@@ -1,0 +1,283 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "dynamic_slideshow_xtXc7L": {
+      "type": "dynamic-slideshow",
+      "blocks": {
+        "slide_C3Ptcd": {
+          "type": "slide",
+          "settings": {
+            "background_image": "shopify://shop_images/Desktop_Slideshow-6.png",
+            "mobile_background_image": "shopify://shop_images/tongue_437ff4fd-0b33-4985-a886-482967abff7c.png",
+            "title": "The Ultimate Guide to Unique Piercings",
+            "text": "Everything You Need to Know About Styles, Care, and Healing for Bold Body Piercings",
+            "color": "#ffffff",
+            "link": "",
+            "text_alignment": "left",
+            "button_one_label": "",
+            "button_one_link": "",
+            "button_two_label": "",
+            "button_two_link": "",
+            "show_overlay": true,
+            "overlay_color": "#000000",
+            "overlay_opacity": 50
+          }
+        }
+      },
+      "block_order": [
+        "slide_C3Ptcd"
+      ],
+      "settings": {
+        "enable_autoplay": true,
+        "autoplay_duration": 8,
+        "slideshow_width": "full",
+        "slideshow_height": "small",
+        "slideshow_height_mobile": "original",
+        "slideshow_text_below_image": true
+      }
+    },
+    "dynamic_rich_text_F4r7Wt": {
+      "type": "dynamic-rich-text",
+      "settings": {
+        "width": "regular",
+        "title": "",
+        "text": "<p>Looking to make a statement with your piercings? Our guide covers everything you need to know about eyebrow, tongue, nipple, and dermal anchors. From choosing the right placement and jewellery from us to understanding the healing process and aftercare essentials, we’ll help you navigate these striking body modifications with confidence. Whether you’re new to piercings or adding to your collection, find expert advice and tips to make your experience smooth and stylish.</p>",
+        "heading_size": "medium",
+        "text_alignment": "center"
+      }
+    },
+    "dynamic_image_with_text_PzCi9p": {
+      "type": "dynamic-image-with-text",
+      "settings": {
+        "section_heading": "Eyebrow Piercings",
+        "image": "shopify://shop_images/Mobile_Slideshow_ef69071c-8f06-43e9-812f-182a9528b307.png",
+        "desktop_height": "600px",
+        "mobile_height": "natural",
+        "desktop_image_alignment": "left",
+        "mobile_image_alignment": "top",
+        "heading": "",
+        "subheading": "<p>Whether you prefer a subtle curved barbell or a statement-making ring, this piercing highlights your facial features and adds a unique flair to your look. Ideal for those seeking a versatile and stylish addition, eyebrow piercings can be customised to suit your personal aesthetic.</p><p><strong>POSITION</strong>: Above the brow's arch, about halfway along the eyebrow. However placement varies with each individual.</p><p><strong>JEWELLERY: </strong>Curved Barbells, Captive Bead Rings (BCR's), Circular Horseshoe Barbells</p><p><strong>STANDARD SIZE: </strong>16G (1.2mm) or 18G (1.0mm) Thickness & 8-10mm Length.</p><p><strong>DOWNSIZE:</strong> 6-8mm Length after healing for snug fit.</p><p><strong>PAIN LEVEL: </strong>Low-Moderate</p><p><strong>HEALING TIME: </strong>6-8 weeks</p><p><strong>AFTERCARE: </strong>Clean piercing twice daily using a saline dipped cotton pad, gently pressing the area for a few minutes. Do not use alcohol or anti-septic creams as this can result in delayed healing. <br/><br/><strong>PRO-TIP: </strong>Be cautious with hairstyles and glasses that might rub against the piercing. Keep hair products like sprays and gels away from the area to prevent irritation or infection.</p>",
+        "text_alignment": "left",
+        "button_label": "",
+        "button_link": ""
+      }
+    },
+    "dynamic_image_with_text_4LTbGh": {
+      "type": "dynamic-image-with-text",
+      "settings": {
+        "section_heading": "Tongue Piercings",
+        "image": "shopify://shop_images/Mobile_Slideshow-2_9ac311b3-f8c4-49d4-8b08-21c7a80958b8.png",
+        "desktop_height": "600px",
+        "mobile_height": "natural",
+        "desktop_image_alignment": "right",
+        "mobile_image_alignment": "top",
+        "heading": "",
+        "subheading": "<p>Tongue piercings are a bold and versatile choice that lets you showcase your unique style. Known for their edgy appeal and diverse jewellery options, they can be as subtle or striking as you like. </p><p><strong>POSITION</strong>: On the centre of the tongue, vertically. Most commonly, slightly behind the teeth & gums to avoid interaction.</p><p><strong>JEWELLERY: </strong>Straight Barbells</p><p><strong>STANDARD SIZE: </strong>14G (1.6mm) bar thickness & 16-19mm barbell length initially. </p><p><strong>DOWNSIZE:</strong> 12-14mm bar length after healing for snug fit.</p><p><strong>PAIN LEVEL: </strong>Low-Moderate</p><p><strong>HEALING TIME: </strong>4-6 weeks</p><p><strong>AFTERCARE: </strong>Rinse with non-alcoholic wash after meals/drink. Avoid spicy, acidic and hard foods and avoid sharing utensils.</p><p><strong>PRO-TIP: </strong>Stick to cold, soft foods (e.g., ice chips, smoothies) for the first few days to reduce swelling and soothe discomfort.</p>",
+        "text_alignment": "left",
+        "button_label": "",
+        "button_link": ""
+      }
+    },
+    "dynamic_image_with_text_4n4NUU": {
+      "type": "dynamic-image-with-text",
+      "settings": {
+        "section_heading": "Nipple Piercings",
+        "image": "shopify://shop_images/3_cecad6e9-cf31-4a6d-9b45-d20f33462efe.png",
+        "desktop_height": "600px",
+        "mobile_height": "400px",
+        "desktop_image_alignment": "left",
+        "mobile_image_alignment": "top",
+        "heading": "",
+        "subheading": "<p>Nipple piercings are a timeless choice for those seeking a bold and empowering body modification. Valued for their aesthetic and versatile jewelry options, these piercings can be a subtle personal adornment or a daring expression of individuality.</p><p><strong>POSITION</strong>: Done horizontally but can also be placed vertically or diagonally based on preference.</p><p><strong>JEWELLERY: </strong>Straight Barbells, BCR's, CBB's</p><p><strong>STANDARD SIZE: </strong>14G (1.6mm) bar thickness & 10-14mm barbell length initially. </p><p><strong>DOWNSIZE:</strong> After 6-8 weeks once initial swelling has subsided.</p><p><strong>PAIN LEVEL: </strong>Moderate-High</p><p><strong>HEALING TIME: </strong>6-12 months</p><p><strong>AFTERCARE: </strong>Using a piercing aftercare spray/saline solution and clean cotton pad, dab around the pierced area to remove any crusting twice a day. Avoid tight/rough clothing.</p><p><strong>PRO-TIP: </strong>Opt for breathable fabrics like cotton during the healing phase to minimize friction and irritation. For added protection, use non-stick bandages or soft padding to shield the area from clothing.</p>",
+        "text_alignment": "left",
+        "button_label": "Button",
+        "button_link": ""
+      }
+    },
+    "dynamic_image_with_text_kP87PF": {
+      "type": "dynamic-image-with-text",
+      "settings": {
+        "section_heading": "Dermal Anchor Piercings",
+        "image": "shopify://shop_images/2_7266b1b5-45bb-4c8f-9f02-0f246cc83ca9.png",
+        "desktop_height": "600px",
+        "mobile_height": "400px",
+        "desktop_image_alignment": "right",
+        "mobile_image_alignment": "top",
+        "heading": "",
+        "subheading": "<p>Unlike traditional piercings, dermal anchors are single-point piercings that sit flush against the skin, offering versatility in placement and design. Perfect for those seeking a modern and minimalistic aesthetic</p><p><strong>POSITION</strong>: Anywhere on the body that provides a flat surface for the stud to 'anchor' into. Face, Neck, Collarbones, Chest, Hips, Spine, Wrists & Ankles.</p><p><strong>JEWELLERY: </strong>Dermal Anchors</p><p><strong>STANDARD SIZE: </strong>14G (1.6mm) or 16G (1.2mm). Post length depending on individual's skin thickness.</p><p><strong>DOWNSIZE:</strong> Not required</p><p><strong>PAIN LEVEL: </strong>Moderate</p><p><strong>HEALING TIME: </strong>2-3 months</p><p><strong>AFTERCARE: </strong>Clean twice daily with cotton pad and saline solution. Do not move the jewellery around unnecessarily. </p><p><strong>PRO-TIP: </strong>Consider areas with minimal movement or friction to reduce irritation</p>",
+        "text_alignment": "left",
+        "button_label": "Button",
+        "button_link": ""
+      }
+    },
+    "dynamic_collection_list_cGQ9WA": {
+      "type": "dynamic-collection-list",
+      "blocks": {
+        "collection_Cgb9cF": {
+          "type": "collection",
+          "settings": {
+            "collection": "nipple-piercing",
+            "title": ""
+          }
+        },
+        "collection_QkAmEc": {
+          "type": "collection",
+          "settings": {
+            "collection": "tongue-barbells",
+            "image": "shopify://shop_images/Frame_21.png",
+            "title": ""
+          }
+        },
+        "collection_zwNgRD": {
+          "type": "collection",
+          "settings": {
+            "collection": "curved-barbells",
+            "image": "shopify://shop_images/Frame_27.png",
+            "title": ""
+          }
+        },
+        "collection_wwY8wd": {
+          "type": "collection",
+          "settings": {
+            "collection": "dermal-anchors",
+            "title": ""
+          }
+        }
+      },
+      "block_order": [
+        "collection_Cgb9cF",
+        "collection_QkAmEc",
+        "collection_zwNgRD",
+        "collection_wwY8wd"
+      ],
+      "settings": {
+        "title": "Shop the Collection",
+        "thumbnail_columns_desktop": 4,
+        "thumbnail_columns_mobile": 2,
+        "image-crop": "original",
+        "cta_label": "",
+        "cta_link": "",
+        "cta_button_style": "primary"
+      }
+    },
+    "main": {
+      "type": "page",
+      "disabled": true,
+      "settings": {}
+    },
+    "dynamic_slideshow_PLyb8Q": {
+      "type": "dynamic-slideshow",
+      "blocks": {
+        "slide_PptVRD": {
+          "type": "slide",
+          "settings": {
+            "background_image": "shopify://shop_images/ETSY_banner_size-2_e608e8fc-9736-4adb-ae29-6b1091a70ee0.jpg",
+            "title": "",
+            "text": "",
+            "color": "#ffffff",
+            "link": "shopify://pages/all-body-jewellery",
+            "text_alignment": "center",
+            "button_one_label": "",
+            "button_one_link": "",
+            "button_two_label": "",
+            "button_two_link": "",
+            "show_overlay": false,
+            "overlay_color": "#000000",
+            "overlay_opacity": 50
+          }
+        }
+      },
+      "block_order": [
+        "slide_PptVRD"
+      ],
+      "settings": {
+        "enable_autoplay": true,
+        "autoplay_duration": 8,
+        "slideshow_width": "full",
+        "slideshow_height": "original",
+        "slideshow_height_mobile": "small",
+        "slideshow_text_below_image": true
+      }
+    },
+    "11859229-c1d4-4dfb-a2ce-dd353ba3b726": {
+      "type": "dynamic-highlights-banner",
+      "blocks": {
+        "template--16105802989730__11859229-c1d4-4dfb-a2ce-dd353ba3b726-highlight-1": {
+          "type": "highlight",
+          "settings": {
+            "icon": "icon-delivery",
+            "image": "shopify://shop_images/1_07a54c9c-8a0b-44ca-b177-699382656454.png",
+            "title": "Free Shipping",
+            "text": "<p><em>For UK Orders Over £20</em></p>",
+            "link": "shopify://pages/shipping-policy"
+          }
+        },
+        "template--16105802989730__11859229-c1d4-4dfb-a2ce-dd353ba3b726-highlight-2": {
+          "type": "highlight",
+          "settings": {
+            "icon": "icon-cell-phone",
+            "image": "shopify://shop_images/sample_f8cb253b-da44-4cc1-91e8-46fdc47a9ab2.png",
+            "title": "Quality Assurance",
+            "text": "<p><em>High Quality Materials & Service</em></p>",
+            "link": "shopify://pages/about-us"
+          }
+        },
+        "template--16105802989730__11859229-c1d4-4dfb-a2ce-dd353ba3b726-highlight-3": {
+          "type": "highlight",
+          "settings": {
+            "icon": "icon-chat-alternate",
+            "image": "shopify://shop_images/2_9d24f671-5979-4ed0-8d10-cf715d64327f.png",
+            "title": "14 Day Return",
+            "text": "<p><em>Product Satisfaction</em></p>",
+            "link": "shopify://pages/replacements-returns-policy"
+          }
+        },
+        "template--16105802989730__11859229-c1d4-4dfb-a2ce-dd353ba3b726-highlight-4": {
+          "type": "highlight",
+          "settings": {
+            "icon": "icon-pin",
+            "image": "shopify://shop_images/4_ad79c56c-096e-4794-aa6e-e2b2c5c0cc4c.png",
+            "title": "Worldwide Shipping",
+            "text": "<p><em>Orders Shipped in 2 Days</em></p>",
+            "link": "shopify://pages/shipping-policy"
+          }
+        }
+      },
+      "block_order": [
+        "template--16105802989730__11859229-c1d4-4dfb-a2ce-dd353ba3b726-highlight-1",
+        "template--16105802989730__11859229-c1d4-4dfb-a2ce-dd353ba3b726-highlight-2",
+        "template--16105802989730__11859229-c1d4-4dfb-a2ce-dd353ba3b726-highlight-3",
+        "template--16105802989730__11859229-c1d4-4dfb-a2ce-dd353ba3b726-highlight-4"
+      ],
+      "settings": {
+        "section_spacing": false,
+        "section_width": "full-width",
+        "icon_layout": "center",
+        "color": "#4d4d4d",
+        "icon_color": "#4d4d4d",
+        "background_color": "#ffffff",
+        "mobile_layout": "grid"
+      }
+    }
+  },
+  "order": [
+    "dynamic_slideshow_xtXc7L",
+    "dynamic_rich_text_F4r7Wt",
+    "dynamic_image_with_text_PzCi9p",
+    "dynamic_image_with_text_4LTbGh",
+    "dynamic_image_with_text_4n4NUU",
+    "dynamic_image_with_text_kP87PF",
+    "dynamic_collection_list_cGQ9WA",
+    "main",
+    "dynamic_slideshow_PLyb8Q",
+    "11859229-c1d4-4dfb-a2ce-dd353ba3b726"
+  ]
+}

@@ -1,0 +1,67 @@
+<div class="shop-by-type__product-card">
+  <a href="{{ product.url }}" class="shop-by-type__product-link">
+    <!-- Image Section -->
+    <div class="shop-by-type__product-image-section">
+      <div class="shop-by-type__product-image-wrapper">
+        {% if product.featured_image %}
+          <img
+            src="{{ product.featured_image | image_url: width: 300 }}"
+            srcset="{{ product.featured_image | image_url: width: 200 }} 200w,
+                    {{ product.featured_image | image_url: width: 300 }} 300w,
+                    {{ product.featured_image | image_url: width: 400 }} 400w"
+            sizes="(max-width: 600px) 45vw, 150px"
+            alt="{{ product.title }}"
+            loading="eager"
+            class="shop-by-type__product-image"
+          >
+        {% else %}
+          <div class="shop-by-type__product-placeholder">
+            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Product Details Section -->
+    <div class="shop-by-type__product-details">
+      <h3 class="shop-by-type__product-title">{{ product.title }}</h3>
+
+      {%- comment -%} Product Rating {%- endcomment -%}
+      {% if section.settings.show_rating %}
+        {% if product.metafields.reviews.rating.value != blank %}
+          {% assign rating = product.metafields.reviews.rating.value | round: 1 %}
+          {% assign rating_count = product.metafields.reviews.rating_count.value | default: 0 %}
+          {% assign rating_ceil = rating | ceil %}
+          {% assign rating_floor = rating | floor %}
+          <div class="shop-by-type__product-rating">
+            <div class="shop-by-type__stars">
+              {% for i in (1..5) %}
+                {% if i <= rating_floor %}
+                  <svg class="star star--filled" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                {% elsif i == rating_ceil and rating != rating_floor %}
+                  <svg class="star star--half" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" opacity="0.3"/><path fill="currentColor" d="M12 17.27V2l-2.81 6.63L2 9.24l5.46 4.73L5.82 21z"/></svg>
+                {% else %}
+                  <svg class="star star--empty" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" opacity="0.3" d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                {% endif %}
+              {% endfor %}
+            </div>
+            {% if rating_count > 0 %}
+              <span class="shop-by-type__rating-count">({{ rating_count }})</span>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endif %}
+
+      <div class="shop-by-type__product-price">
+        {% if product.compare_at_price > product.price %}
+          <span class="shop-by-type__price-compare">{{ product.compare_at_price | money }}</span>
+        {% endif %}
+        <span class="shop-by-type__price-current">{{ product.price | money }}</span>
+      </div>
+
+      <span class="shop-by-type__product-button">
+        {{ section.settings.product_button_text | default: 'View Product' }}
+      </span>
+    </div>
+  </a>
+</div>

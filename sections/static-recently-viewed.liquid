@@ -1,0 +1,104 @@
+{% if section.settings.enable_recently_viewed_products %}
+
+<style>
+  .product-recently-viewed--section .productgrid--item {
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
+    height: 355.05px;
+    min-height: 355.05px;
+    max-height: 355.05px;
+  }
+  .product-recently-viewed--section .productitem {
+    width: 100%;
+    height: 100%;
+  }
+  .product-recently-viewed--section .productitem__container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .product-recently-viewed--section .productitem--title a {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
+    max-height: calc(1.4em * 2);
+  }
+  
+  .product-recently-viewed--section .productitem__container .product__rating-placeholder {
+    height: 20px;
+    min-height: 20px;
+    display: block;
+  }
+  .product-recently-viewed--section .productitem__container .product__rating {
+    min-height: 20px;
+  }
+</style>
+
+{%- capture recently_viewed_data -%}
+  {%-
+    render 'product-recently-viewed',
+    product: product
+  -%}
+{%- endcapture -%}
+
+<script
+  type="application/json"
+  data-section-type="static-recently-viewed"
+  data-section-id="{{ section.id }}"
+  data-section-data
+>
+  {
+    {{ recently_viewed_data }}
+  }
+</script>
+
+<aside
+  aria-label="Recently viewed products"
+  class="product-section--container product-recently-viewed--section"
+>
+  <div class="product-recently-viewed__wrapper">
+    <div class="product-recently-viewed__header">
+      <h2 class="product-recently-viewed__heading">
+        {{ 'general.time.previous' | t }}
+      </h2>
+      <button
+        class="product-recently-viewed__clear"
+        data-clear-recently-viewed
+      >
+        {{ 'general.time.clear' | t }}
+      </button>
+    </div>
+
+    <div
+      class="
+        product-section--content
+        product-recently-viewed__content
+        imagestyle--{% if settings.product_grid_image_crop and settings.product_grid_image_style != 'natural' %}cropped-{% endif %}{{ settings.product_grid_image_style }}
+      "
+      data-recently-viewed-container
+    >
+    </div>
+  </div>
+</aside>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:sections.recently_viewed_products.name",
+  "class": "recently-viewed--section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_recently_viewed_products",
+      "label": "t:sections.recently_viewed_products.enable_recently_viewed_products.label",
+      "info": "t:sections.recently_viewed_products.enable_recently_viewed_products.info"
+    }
+  ]
+}
+
+{% endschema %}

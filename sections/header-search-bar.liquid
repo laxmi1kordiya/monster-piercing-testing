@@ -1,0 +1,381 @@
+{%- assign logo_height = section.settings.logo_height | default: 50 -%}
+{%- assign logo_width = section.settings.logo_width | default: 180 -%}
+{%- assign logo_size = logo_width | prepend: 'x' -%}
+
+<style>
+  body {
+    padding-top: 0 !important;
+  }
+
+  .header-search-bar-section {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  .header-search-bar {
+    background-color: #ffffff;
+    padding: 12px 20px;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .header-search-bar__container {
+    max-width: {{ settings.layout_max_width }}px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .header-search-bar__logo {
+    flex-shrink: 0;
+  }
+
+  .header-search-bar__logo a {
+    display: block;
+  }
+
+  .header-search-bar__logo img {
+    max-width: {{ logo_width }}px;
+    max-height: {{ logo_height }}px;
+    width: auto;
+    height: auto;
+  }
+
+  .header-search-bar__logo-text {
+    font-size: 24px;
+    font-weight: 700;
+    color: #000000;
+    text-decoration: none;
+    margin: 0;
+  }
+
+  .header-search-bar__search {
+    flex: 1;
+    max-width: 800px;
+  }
+
+  .header-search-bar__search-form {
+    display: flex;
+    align-items: stretch;
+    border: 2px solid #4CAF50;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #fff;
+  }
+
+  .header-search-bar__search-input {
+    flex: 1;
+    border: none;
+    padding: 12px 16px;
+    font-size: 16px;
+    outline: none;
+    color: #333;
+    background: #fff;
+  }
+
+  .header-search-bar__search-input::placeholder {
+    color: #999;
+  }
+
+  .header-search-bar__search-input:focus {
+    outline: none;
+  }
+
+  .header-search-bar__mic-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    background: #fff;
+    border: none;
+    cursor: pointer;
+    color: #666;
+  }
+
+  .header-search-bar__mic-btn:hover {
+    color: #333;
+  }
+
+  .header-search-bar__mic-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .header-search-bar__search-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    background-color: #4CAF50;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    transition: background-color 0.2s;
+  }
+
+  .header-search-bar__search-btn:hover {
+    background-color: #45a049;
+  }
+
+  .header-search-bar__search-btn svg {
+    width: 22px;
+    height: 22px;
+    fill: #fff;
+  }
+
+  .header-search-bar__cart {
+    flex-shrink: 0;
+  }
+
+  .header-search-bar__cart-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    position: relative;
+    color: #000;
+  }
+
+  .header-search-bar__cart-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .header-search-bar__cart-icon svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: #000;
+    stroke-width: 1.5;
+  }
+
+  .header-search-bar__cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #4CAF50;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+  }
+
+  .header-search-bar__cart-count:empty {
+    display: none;
+  }
+
+  /* Live search flydown styling for this section */
+  .header-search-bar .search-flydown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: none;
+  }
+
+  .header-search-bar .live-search-form-field:focus ~ .search-flydown,
+  .header-search-bar .search-flydown:hover {
+    display: block;
+  }
+
+  /* Mobile responsive */
+  @media screen and (max-width: 768px) {
+    .header-search-bar {
+      padding: 10px 15px;
+    }
+
+    .header-search-bar__container {
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .header-search-bar__logo {
+      order: 1;
+    }
+
+    .header-search-bar__cart {
+      order: 2;
+      margin-left: auto;
+    }
+
+    .header-search-bar__search {
+      order: 3;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .header-search-bar__logo img {
+      max-width: 140px;
+      max-height: 40px;
+    }
+
+    .header-search-bar__search-input {
+      padding: 10px 12px;
+      font-size: 14px;
+    }
+
+    .header-search-bar__mic-btn {
+      padding: 0 8px;
+    }
+
+    .header-search-bar__search-btn {
+      padding: 0 14px;
+    }
+  }
+</style>
+
+<div class="header-search-bar" data-header-search-bar>
+  <div class="header-search-bar__container">
+    <!-- Logo -->
+    <div class="header-search-bar__logo">
+      <a href="{{ routes.root_url }}">
+        {%- if section.settings.logo -%}
+          {%- assign logo_alt = section.settings.logo.alt -%}
+          {%- if logo_alt == blank -%}
+            {%- assign logo_alt = shop.name | strip -%}
+          {%- endif -%}
+          {%-
+            render 'rimg',
+            img: section.settings.logo,
+            class: 'header-search-bar__logo-img',
+            alt: logo_alt,
+            size: logo_size,
+            focal_point: section.settings.logo.presentation.focal_point,
+          -%}
+        {%- else -%}
+          <span class="header-search-bar__logo-text">{{ shop.name }}</span>
+        {%- endif -%}
+      </a>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="header-search-bar__search">
+      <form
+        class="header-search-bar__search-form"
+        action="{{ routes.search_url }}"
+        method="get"
+        role="search"
+        data-live-search-form
+      >
+        <input
+          type="hidden"
+          name="type"
+          value="product"
+        >
+        <input
+          class="header-search-bar__search-input"
+          type="text"
+          name="q"
+          placeholder="{{ section.settings.search_placeholder | default: 'What are you looking for?' }}"
+          autocomplete="off"
+          data-live-search-input
+        >
+        <button type="button" class="header-search-bar__mic-btn" aria-label="Voice search">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+            <line x1="12" y1="19" x2="12" y2="23"></line>
+            <line x1="8" y1="23" x2="16" y2="23"></line>
+          </svg>
+        </button>
+        <button type="submit" class="header-search-bar__search-btn" aria-label="Search">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </form>
+    </div>
+
+    <!-- Cart -->
+    <div class="header-search-bar__cart">
+      <a class="header-search-bar__cart-link" href="{{ routes.cart_url }}" data-cart-open aria-label="{{ 'general.accessibility.cart' | t }}">
+        <span class="header-search-bar__cart-count" data-header-cart-count>
+          {%- if cart.item_count > 0 -%}{{ cart.item_count }}{%- endif -%}
+        </span>
+        <span class="header-search-bar__cart-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+        </span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Remove body padding-top
+  document.body.style.paddingTop = '0px';
+
+  // Update cart count when cart changes
+  document.addEventListener('cart:updated', function(event) {
+    const cartCounts = document.querySelectorAll('.header-search-bar__cart-count');
+    cartCounts.forEach(function(el) {
+      if (event.detail && event.detail.item_count !== undefined) {
+        el.textContent = event.detail.item_count > 0 ? event.detail.item_count : '';
+      }
+    });
+  });
+});
+</script>
+
+{% schema %}
+{
+  "name": "Header Search Bar",
+  "class": "header-search-bar-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo",
+      "info": "Recommended: 180 x 50px"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Logo height",
+      "min": 30,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 100,
+      "max": 250,
+      "step": 2,
+      "unit": "px",
+      "default": 180
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search placeholder text",
+      "default": "What are you looking for?"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header Search Bar"
+    }
+  ]
+}
+{% endschema %}

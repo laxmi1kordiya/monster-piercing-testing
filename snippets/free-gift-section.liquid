@@ -1,0 +1,132 @@
+{% comment %}
+  Free Gift Section
+  @param context {String} - 'cart-drawer' or 'cart-page'
+  @param free_gift_threshold {Number} - in cents (e.g., 10000 = £100)
+  @param free_gift_collection_handle {String}
+  @param show_progress_bar {Boolean}
+  @param max_products {Number}
+  @param bg_color {String} - Background color
+  @param progress_color {String} - Progress bar color
+{% endcomment %}
+{%- liquid
+  assign gift_amount = free_gift_threshold | default: 10000 | plus: 0
+  assign gift_collection_handle = free_gift_collection_handle | default: 'free-gifts'
+  assign gift_collection = collections[gift_collection_handle]
+  assign cart_total = cart.total_price
+  assign show_bar = show_progress_bar | default: true
+  assign products_limit = max_products | default: 6
+  assign context_class = context | default: 'cart-drawer'
+  assign section_bg_color = bg_color | default: '#f5f5f5'
+  assign section_progress_color = progress_color | default: '#4ade80'
+
+  assign free_gift_unlocked = false
+  if cart_total >= gift_amount
+    assign free_gift_unlocked = true
+  endif
+
+  assign progress_percent = 0
+  if gift_amount > 0
+    assign progress_percent = cart_total | times: 100.0 | divided_by: gift_amount
+    if progress_percent > 100
+      assign progress_percent = 100
+    endif
+  endif
+
+  assign has_free_gift_in_cart = false
+  for item in cart.items
+    if item.properties['_free_gift'] == 'true'
+      assign has_free_gift_in_cart = true
+      break
+    endif
+  endfor
+-%}
+
+{%- unless has_free_gift_in_cart -%}
+<div class="free-gift-wrapper free-gift-wrapper--{{ context_class }}" data-free-gift-section style="--free-gift-bg: {{ section_bg_color }}; --free-gift-progress: {{ section_progress_color }};">
+  {%- if show_bar -%}
+    <div class="free-gift-progress">
+      <div class="free-gift-progress__header">
+        {%- if free_gift_unlocked -%}
+          <span class="free-gift-progress__title">Free gift unlocked! Pick yours below</span>
+        {%- else -%}
+          <span class="free-gift-progress__title">Add {{ gift_amount | minus: cart_total | money }} more for a free gift</span>
+        {%- endif -%}
+      </div>
+
+      <div class="free-gift-progress__bar-container">
+        <div class="free-gift-progress__bar">
+          <div class="free-gift-progress__bar-fill" style="width: {{ progress_percent }}%;"></div>
+
+          <div class="free-gift-progress__milestone free-gift-progress__milestone--gift free-gift-progress__milestone--end {% if free_gift_unlocked %}is-unlocked{% endif %}">
+            <span class="free-gift-progress__milestone-icon">
+              {%- if free_gift_unlocked -%}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              {%- endif -%}
+            </span>
+          </div>
+        </div>
+
+        <div class="free-gift-progress__labels">
+          <div class="free-gift-progress__label free-gift-progress__label--end">
+            <span class="free-gift-progress__label-amount">{{ gift_amount | money }}</span>
+            <span class="free-gift-progress__label-text">Free gift</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- if gift_collection and gift_collection.products.size > 0 -%}
+    <div class="free-gift-products">
+      {%- unless show_bar -%}
+        {%- if free_gift_unlocked -%}
+          <h3 class="free-gift-products__title">Free gift unlocked! Pick yours below</h3>
+        {%- else -%}
+          <h3 class="free-gift-products__title">Buy {{ gift_amount | minus: cart_total | money }} to get a free gift</h3>
+        {%- endif -%}
+      {%- endunless -%}
+
+      <div class="free-gift-products__grid" style="--products-count: {{ products_limit }};">
+        {%- for gift in gift_collection.products -%}
+          <div class="free-gift-products__item">
+            <a href="{{ gift.url }}" class="free-gift-products__image">
+              {%- if gift.featured_image -%}
+                <img src="{{ gift.featured_image | image_url: width: 300 }}" alt="{{ gift.featured_image.alt | escape }}" loading="lazy">
+              {%- else -%}
+                {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </a>
+
+            <div class="free-gift-products__info">
+              <a href="{{ gift.url }}" class="free-gift-products__name">{{ gift.title }}</a>
+              <div class="free-gift-products__price">
+                <span class="free-gift-products__price-original">{{ gift.price | money }}</span>
+                <span class="free-gift-products__price-free">Free</span>
+              </div>
+              {%- if gift.variants.size > 1 -%}
+                <select class="free-gift-products__variant-select" data-free-gift-variant-select>
+                  {%- for variant in gift.variants -%}
+                    <option value="{{ variant.id }}" data-available="{{ variant.available }}"{% unless variant.available %} disabled{% endunless %}>{{ variant.title }}</option>
+                  {%- endfor -%}
+                </select>
+              {%- endif -%}
+
+              {%- if free_gift_unlocked -%}
+                {%- if gift.available -%}
+                  <button class="free-gift-products__add-btn" type="button" data-free-gift-add data-variant-id="{{ gift.variants.first.id }}" data-product-title="{{ gift.title | escape }}">Add</button>
+                {%- else -%}
+                  <button class="free-gift-products__add-btn free-gift-products__add-btn--soldout" type="button" disabled>Sold out</button>
+                {%- endif -%}
+              {%- else -%}
+                <button class="free-gift-products__add-btn free-gift-products__add-btn--disabled" type="button" disabled>Add</button>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+{%- endunless -%}

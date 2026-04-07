@@ -1,0 +1,287 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "blocks_yQncrE": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_f1f6909_zWVdfz": {
+          "type": "ai_gen_block_f1f6909",
+          "settings": {
+            "text_1": "FLAT 25% OFF",
+            "text_2": "No Exclusions",
+            "text_3": "FLAT 25% OFF",
+            "text_4": "Limited Time",
+            "text_5": "",
+            "initial_direction": "right",
+            "animation_speed": 10,
+            "background_color": "#fec0c7",
+            "text_color": "#810000",
+            "font_size": 17,
+            "bar_padding": 10,
+            "text_spacing": 40,
+            "show_toggle_button": false,
+            "button_background": "#ffffff",
+            "button_color": "#000000",
+            "button_padding": 8,
+            "button_border_radius": 4,
+            "button_icon_size": 20,
+            "button_position": 20
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_f1f6909_zWVdfz"
+      ],
+      "name": "Sliding announcement bar",
+      "settings": {}
+    },
+    "blocks_BLRPtN": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_e2abd90_HwJe88": {
+          "type": "ai_gen_block_e2abd90",
+          "settings": {
+            "background_color": "#ffffff",
+            "padding_top": 15,
+            "padding_bottom": 10,
+            "desktop_width_percent": 60,
+            "desktop_circle_size": 80,
+            "desktop_item_spacing": 50,
+            "desktop_border_width": 1,
+            "desktop_border_color": "#8c0013",
+            "desktop_overlay_height": 50,
+            "desktop_overlay_angle": 0,
+            "desktop_overlay_color": "#000000",
+            "desktop_text_color": "#ffffff",
+            "desktop_text_size": 11,
+            "desktop_text_weight": "700",
+            "mobile_width_percent": 65,
+            "mobile_circle_size": 60,
+            "mobile_item_spacing": 30,
+            "mobile_text_spacing": 10,
+            "mobile_border_width": 1,
+            "mobile_border_color": "#db1e37",
+            "mobile_text_color": "#000000",
+            "mobile_text_size": 12,
+            "mobile_text_weight": "700",
+            "auto_slide": true,
+            "slide_direction": "left",
+            "slide_speed": 0.5,
+            "collection_1": "nose-jewellery",
+            "image_1": "shopify://shop_images/nose_bc5ae189-ee67-4f88-9668-04c2d4748e40.png",
+            "text_1": "Nose",
+            "collection_2": "tongue-barbells",
+            "image_2": "shopify://shop_images/tongue_5dd1d57d-7106-4583-a074-ea77709522c9.png",
+            "text_2": "Tongue",
+            "collection_3": "labrets",
+            "image_3": "shopify://shop_images/lip_bba8e2e8-ce52-4abf-a69e-3a29abb9c64f.png",
+            "text_3": "Lips",
+            "collection_4": "ear-jewellery",
+            "image_4": "shopify://shop_images/EAR_8d82411f-dba1-4361-ac70-e54df25c8cde.png",
+            "text_4": "Ear",
+            "collection_5": "curved-barbells",
+            "image_5": "shopify://shop_images/eyebrow_36308969-f00a-4946-a60c-4169ae033573.png",
+            "text_5": "Eye",
+            "collection_6": "belly-rings",
+            "image_6": "shopify://shop_images/belly_fe8fd30c-580d-4858-9e75-feeca8a51ab0.png",
+            "text_6": "Belly",
+            "collection_7": "fake-plugs",
+            "image_7": "shopify://shop_images/stretched.png",
+            "text_7": "Stretched",
+            "collection_8": "dermal-anchors",
+            "image_8": "shopify://shop_images/surface.png",
+            "text_8": "Surface",
+            "collection_9": "",
+            "text_9": "",
+            "collection_10": "",
+            "text_10": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_e2abd90_HwJe88"
+      ],
+      "settings": {}
+    },
+    "dynamic_slideshow_Fg9knU": {
+      "type": "dynamic-slideshow",
+      "blocks": {
+        "slide_fYrgra": {
+          "type": "slide",
+          "settings": {
+            "background_image": "shopify://shop_images/Collection_Banners_268933a2-8165-45cf-bcfd-4ac4fc9f32f0.png",
+            "mobile_background_image": "shopify://shop_images/mobile_collection_05e8aef2-1d12-410c-9d87-5f45072e48e1.png",
+            "title": "",
+            "text": "",
+            "color": "#ffffff",
+            "link": "",
+            "text_alignment": "left",
+            "content_position": "center",
+            "heading_size": 40,
+            "subheading_size": 16,
+            "button_size": 14,
+            "button_background_color": "#000000",
+            "button_text_color": "#ffffff",
+            "mobile_content_position": "center",
+            "mobile_vertical_position": "center",
+            "mobile_text_alignment": "center",
+            "mobile_heading_size": 24,
+            "mobile_subheading_size": 14,
+            "mobile_button_size": 12,
+            "button_one_label": "",
+            "button_one_link": "",
+            "button_two_label": "",
+            "button_two_link": "",
+            "show_overlay": false,
+            "overlay_color": "#000000",
+            "overlay_opacity": 50
+          }
+        }
+      },
+      "block_order": [
+        "slide_fYrgra"
+      ],
+      "disabled": true,
+      "name": "t:sections.slideshow.presets.slideshow.name",
+      "settings": {
+        "enable_autoplay": true,
+        "autoplay_duration": 8,
+        "slideshow_width": "full",
+        "slideshow_height": "original",
+        "slideshow_height_mobile": "medium",
+        "slideshow_text_below_image": true
+      }
+    },
+    "main": {
+      "type": "static-collection",
+      "blocks": {
+        "filter-1": {
+          "type": "filter",
+          "settings": {
+            "filter_option": "tag",
+            "filter_groups": "collapse_all",
+            "show_filter_product_count": true,
+            "filter_style": "groups",
+            "filter_limit": "6",
+            "grid_categories": "",
+            "custom_ordered_categories": "Type",
+            "custom_ordered_tags": "",
+            "excluded_tags": "Colour_Black, Colour_Steel, Colour_Gold, Colour_Luminescent, Colour_Red, Colour_Yellow",
+            "excluded_groups": "Colour_Black, Colour_Steel, Colour_Gold, Colour_Luminescent, Colour_Red, Colour_Yellow"
+          }
+        }
+      },
+      "block_order": [
+        "filter-1"
+      ],
+      "settings": {
+        "show_collection_image": false,
+        "products_per_page_range": 24,
+        "products_per_row": "5",
+        "sort_by": true,
+        "grid_list": true,
+        "default_view": "grid-view",
+        "enable_subcollection": true,
+        "show_product_count": false,
+        "thumbnail_image": "collection-image",
+        "image_crop": "original"
+      }
+    },
+    "static-recently-viewed": {
+      "type": "static-recently-viewed",
+      "settings": {
+        "enable_recently_viewed_products": true
+      }
+    },
+    "dynamic_rich_text_DjyrG8": {
+      "type": "dynamic-rich-text",
+      "name": "t:sections.rich_text.presets.rich_text.name",
+      "settings": {
+        "width": "full-width",
+        "title": "Monster Piercing | New Arrivals",
+        "text": "<p>Our new arrivals are here and they are looking better than ever. Discover the latest body piercing jewellery designed for comfort, quality and everyday style. Each new piece is chosen with care, combining sleek designs, durable materials and that perfect shine that makes your piercings stand out.</p><p>You will find everything from belly rings and nose hoops to labret studs and ear piercings, all crafted from high quality metals that are safe for sensitive skin. We love updating this collection regularly so there is always something fresh for you to fall in love with.</p><p>Wherever you are in the world, these new arrivals are made to keep you on trend without losing that effortless edge.</p><p>Shop what is new now and be the first to wear the latest looks in modern piercing jewellery.</p>",
+        "heading_size": "medium",
+        "text_alignment": "center"
+      }
+    },
+    "dynamic_faq_RkgVed": {
+      "type": "dynamic-faq",
+      "blocks": {
+        "category_c6PBRQ": {
+          "type": "category",
+          "settings": {
+            "heading": "New Arrivals",
+            "show_category_card": true
+          }
+        },
+        "question_hm7LNy": {
+          "type": "question",
+          "settings": {
+            "question": "How often do you release new body jewellery designs?",
+            "answer": "<p>We add <strong>new piercing jewellery</strong> every week to keep up with modern styles and seasonal trends. Whether you’re looking for <a href=\"https://www.monsterpiercing.com/collections/gold-items\" title=\"https://www.monsterpiercing.com/collections/gold-items\"><strong>new gold body jewellery</strong></a><strong>, </strong><a href=\"https://www.monsterpiercing.com/collections/segment-clickers/material_titanium\" title=\"https://www.monsterpiercing.com/collections/segment-clickers/material_titanium\"><strong>latest titanium clickers</strong></a><strong>, </strong>or<strong> </strong><a href=\"https://www.monsterpiercing.com/collections/nose-jewellery\" title=\"https://www.monsterpiercing.com/collections/nose-jewellery\"><strong>trendy nose rings</strong></a>, you’ll always find fresh designs updated regularly with every season.</p>",
+            "icon": "none"
+          }
+        },
+        "question_WHgWzx": {
+          "type": "question",
+          "settings": {
+            "question": "Are these new jewellery items limited edition?",
+            "answer": "<p>Some of our new arrivals are <strong>limited edition body jewellery pieces</strong> available only for a short time. Once sold out, certain styles may not return, so if you love a new design, it’s best to grab it early!</p>",
+            "icon": "none"
+          }
+        },
+        "question_FgnAgE": {
+          "type": "question",
+          "settings": {
+            "question": "Can I buy new arrival pieces in bulk or for my piercingstudio?",
+            "answer": "<p>Yes! We offer <strong>wholesale body jewellery</strong> pricing on most new arrivals.<br/>Piercing studios and resellers can contact our team for bulk discounts and<br/>stock availability.</p>",
+            "icon": "none"
+          }
+        },
+        "question_dwK39E": {
+          "type": "question",
+          "settings": {
+            "question": "How can I get early access to your next jewellery drop?",
+            "answer": "<p>Join our newsletter to get first access to exclusive jewellery drops, new arrivals, and limited-edition piercing jewellery before they go public. Subscribers also receive early-sale notifications and trend<br/>updates.</p>",
+            "icon": "none"
+          }
+        }
+      },
+      "block_order": [
+        "category_c6PBRQ",
+        "question_hm7LNy",
+        "question_WHgWzx",
+        "question_FgnAgE",
+        "question_dwK39E"
+      ],
+      "name": "t:sections.faq.presets.name",
+      "settings": {
+        "section_width": "wide",
+        "heading": "FAQ",
+        "enable_category_cards": false,
+        "category_card_image_crop": "original",
+        "category_heading_size": "medium",
+        "icon_color": "rgba(0,0,0,0)"
+      }
+    }
+  },
+  "order": [
+    "blocks_yQncrE",
+    "blocks_BLRPtN",
+    "dynamic_slideshow_Fg9knU",
+    "main",
+    "static-recently-viewed",
+    "dynamic_rich_text_DjyrG8",
+    "dynamic_faq_RkgVed"
+  ]
+}

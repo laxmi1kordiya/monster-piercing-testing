@@ -1,0 +1,1410 @@
+{% assign has_box_shadow = false %}
+{% if settings.color_background == settings.color_header_background  %}
+  {% assign has_box_shadow = true %}
+{% endif %}
+
+<script
+  type="application/json"
+  data-section-id="{{ section.id }}"
+  data-section-type="static-header"
+  data-section-data>
+  {
+    "settings": {
+      "sticky_header": {{ section.settings.sticky_header | json }},
+      "has_box_shadow": {{ has_box_shadow | json }},
+      "live_search": {
+        "enable": {{ section.settings.enable_live_search | json }},
+        "enable_images": {{ section.settings.enable_live_search_images | json }},
+        "enable_content": {{ section.settings.enable_live_search_articles_pages | json }},
+        "money_format": {{ shop.money_format | strip_html | json }},
+        "show_mobile_search_bar": {{ section.settings.show_mobile_search_bar | json }},
+        "context": {
+          "view_all_results": {{ 'search.general.view_all_results' | t | json }},
+          "view_all_products": {{ 'search.general.view_all_products' | t | json }},
+          "content_results": {
+            "title": {{ 'search.general.pages_and_posts_title' | t | json }},
+            "no_results": {{ 'search.general.pages_and_posts_no_results' | t | json }}
+          },
+          "no_results_products": {
+            "title": {{ 'search.general.no_results_products_title' | t: terms: '*terms*' | json }},
+            "title_in_category": {{ 'search.general.no_results_products_title_in_category' | t: terms: '*terms*', category: '*category*' | json }},
+            "message": {{ 'search.general.no_results_products_message' | t | json }}
+          }
+        }
+      }
+    }
+  }
+</script>
+
+{%- assign logo_height = section.settings.logo_height | default: 100 -%}
+{%- assign logo_width = section.settings.logo_width | default: 200 -%}
+{%- assign logo_size = logo_width | prepend: 'x' -%}
+<link rel="stylesheet" href="{{ 'static-header-ew.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript>{{ 'static-header-ew.css' | asset_url | stylesheet_tag }}</noscript>
+<link rel="stylesheet" href="{{ 'meganav-custom.css' | asset_url }}" media="print" onload="this.media='all'">
+<noscript>{{ 'meganav-custom.css' | asset_url | stylesheet_tag }}</noscript> 
+{% comment %} {{ 'meganav-custom.css' | asset_url | stylesheet_tag }} {% endcomment %}
+{%- style -%}
+  /* Critical header styles inlined to prevent CLS */
+  .static-header-ew .site-header-main--wrapper {
+    background-color: #000;
+    color: #fff;
+    position: sticky;
+    z-index: 1001;
+    overflow: visible;
+    box-shadow: none;
+    border: none;
+  }
+  .static-header-ew .site-header-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+    position: relative;
+    overflow: visible;
+    height: 50px;
+    background-color: #000;
+    box-shadow: none;
+    border: none;
+  }
+  .static-header-ew .site-header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 2px 20px;
+  }
+  .static-header-ew .site-header-right {
+    display: flex;
+    align-items: center;
+    padding: 2px 20px;
+  }
+  .static-header-ew .site-header-center {
+    flex: 1;
+    display: none;
+    align-items: center;
+  }
+  @media screen and (max-width: 1023px) {
+    .static-header-ew .site-header-left { padding: 10px 15px; }
+    .static-header-ew .site-header-right { padding: 10px 15px; }
+    .static-header-ew .site-header-center { display: none; }
+  }
+  @media screen and (min-width: 1024px) {
+    .static-header-ew .site-header-center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .static-header-ew .site-header-menu-toggle { display: none; }
+  }
+  /* End critical header styles */
+
+  .site-header {
+    --layout-container-max-width: {{ settings.layout_max_width }}px;
+  }
+  .site-logo {
+    max-width: {{ logo_width }}px;
+  }
+  .site-logo-image {
+    max-height: {{ logo_height }}px;
+  }
+  .site-navigation-wrapper{
+    background-color:{{section.settings.menu_background}};
+  }
+  .site-navigation{
+    background-color:transparent;
+    justify-content: center;
+  }
+  .site-navigation .navmenu-link-depth-1{
+    color:{{section.settings.menu_text_color}};
+    padding: 14px 15px;
+  }
+  @media screen and (min-width: 1024px){
+    .site-header-main-content {
+      margin-right:80px;
+      margin-left: 0;
+    }
+  }
+  .site-header .site-navigation .navmenu-depth-1>li {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .site-header li.navmenu-item{
+    position:relative;
+  }
+ 
+ .site-header li.navmenu-item a,summary{
+    postion:relative;
+    z-index:1;
+    opacity:1;
+  }
+  .site-header .site-navigation .navmenu-depth-1>li>a:hover, .site-navigation .navmenu-depth-1>li>a[aria-expanded=true] {
+    opacity: 1;
+  }
+  .site-header .site-navigation .navmenu-depth-2 .navmenu-link:hover, .site-navigation .navmenu-depth-2 .navmenu-link.navmenu-active {
+    color: #fff;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Mega Menu Icon Size - Adjustable from Admin */
+  .meganav-tabbed__link-item-icon {
+    width: {{ section.settings.meganav_icon_size | default: 40 }}px !important;
+    height: {{ section.settings.meganav_icon_size | default: 40 }}px !important;
+    min-width: {{ section.settings.meganav_icon_size | default: 40 }}px !important;
+  }
+
+  /* Mega Menu Links Grid Icon Size - Adjustable from Admin */
+  .meganav-tabbed__links-grid.meganav-tabbed__links-grid--with-icons .meganav-tabbed__link-item .meganav-tabbed__link-item-icon,
+  .meganav-tabbed__links-grid.meganav-tabbed__links-grid--with-icons .meganav-tabbed__link-item .meganav-tabbed__submenu-icon {
+    width: {{ section.settings.meganav_link_icon_size | default: 30 }}px !important;
+    height: {{ section.settings.meganav_link_icon_size | default: 30 }}px !important;
+    min-width: {{ section.settings.meganav_link_icon_size | default: 30 }}px !important;
+  }
+
+  .meganav-tabbed__links-grid.meganav-tabbed__links-grid--with-icons .meganav-tabbed__link-item {
+    padding-left: calc({{ section.settings.meganav_link_icon_size | default: 30 }}px + 10px) !important;
+  }
+
+  /* ========================================
+     VALENTINE'S SPECIAL - Super Attractive Link
+     ======================================== */
+
+  /* Target Valentine's Special menu item */
+  .site-navigation a[href*="valentine" i],
+  .site-navigation a[href*="valentines" i] {
+    position: relative !important;
+    background: linear-gradient(
+      -45deg,
+      #ff6b9d 0%,
+      #ff1744 25%,
+      #ff4081 50%,
+      #ff1744 75%,
+      #ff6b9d 100%
+    ) !important;
+    background-size: 400% 400% !important;
+    color: #ffffff !important;
+    padding: 8px 18px !important;
+    border-radius: 20px !important;
+    font-weight: 700 !important;
+    font-size: inherit !important;
+    text-transform: inherit !important;
+    letter-spacing: inherit !important;
+    animation: valentine-gradient-wave 6s ease-in-out infinite !important;
+    transition: all 0.3s ease !important;
+    overflow: visible !important;
+    z-index: 999 !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  }
+
+  /* Smooth wave-like gradient animation */
+  @keyframes valentine-gradient-wave {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  /* Hover effect - glowing border */
+  .site-navigation a[href*="valentine" i]:hover,
+  .site-navigation a[href*="valentines" i]:hover {
+    border: 2px solid rgba(255, 255, 255, 0.9) !important;
+    box-shadow: 0 0 20px rgba(255, 23, 68, 0.7),
+                0 0 30px rgba(255, 107, 157, 0.5),
+                inset 0 0 15px rgba(255, 255, 255, 0.15) !important;
+    transform: translateY(-2px) scale(1.02) !important;
+  }
+
+  /* Shimmer overlay effect */
+  .site-navigation a[href*="valentine" i]::before,
+  .site-navigation a[href*="valentines" i]::before {
+    content: "" !important;
+    position: absolute !important;
+    top: -2px !important;
+    left: -100% !important;
+    width: 50% !important;
+    height: calc(100% + 4px) !important;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    ) !important;
+    animation: shimmer-sweep 2.5s ease-in-out infinite !important;
+    border-radius: 20px !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+  }
+
+  @keyframes shimmer-sweep {
+    0% {
+      left: -100%;
+    }
+    100% {
+      left: 200%;
+    }
+  }
+
+  /* Override default menu item styles for Valentine's link */
+  .site-header li.navmenu-item:has(a[href*="valentine" i]):after,
+  .site-header li.navmenu-item:has(a[href*="valentines" i]):after {
+    display: none !important;
+  }
+
+  .site-header li.navmenu-item:has(a[href*="valentine" i]),
+  .site-header li.navmenu-item:has(a[href*="valentines" i]) {
+    margin: 0 8px !important;
+    position: relative !important;
+  }
+
+  /* Mobile styles */
+  @media screen and (max-width: 1023px) {
+    .site-navigation a[href*="valentine" i],
+    .site-navigation a[href*="valentines" i] {
+      display: inline-block !important;
+      margin: 10px auto !important;
+      text-align: center !important;
+    }
+  }
+
+{%- endstyle -%}
+
+<header class="site-header site-header-nav--open" role="banner" data-site-header data-nav-header-sticky>
+
+  <div class="site-navigation-wrapper{% if shop.customer_accounts_enabled %} site-navigation--has-actions{% endif %}{% if section.settings.full_width_header %} site-header--full-width{% endif %}" data-site-navigation id="site-header-nav">
+    <nav class="site-navigation" aria-label="{{ 'general.accessibility.nav_main' | t }}">
+      {%
+        render 'navmenu',
+        menu: section.settings.menu,
+        blocks: section.blocks,
+      %}
+
+      {% if section.settings.secondary_menu != blank %}
+        {%
+          render 'navlist',
+          menu_list: linklists[section.settings.secondary_menu].links,
+          depth: 1,
+          max_depth: 1,
+          aria_expanded: true,
+          navmenu_classes: 'site-navigation__secondary-menu',
+        %}
+      {% endif %}
+    </nav>
+  </div>
+
+  {%- render 'site-mobile-nav', blocks: section.blocks, -%}
+  <search-modal class="auto-search-modal">
+      <div class="modal-1" aria-label="modal window">
+          <div class="modal-inner" data-search-modal-inner>
+              <div class="modal-content" data-search-modal-content>
+                <div class="modal-content__wrapper">
+                  <div class="live-search-form__wrapper">
+                    {%-
+                        render 'live-search-form',
+                        quick_links: linklists[section.settings.quick_links],
+                        enable_images: section.settings.enable_live_search_images,
+                        enable_content: section.settings.enable_live_search_articles_pages
+                    -%}
+                    <button
+                      class="modal-close"
+                      type="button"
+                      aria-label="{{ 'general.accessibility.close' | t }}"
+                      data-asset="search-modal-close"
+                    >
+                      {%- render 'icon-menu-close' -%}
+                    </button>
+                  </div>
+                </div>
+              </div>
+          </div>
+      </div>
+  </search-modal>
+</header>
+
+<script>
+  // Move mobile nav outside header to escape stacking context
+  document.addEventListener('DOMContentLoaded', function() {
+    var mobileNav = document.getElementById('site-mobile-nav');
+    if (mobileNav && window.innerWidth <= 749) {
+      document.body.appendChild(mobileNav);
+    }
+  });
+</script>
+
+<script>
+  // Valentine's Special Link - Minimal Heart Animations
+  (function() {
+    const valentineLinks = document.querySelectorAll('a[href*="valentine" i], a[href*="valentines" i]');
+
+    if (valentineLinks.length === 0) return;
+
+    // Add CSS animation styles
+    if (!document.getElementById('valentine-heart-animation')) {
+      const style = document.createElement('style');
+      style.id = 'valentine-heart-animation';
+      style.textContent = `
+        @keyframes floatHeartRight {
+          0% {
+            transform: translateY(0) scale(0.8);
+            opacity: 0;
+          }
+          15% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-70px) scale(1);
+            opacity: 0;
+          }
+        }
+
+        @keyframes floatHeartHoverSmall {
+          0% {
+            transform: translateY(0) scale(0.5);
+            opacity: 0;
+          }
+          20% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateY(-60px) scale(0.8);
+            opacity: 0;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    valentineLinks.forEach(link => {
+      // Create heart container
+      const heartContainer = document.createElement('div');
+      heartContainer.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: visible;
+        z-index: -1;
+      `;
+
+      link.style.position = 'relative';
+      link.parentElement.insertBefore(heartContainer, link);
+
+      let isHovering = false;
+
+      // Create 2-3 hearts from RIGHT side only
+      function createHearts() {
+        const numHearts = Math.floor(Math.random() * 2) + 2; // 2-3 hearts
+
+        for (let i = 0; i < numHearts; i++) {
+          setTimeout(() => {
+            const heart = document.createElement('span');
+            heart.innerHTML = '❤️';
+
+            if (isHovering) {
+              // Hover: very small clear hearts from right
+              heart.style.cssText = `
+                position: absolute;
+                font-size: 10px;
+                right: ${Math.random() * 20 + 5}%;
+                bottom: -5px;
+                opacity: 0;
+                pointer-events: none;
+                animation: floatHeartHoverSmall 2.5s ease-out forwards;
+                z-index: 1001;
+                filter: none;
+              `;
+            } else {
+              // Normal: small hearts from right side
+              const sizes = [12, 14];
+              const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
+
+              heart.style.cssText = `
+                position: absolute;
+                font-size: ${randomSize}px;
+                right: ${Math.random() * 25 + 5}%;
+                bottom: -5px;
+                opacity: 0;
+                pointer-events: none;
+                animation: floatHeartRight 3s ease-out forwards;
+                z-index: 1000;
+              `;
+            }
+
+            heartContainer.appendChild(heart);
+
+            setTimeout(() => {
+              heart.remove();
+            }, 3500);
+          }, i * 300);
+        }
+      }
+
+      // Create hearts every 2.5 seconds
+      const heartInterval = setInterval(createHearts, 2500);
+
+      // On hover - create small clear hearts
+      link.addEventListener('mouseenter', () => {
+        isHovering = true;
+        // Create 2-3 small hearts immediately
+        const numHearts = Math.floor(Math.random() * 2) + 2;
+        for (let i = 0; i < numHearts; i++) {
+          setTimeout(() => {
+            const heart = document.createElement('span');
+            heart.innerHTML = '❤️';
+
+            heart.style.cssText = `
+              position: absolute;
+              font-size: 10px;
+              right: ${Math.random() * 20 + 10}%;
+              bottom: -5px;
+              opacity: 0;
+              pointer-events: none;
+              animation: floatHeartHoverSmall 2s ease-out forwards;
+              z-index: 1001;
+              filter: none;
+            `;
+
+            heartContainer.appendChild(heart);
+
+            setTimeout(() => {
+              heart.remove();
+            }, 2000);
+          }, i * 200);
+        }
+      });
+
+      link.addEventListener('mouseleave', () => {
+        isHovering = false;
+      });
+
+      // Cleanup on page unload
+      window.addEventListener('beforeunload', () => {
+        clearInterval(heartInterval);
+      });
+    });
+  })();
+</script>
+{% if section.settings.sticky_header %}
+<style>
+  header[data-nav-header-sticky].nav-is-fixed {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 998 !important;
+  }
+</style>
+<script>
+  (function() {
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.innerWidth < 1024) return;
+
+      var navHeader = document.querySelector('[data-nav-header-sticky]');
+      if (!navHeader) return;
+
+      var headerHeight = navHeader.offsetHeight;
+      var rect = navHeader.getBoundingClientRect();
+      var triggerPoint = rect.top + window.scrollY + headerHeight;
+      var isFixed = false;
+      var placeholder = null;
+
+      function getAiHeaderHeight() {
+        var aiPlaceholder = document.getElementById('header-placeholder');
+        if (aiPlaceholder && aiPlaceholder.style.height !== '0px') {
+          var aiSection = aiPlaceholder.nextElementSibling;
+          if (aiSection && aiSection.style.position === 'fixed') {
+            return aiSection.offsetHeight;
+          }
+        }
+        return 0;
+      }
+
+      function makeFixed() {
+        if (isFixed) return;
+        var aiHeight = getAiHeaderHeight();
+        navHeader.classList.add('nav-is-fixed');
+        navHeader.style.setProperty('top', aiHeight + 'px', 'important');
+
+        if (!placeholder) {
+          placeholder = document.createElement('div');
+          placeholder.id = 'nav-header-placeholder';
+          navHeader.parentNode.insertBefore(placeholder, navHeader);
+        }
+        placeholder.style.height = headerHeight + 'px';
+        isFixed = true;
+      }
+
+      function makeNormal() {
+        if (!isFixed) return;
+        navHeader.classList.remove('nav-is-fixed');
+        navHeader.style.removeProperty('top');
+
+        if (placeholder) {
+          placeholder.style.height = '0px';
+        }
+        isFixed = false;
+      }
+
+      var ticking = false;
+      window.addEventListener('scroll', function() {
+        if (!ticking) {
+          requestAnimationFrame(function() {
+            if (window.innerWidth >= 1024) {
+              if (window.scrollY > triggerPoint) {
+                makeFixed();
+                var aiHeight = getAiHeaderHeight();
+                navHeader.style.setProperty('top', aiHeight + 'px', 'important');
+              } else {
+                makeNormal();
+              }
+            }
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+
+      window.addEventListener('resize', function() {
+        if (!isFixed) {
+          headerHeight = navHeader.offsetHeight;
+          var r = navHeader.getBoundingClientRect();
+          triggerPoint = r.top + window.scrollY + headerHeight;
+        }
+        if (window.innerWidth < 1024 && isFixed) {
+          makeNormal();
+        }
+        if (placeholder && isFixed) {
+          placeholder.style.height = headerHeight + 'px';
+        }
+      });
+    });
+  })();
+</script>
+{% endif %}
+{% schema %}
+{
+  "name": "Header",
+  "class": "site-header-wrapper",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "sticky_header",
+      "label": "Enable sticky navigation on scroll",
+      "info": "Navigation bar sticks below the search header when you scroll past it (desktop only)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width_header",
+      "label": "t:sections.header.full_width_header.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.header_2.content"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "t:sections.header.menu.label",
+      "default": "main-menu"
+    },
+    {
+      "type": "link_list",
+      "id": "secondary_menu",
+      "label": "t:sections.header.secondary_menu.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.header_3.content"
+    },
+    {
+      "type": "text",
+      "id": "small_promo_heading",
+      "label": "t:sections.header.small_promo_heading.label"
+    },
+    {
+      "type": "richtext",
+      "id": "small_promo_text",
+      "label": "t:sections.header.small_promo_text.label"
+    },
+    {
+      "type": "richtext",
+      "id": "small_promo_text_mobile",
+      "label": "t:sections.header.small_promo_text_mobile.label",
+      "info": "t:sections.header.small_promo_text_mobile.info"
+    },
+    {
+      "type": "url",
+      "id": "small_promo_link",
+      "label": "t:sections.header.small_promo_link.label"
+    },
+    {
+      "type": "select",
+      "id": "small_promo_icon",
+      "label": "t:sections.header.small_promo_icon.label",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.header.small_promo_icon.option_1"
+        },
+        {
+          "value": "icon-award-trophy",
+          "label": "t:sections.header.small_promo_icon.option_2"
+        },
+        {
+          "value": "icon-car",
+          "label": "t:sections.header.small_promo_icon.option_3"
+        },
+        {
+          "value": "icon-cell-phone",
+          "label": "t:sections.header.small_promo_icon.option_4"
+        },
+        {
+          "value": "icon-chat",
+          "label": "t:sections.header.small_promo_icon.option_5"
+        },
+        {
+          "value": "icon-chat-alternate",
+          "label": "t:sections.header.small_promo_icon.option_6"
+        },
+        {
+          "value": "icon-credit-card",
+          "label": "t:sections.header.small_promo_icon.option_7"
+        },
+        {
+          "value": "icon-delivery",
+          "label": "t:sections.header.small_promo_icon.option_8"
+        },
+        {
+          "value": "icon-delivery-cart",
+          "label": "t:sections.header.small_promo_icon.option_9"
+        },
+        {
+          "value": "icon-delivery-door",
+          "label": "t:sections.header.small_promo_icon.option_10"
+        },
+        {
+          "value": "icon-delivery-package",
+          "label": "t:sections.header.small_promo_icon.option_11"
+        },
+        {
+          "value": "icon-email",
+          "label": "t:sections.header.small_promo_icon.option_12"
+        },
+        {
+          "value": "icon-envelope",
+          "label": "t:sections.header.small_promo_icon.option_13"
+        },
+        {
+          "value": "icon-gift-card",
+          "label": "t:sections.header.small_promo_icon.option_14"
+        },
+        {
+          "value": "icon-heart",
+          "label": "t:sections.header.small_promo_icon.option_15"
+        },
+        {
+          "value": "icon-information",
+          "label": "t:sections.header.small_promo_icon.option_16"
+        },
+        {
+          "value": "icon-label-tag",
+          "label": "t:sections.header.small_promo_icon.option_17"
+        },
+        {
+          "value": "icon-lock",
+          "label": "t:sections.header.small_promo_icon.option_18"
+        },
+        {
+          "value": "icon-number-14",
+          "label": "t:sections.header.small_promo_icon.option_19"
+        },
+        {
+          "value": "icon-number-24",
+          "label": "t:sections.header.small_promo_icon.option_20"
+        },
+        {
+          "value": "icon-number-30",
+          "label": "t:sections.header.small_promo_icon.option_21"
+        },
+        {
+          "value": "icon-people",
+          "label": "t:sections.header.small_promo_icon.option_22"
+        },
+        {
+          "value": "icon-pin",
+          "label": "t:sections.header.small_promo_icon.option_23"
+        },
+        {
+          "value": "icon-question-mark",
+          "label": "t:sections.header.small_promo_icon.option_24"
+        },
+        {
+          "value": "icon-rating-five-star",
+          "label": "t:sections.header.small_promo_icon.option_25"
+        },
+        {
+          "value": "icon-rating-star",
+          "label": "t:sections.header.small_promo_icon.option_26"
+        },
+        {
+          "value": "icon-smile",
+          "label": "t:sections.header.small_promo_icon.option_27"
+        },
+        {
+          "value": "icon-store",
+          "label": "t:sections.header.small_promo_icon.option_28"
+        },
+        {
+          "value": "icon-tape-measure",
+          "label": "t:sections.header.small_promo_icon.option_29"
+        },
+        {
+          "value": "icon-thumbs-up",
+          "label": "t:sections.header.small_promo_icon.option_30"
+        },
+        {
+          "value": "icon-transfer",
+          "label": "t:sections.header.small_promo_icon.option_31"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.header.image.label",
+      "info": "t:sections.header.image.info"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.header.header_4.content"
+    },
+    {
+      "type": "select",
+      "id": "cart_icon",
+      "label": "t:sections.header.cart_icon.label",
+      "options": [
+        {
+          "value": "icon-bag",
+          "label": "t:sections.header.cart_icon.option_1"
+        },
+        {
+          "value": "icon-cart",
+          "label": "t:sections.header.cart_icon.option_2"
+        }
+      ],
+      "default": "icon-cart"
+    },
+    {
+      "type": "color",
+      "id": "menu_background",
+      "label": "Menu Background",
+      "default": "#000000"
+    },
+     {
+      "type": "color",
+      "id": "menu_text_color",
+      "label": "Menu Text Color",
+      "default": "#000000"
+    },
+  ],
+  "blocks": [
+    {
+      "type": "meganav_images",
+      "name": "t:sections.header.blocks.mega_menu.name",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "meganav_trigger",
+          "label": "t:sections.header.blocks.mega_menu.meganav_trigger.label",
+          "info": "t:sections.header.blocks.mega_menu.meganav_trigger.info"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.header.blocks.mega_menu.header_1.content"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "t:sections.header.blocks.mega_menu.image_1.label"
+        },
+        {
+          "type": "text",
+          "id": "text_1",
+          "label": "t:sections.header.blocks.mega_menu.text_1.label"
+        },
+        {
+          "type": "url",
+          "id": "link_1",
+          "label": "t:sections.header.blocks.mega_menu.link_1.label"
+        },
+        {
+          "type": "select",
+          "id": "position_1",
+          "label": "t:sections.header.blocks.mega_menu.position_1.label",
+          "options": [
+            {
+              "value": "first",
+              "label": "t:sections.header.blocks.mega_menu.position_1.option_1"
+            },
+            {
+              "value": "last",
+              "label": "t:sections.header.blocks.mega_menu.position_1.option_2"
+            }
+          ],
+          "default": "first"
+        },
+        {
+          "type": "select",
+          "id": "size_1",
+          "label": "t:sections.header.blocks.mega_menu.size_1.label",
+          "options": [
+            {
+              "value": "small",
+              "label": "t:sections.header.blocks.mega_menu.size_1.option_1"
+            },
+            {
+              "value": "medium",
+              "label": "t:sections.header.blocks.mega_menu.size_1.option_2"
+            },
+            {
+              "value": "large",
+              "label": "t:sections.header.blocks.mega_menu.size_1.option_3"
+            }
+          ],
+          "default": "small"
+        },
+        {
+          "type": "header",
+          "content": "t:sections.header.blocks.mega_menu.header_2.content"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "t:sections.header.blocks.mega_menu.image_2.label"
+        },
+        {
+          "type": "text",
+          "id": "text_2",
+          "label": "t:sections.header.blocks.mega_menu.text_2.label"
+        },
+        {
+          "type": "url",
+          "id": "link_2",
+          "label": "t:sections.header.blocks.mega_menu.link_2.label"
+        },
+        {
+          "type": "select",
+          "id": "position_2",
+          "label": "t:sections.header.blocks.mega_menu.position_2.label",
+          "options": [
+            {
+              "value": "first",
+              "label": "t:sections.header.blocks.mega_menu.position_2.option_1"
+            },
+            {
+              "value": "last",
+              "label": "t:sections.header.blocks.mega_menu.position_2.option_2"
+            }
+          ],
+          "default": "first"
+        },
+        {
+          "type": "select",
+          "id": "size_2",
+          "label": "t:sections.header.blocks.mega_menu.size_2.label",
+          "options": [
+            {
+              "value": "small",
+              "label": "t:sections.header.blocks.mega_menu.size_2.option_1"
+            },
+            {
+              "value": "medium",
+              "label": "t:sections.header.blocks.mega_menu.size_2.option_2"
+            },
+            {
+              "value": "large",
+              "label": "t:sections.header.blocks.mega_menu.size_2.option_3"
+            }
+          ],
+          "default": "small"
+        }
+      ]
+    },
+    {
+      "type": "meganav_sidenav",
+      "name": "t:sections.header.blocks.mega_menu_with_sidebar.name",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "text",
+          "id": "meganav_trigger",
+          "label": "t:sections.header.blocks.mega_menu_with_sidebar.meganav_trigger.label",
+          "info": "t:sections.header.blocks.mega_menu_with_sidebar.meganav_trigger.info"
+        },
+        {
+          "type": "radio",
+          "id": "submenu_layout",
+          "label": "t:sections.header.blocks.mega_menu_with_sidebar.submenu_layout.label",
+          "options": [
+            {
+              "value": "text_columns",
+              "label": "t:sections.header.blocks.mega_menu_with_sidebar.submenu_layout.option_1"
+            },
+            {
+              "value": "product_images",
+              "label": "t:sections.header.blocks.mega_menu_with_sidebar.submenu_layout.option_2"
+            },
+            {
+              "value": "collection_images",
+              "label": "t:sections.header.blocks.mega_menu_with_sidebar.submenu_layout.option_3"
+            }
+          ],
+          "default": "text_columns"
+        },
+        {
+          "type": "select",
+          "id": "image_aspect_ratio",
+          "label": "t:sections.header.blocks.mega_menu_with_sidebar.image_aspect_ratio.label",
+          "options": [
+            {
+              "value": "natural",
+              "label": "t:sections.header.blocks.mega_menu_with_sidebar.image_aspect_ratio.option_1"
+            },
+            {
+              "value": "short",
+              "label": "t:sections.header.blocks.mega_menu_with_sidebar.image_aspect_ratio.option_2"
+            },
+            {
+              "value": "square",
+              "label": "t:sections.header.blocks.mega_menu_with_sidebar.image_aspect_ratio.option_3"
+            },
+            {
+              "value": "tall",
+              "label": "t:sections.header.blocks.mega_menu_with_sidebar.image_aspect_ratio.option_4"
+            }
+          ],
+          "default": "natural"
+        },
+        {
+          "type": "checkbox",
+          "id": "image_crop",
+          "label": "t:sections.header.blocks.mega_menu_with_sidebar.image_crop.label",
+          "info": "t:sections.header.blocks.mega_menu_with_sidebar.image_crop.info",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "multi_column_menu",
+      "name": "t:sections.header.blocks.multi-column_single_menu.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "menu_trigger",
+          "label": "t:sections.header.blocks.multi-column_single_menu.menu_trigger.label",
+          "info": "t:sections.header.blocks.multi-column_single_menu.menu_trigger.info"
+        }
+      ]
+    },
+    {
+      "type": "tabbed_mega_menu",
+      "name": "Tabbed Mega Menu",
+      "limit": 10,
+      "settings": [
+        {
+          "type": "text",
+          "id": "meganav_trigger",
+          "label": "Menu item",
+          "info": "Enter the name of the menu item to apply this mega menu to."
+        },
+        {
+          "type": "header",
+          "content": "Default Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "default_image",
+          "label": "Default image",
+          "info": "Fallback image shown when no collection image is available"
+        },
+        {
+          "type": "url",
+          "id": "default_image_link",
+          "label": "Default image link",
+          "info": "URL the default image will link to when clicked"
+        },
+        {
+          "type": "header",
+          "content": "Category 1 Settings"
+        },
+        {
+          "type": "image_picker",
+          "id": "category_1_icon",
+          "label": "Category 1 icon"
+        },
+        {
+          "type": "url",
+          "id": "category_1_link",
+          "label": "Category 1 custom link"
+        },
+        {
+          "type": "header",
+          "content": "Category 2 Settings"
+        },
+        {
+          "type": "image_picker",
+          "id": "category_2_icon",
+          "label": "Category 2 icon"
+        },
+        {
+          "type": "url",
+          "id": "category_2_link",
+          "label": "Category 2 custom link"
+        },
+        {
+          "type": "header",
+          "content": "Category 3 Settings"
+        },
+        {
+          "type": "image_picker",
+          "id": "category_3_icon",
+          "label": "Category 3 icon"
+        },
+        {
+          "type": "url",
+          "id": "category_3_link",
+          "label": "Category 3 custom link"
+        },
+        {
+          "type": "header",
+          "content": "Category 4 Settings"
+        },
+        {
+          "type": "image_picker",
+          "id": "category_4_icon",
+          "label": "Category 4 icon"
+        },
+        {
+          "type": "url",
+          "id": "category_4_link",
+          "label": "Category 4 custom link"
+        },
+        {
+          "type": "header",
+          "content": "Category 5 Settings"
+        },
+        {
+          "type": "image_picker",
+          "id": "category_5_icon",
+          "label": "Category 5 icon"
+        },
+        {
+          "type": "url",
+          "id": "category_5_link",
+          "label": "Category 5 custom link"
+        },
+        {
+          "type": "header",
+          "content": "Category 6 Settings"
+        },
+        {
+          "type": "image_picker",
+          "id": "category_6_icon",
+          "label": "Category 6 icon"
+        },
+        {
+          "type": "url",
+          "id": "category_6_link",
+          "label": "Category 6 custom link"
+        },
+        {
+          "type": "header",
+          "content": "Category 7 Settings"
+        },
+        {
+          "type": "image_picker",
+          "id": "category_7_icon",
+          "label": "Category 7 icon"
+        },
+        {
+          "type": "url",
+          "id": "category_7_link",
+          "label": "Category 7 custom link"
+        },
+        {
+          "type": "header",
+          "content": "Category 8 Settings"
+        },
+        {
+          "type": "image_picker",
+          "id": "category_8_icon",
+          "label": "Category 8 icon"
+        },
+        {
+          "type": "url",
+          "id": "category_8_link",
+          "label": "Category 8 custom link"
+        },
+        {
+          "type": "header",
+          "content": "Category 9 Settings"
+        },
+        {
+          "type": "image_picker",
+          "id": "category_9_icon",
+          "label": "Category 9 icon"
+        },
+        {
+          "type": "url",
+          "id": "category_9_link",
+          "label": "Category 9 custom link"
+        },
+        {
+          "type": "header",
+          "content": "Category 10 Settings"
+        },
+        {
+          "type": "image_picker",
+          "id": "category_10_icon",
+          "label": "Category 10 icon"
+        },
+        {
+          "type": "url",
+          "id": "category_10_link",
+          "label": "Category 10 custom link"
+        },
+        {
+          "type": "header",
+          "content": "Custom Submenu Icons"
+        },
+        {
+          "type": "paragraph",
+          "content": "Upload custom icons for submenu items. Icons are assigned in order across all categories."
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_1_icon",
+          "label": "Submenu 1 icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_2_icon",
+          "label": "Submenu 2 icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_3_icon",
+          "label": "Submenu 3 icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_4_icon",
+          "label": "Submenu 4 icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_5_icon",
+          "label": "Submenu 5 icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_6_icon",
+          "label": "Submenu 6 icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_7_icon",
+          "label": "Submenu 7 icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_8_icon",
+          "label": "Submenu 8 icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_9_icon",
+          "label": "Submenu 9 icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_10_icon",
+          "label": "Submenu 10 icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_11_icon",
+          "label": "Submenu 11 icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_12_icon",
+          "label": "Submenu 12 icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_13_icon",
+          "label": "Submenu 13 icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_14_icon",
+          "label": "Submenu 14 icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_15_icon",
+          "label": "Submenu 15 icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_16_icon",
+          "label": "Submenu 16 icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_17_icon",
+          "label": "Submenu 17 icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_18_icon",
+          "label": "Submenu 18 icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_19_icon",
+          "label": "Submenu 19 icon"
+        },
+        {
+          "type": "image_picker",
+          "id": "submenu_20_icon",
+          "label": "Submenu 20 icon"
+        },
+        {
+          "type": "header",
+          "content": "Explore More Header"
+        },
+        {
+          "type": "image_picker",
+          "id": "explore_header_icon",
+          "label": "Explore header icon (image)",
+          "info": "Upload an image icon. If SVG code is provided below, it will be used instead."
+        },
+        {
+          "type": "html",
+          "id": "explore_header_svg",
+          "label": "Explore header icon (SVG code)",
+          "info": "Paste SVG code here. This will override the image icon above."
+        },
+        {
+          "type": "text",
+          "id": "explore_header_title",
+          "label": "Explore header title",
+          "default": "All Body Jewellery"
+        },
+        {
+          "type": "url",
+          "id": "explore_header_link",
+          "label": "Explore header link"
+        }
+      ]
+    },
+    {
+      "type": "advanced_mega_menu",
+      "name": "Mega Menu",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "meganav_trigger",
+          "label": "Menu item",
+          "info": "Enter the name of the menu item to apply this mega menu to."
+        },
+        {
+          "type": "select",
+          "id": "mega_menu_width",
+          "label": "Mega menu width",
+          "options": [
+            { "value": "small", "label": "Small" },
+            { "value": "medium", "label": "Medium" },
+            { "value": "large", "label": "Large" }
+          ],
+          "default": "medium"
+        },
+        {
+          "type": "header",
+          "content": "Button"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "header",
+          "content": "Promotional Images"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_promo_images",
+          "label": "Show promotional images",
+          "default": false
+        },
+        {
+          "type": "image_picker",
+          "id": "promo_image_1",
+          "label": "Promotional image 1"
+        },
+        {
+          "type": "text",
+          "id": "promo_title_1",
+          "label": "Image 1 title"
+        },
+        {
+          "type": "url",
+          "id": "promo_link_1",
+          "label": "Image 1 link"
+        },
+        {
+          "type": "image_picker",
+          "id": "promo_image_2",
+          "label": "Promotional image 2"
+        },
+        {
+          "type": "text",
+          "id": "promo_title_2",
+          "label": "Image 2 title"
+        },
+        {
+          "type": "url",
+          "id": "promo_link_2",
+          "label": "Image 2 link"
+        }
+      ]
+    },
+    
+  ],
+    "presets": [
+    {
+      "name": "Header"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,208 @@
+{% render 'cart-drawer',
+  enable_free_gift: section.settings.enable_free_gift,
+  show_progress_bar: section.settings.show_progress_bar,
+  free_gift_collection_handle: section.settings.free_gift_collection,
+  free_gift_threshold: section.settings.free_gift_threshold,
+  free_gift_max_products: section.settings.free_gift_max_products,
+  free_gift_bg_color: section.settings.free_gift_bg_color,
+  free_gift_progress_color: section.settings.free_gift_progress_color,
+  enable_empty_cart_collections: section.settings.enable_empty_cart_collections,
+  empty_cart_heading: section.settings.empty_cart_heading,
+  empty_cart_link_1: section.settings.empty_cart_link_1,
+  empty_cart_label_1: section.settings.empty_cart_label_1,
+  empty_cart_link_2: section.settings.empty_cart_link_2,
+  empty_cart_label_2: section.settings.empty_cart_label_2,
+  empty_cart_link_3: section.settings.empty_cart_link_3,
+  empty_cart_label_3: section.settings.empty_cart_label_3,
+  empty_cart_link_4: section.settings.empty_cart_link_4,
+  empty_cart_label_4: section.settings.empty_cart_label_4,
+  empty_cart_link_5: section.settings.empty_cart_link_5,
+  empty_cart_label_5: section.settings.empty_cart_label_5,
+  empty_cart_link_6: section.settings.empty_cart_link_6,
+  empty_cart_label_6: section.settings.empty_cart_label_6,
+  empty_cart_link_7: section.settings.empty_cart_link_7,
+  empty_cart_label_7: section.settings.empty_cart_label_7,
+  empty_cart_link_8: section.settings.empty_cart_link_8,
+  empty_cart_label_8: section.settings.empty_cart_label_8,
+  empty_cart_link_9: section.settings.empty_cart_link_9,
+  empty_cart_label_9: section.settings.empty_cart_label_9,
+  empty_cart_link_10: section.settings.empty_cart_link_10,
+  empty_cart_label_10: section.settings.empty_cart_label_10
+%}
+
+{% schema %}
+{
+  "name": "Cart Drawer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Free Gift Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_free_gift",
+      "label": "Enable free gift section",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_progress_bar",
+      "label": "Show progress bar",
+      "default": true
+    },
+    {
+      "type": "collection",
+      "id": "free_gift_collection",
+      "label": "Free gift collection"
+    },
+    {
+      "type": "text",
+      "id": "free_gift_threshold",
+      "label": "Free gift threshold (in cents)",
+      "default": "10000",
+      "info": "10000 = £100.00"
+    },
+    {
+      "type": "range",
+      "id": "free_gift_max_products",
+      "label": "Max products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "Free Gift Colors"
+    },
+    {
+      "type": "color",
+      "id": "free_gift_bg_color",
+      "label": "Background color",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "free_gift_progress_color",
+      "label": "Progress bar color",
+      "default": "#4ade80"
+    },
+    {
+      "type": "header",
+      "content": "Empty Cart Collections"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_empty_cart_collections",
+      "label": "Show collection buttons when cart is empty",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "empty_cart_heading",
+      "label": "Heading text",
+      "default": "Explore our popular categories!"
+    },
+    {
+      "type": "url",
+      "id": "empty_cart_link_1",
+      "label": "Link 1"
+    },
+    {
+      "type": "text",
+      "id": "empty_cart_label_1",
+      "label": "Link 1 label"
+    },
+    {
+      "type": "url",
+      "id": "empty_cart_link_2",
+      "label": "Link 2"
+    },
+    {
+      "type": "text",
+      "id": "empty_cart_label_2",
+      "label": "Link 2 label"
+    },
+    {
+      "type": "url",
+      "id": "empty_cart_link_3",
+      "label": "Link 3"
+    },
+    {
+      "type": "text",
+      "id": "empty_cart_label_3",
+      "label": "Link 3 label"
+    },
+    {
+      "type": "url",
+      "id": "empty_cart_link_4",
+      "label": "Link 4"
+    },
+    {
+      "type": "text",
+      "id": "empty_cart_label_4",
+      "label": "Link 4 label"
+    },
+    {
+      "type": "url",
+      "id": "empty_cart_link_5",
+      "label": "Link 5"
+    },
+    {
+      "type": "text",
+      "id": "empty_cart_label_5",
+      "label": "Link 5 label"
+    },
+    {
+      "type": "url",
+      "id": "empty_cart_link_6",
+      "label": "Link 6"
+    },
+    {
+      "type": "text",
+      "id": "empty_cart_label_6",
+      "label": "Link 6 label"
+    },
+    {
+      "type": "url",
+      "id": "empty_cart_link_7",
+      "label": "Link 7"
+    },
+    {
+      "type": "text",
+      "id": "empty_cart_label_7",
+      "label": "Link 7 label"
+    },
+    {
+      "type": "url",
+      "id": "empty_cart_link_8",
+      "label": "Link 8"
+    },
+    {
+      "type": "text",
+      "id": "empty_cart_label_8",
+      "label": "Link 8 label"
+    },
+    {
+      "type": "url",
+      "id": "empty_cart_link_9",
+      "label": "Link 9"
+    },
+    {
+      "type": "text",
+      "id": "empty_cart_label_9",
+      "label": "Link 9 label"
+    },
+    {
+      "type": "url",
+      "id": "empty_cart_link_10",
+      "label": "Link 10"
+    },
+    {
+      "type": "text",
+      "id": "empty_cart_label_10",
+      "label": "Link 10 label"
+    }
+  ]
+}
+{% endschema %}

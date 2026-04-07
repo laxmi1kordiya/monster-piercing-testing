@@ -1,0 +1,99 @@
+{% comment %}
+  Shipping Cost Bar - Location-based shipping messaging
+  Uses Shopify's native localization object to detect country
+
+  Requirements:
+  - UK (GB): £20
+  - Europe (EUR countries): €30
+  - US: $30
+  - Other countries: "Shipping calculated at checkout"
+{% endcomment %}
+
+{%- liquid
+  assign country_code = localization.country.iso_code
+  assign currency_code = localization.country.currency.iso_code
+
+  comment
+    Define EU countries and other EUR-using countries
+  endcomment
+  assign eur_countries = 'AT,BE,CY,EE,FI,FR,DE,GR,IE,IT,LV,LT,LU,MT,NL,PT,SK,SI,ES,MC,SM,VA,AD'
+
+  comment
+    Determine shipping cost and message based on country
+  endcomment
+  assign show_specific_cost = false
+  assign shipping_cost = ''
+  assign shipping_message = ''
+
+  if country_code == 'GB'
+    assign show_specific_cost = true
+    assign shipping_cost = '£20'
+    assign shipping_message = 'Shipping to UK:'
+  elsif country_code == 'US'
+    assign show_specific_cost = true
+    assign shipping_cost = '$30'
+    assign shipping_message = 'Shipping to US:'
+  elsif eur_countries contains country_code
+    assign show_specific_cost = true
+    assign shipping_cost = '€30'
+    assign shipping_message = 'Shipping to Europe:'
+  else
+    assign show_specific_cost = false
+    assign shipping_message = 'Shipping calculated at checkout'
+  endif
+-%}
+
+<div
+  class="shipping-cost-bar"
+  data-shipping-cost-bar
+  data-country-code="{{ country_code }}"
+  data-currency-code="{{ currency_code }}"
+>
+  <div class="shipping-cost-bar__content">
+    {% if show_specific_cost %}
+      <span class="shipping-cost-bar__message">{{ shipping_message }}</span>
+      <span class="shipping-cost-bar__cost">{{ shipping_cost }}</span>
+    {% else %}
+      <span class="shipping-cost-bar__message">{{ shipping_message }}</span>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .shipping-cost-bar {
+    padding: 12px 16px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    border: 1px solid #e9ecef;
+  }
+
+  .shipping-cost-bar__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .shipping-cost-bar__message {
+    color: #495057;
+    font-weight: 500;
+  }
+
+  .shipping-cost-bar__cost {
+    color: #212529;
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  /* Cart drawer specific styles */
+  .cart-drawer .shipping-cost-bar {
+    margin: 0 0 12px 0;
+  }
+
+  /* Cart page specific styles */
+  .cart-template .shipping-cost-bar {
+    margin: 16px 0;
+  }
+</style>

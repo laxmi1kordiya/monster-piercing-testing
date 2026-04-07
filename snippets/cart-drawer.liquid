@@ -1,0 +1,283 @@
+{%- comment -%}
+  Cart Drawer
+  - Heading: "Your Beautiful Picks"
+  - Product grid: image, name, variants, price, qty adjustment
+  - Footer: Total + note + centered checkout button + cross-sell + free-shipping banner
+{%- endcomment -%}
+
+{%- liquid
+  if enable_free_gift == false
+    assign enable_free_gift_section = false
+  else
+    assign enable_free_gift_section = enable_free_gift | default: true
+  endif
+  assign show_free_gift_progress = show_progress_bar | default: true
+  assign gift_collection = free_gift_collection_handle | default: 'free-gifts'
+  assign gift_threshold = free_gift_threshold | default: 10000 | plus: 0
+  assign max_gift_products = free_gift_max_products | default: 6
+  assign gift_bg_color = free_gift_bg_color | default: '#f5f5f5'
+  assign gift_progress_color = free_gift_progress_color | default: '#4ade80'
+-%}
+
+<div id="CartDrawerOverlay" class="cart-drawer__overlay"></div>
+
+<aside
+  id="CartDrawer"
+  class="cart-drawer cart-drawer--right"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="CartDrawerTitle"
+>
+  <header class="cart-drawer__header">
+    <h2 id="CartDrawerTitle" class="cart-drawer__title">Your Beautiful Picks</h2>
+    <button
+      type="button"
+      class="cart-drawer__close"
+      aria-label="Close cart"
+      data-cart-drawer-close
+    >
+      ×
+    </button>
+  </header>
+
+  <form action="{{ routes.cart_url }}" method="post" novalidate class="cart-drawer__form">
+    {% if cart.item_count == 0 %}
+      <div class="cart-drawer__empty cart-drawer__empty--center">
+        <p class="cart-drawer__empty-message">
+          Your bag is empty.
+        </p>
+
+        {% if enable_empty_cart_collections %}
+          <p class="cart-drawer__empty-subheading">{{ empty_cart_heading }}</p>
+          <div class="cart-drawer__empty-collections">
+            {% for i in (1..10) %}
+              {% assign link_url = nil %}
+              {% assign link_label = nil %}
+              {% case i %}
+                {% when 1 %}{% assign link_url = empty_cart_link_1 %}{% assign link_label = empty_cart_label_1 %}
+                {% when 2 %}{% assign link_url = empty_cart_link_2 %}{% assign link_label = empty_cart_label_2 %}
+                {% when 3 %}{% assign link_url = empty_cart_link_3 %}{% assign link_label = empty_cart_label_3 %}
+                {% when 4 %}{% assign link_url = empty_cart_link_4 %}{% assign link_label = empty_cart_label_4 %}
+                {% when 5 %}{% assign link_url = empty_cart_link_5 %}{% assign link_label = empty_cart_label_5 %}
+                {% when 6 %}{% assign link_url = empty_cart_link_6 %}{% assign link_label = empty_cart_label_6 %}
+                {% when 7 %}{% assign link_url = empty_cart_link_7 %}{% assign link_label = empty_cart_label_7 %}
+                {% when 8 %}{% assign link_url = empty_cart_link_8 %}{% assign link_label = empty_cart_label_8 %}
+                {% when 9 %}{% assign link_url = empty_cart_link_9 %}{% assign link_label = empty_cart_label_9 %}
+                {% when 10 %}{% assign link_url = empty_cart_link_10 %}{% assign link_label = empty_cart_label_10 %}
+              {% endcase %}
+              {% if link_url != blank %}
+                <a href="{{ link_url }}" class="cart-drawer__empty-collection-btn">
+                  {{ link_label | default: link_url }}
+                </a>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% else %}
+          <a href="https://www.monsterpiercing.com/collections/new-arrivals" class="cart-drawer__empty-btn">
+            Shop your next look
+          </a>
+        {% endif %}
+      </div>
+    {% else %}
+
+{%- assign free_shipping_threshold = 2000 -%}
+{%- assign subtotal = cart.items_subtotal_price | default: 0 -%}
+{%- assign remaining = free_shipping_threshold | minus: subtotal -%}
+{%- assign pct = 0 -%}
+
+{%- if free_shipping_threshold > 0 -%}
+  {%- assign pct = subtotal | times: 100 | divided_by: free_shipping_threshold -%}
+  {%- if pct > 100 -%}{%- assign pct = 100 -%}{%- endif -%}
+{%- endif -%}
+
+<div class="free-shipping-banner" role="status" aria-live="polite" aria-atomic="true">
+
+  {% if cart.currency.iso_code == 'GBP' %}
+
+    {% if remaining > 0 %}
+      <div class="free-shipping-banner__inner">
+        <span class="free-shipping-banner__text">
+          <strong><span class="money">{{ remaining | money }}</span></strong> away from free UK shipping
+        </span>
+      </div>
+    {% else %}
+      <div class="free-shipping-banner__inner free-shipping-banner__inner--eligible">
+        <span class="free-shipping-banner__text">
+          You’re eligible for <strong>free UK shipping!</strong>
+        </span>
+      </div>
+    {% endif %}
+
+  {% else %}
+
+    <div class="free-shipping-banner__inner">
+      <span class="free-shipping-banner__text">
+        Shipping calculated at checkout🙂
+      </span>
+    </div>
+
+  {% endif %}
+
+</div>
+
+
+      <ul class="cart-drawer__items" role="list">
+        {% for item in cart.items %}
+          <li class="cart-drawer__item" data-line="{{ forloop.index }}">
+            <a href="{{ item.url }}" class="cart-drawer__image-wrapper">
+              {%- comment -%} Robust safe image output {%- endcomment -%}
+              {%- assign image_obj = item.image | default: item.product.featured_image -%}
+              {% if image_obj %}
+                <img
+                  src="{{ image_obj | img_url: '200x' }}"
+                  srcset="{{ image_obj | img_url: '120x' }} 1x, {{ image_obj | img_url: '240x' }} 2x, {{ image_obj | img_url: '360x' }} 3x"
+                  alt="{{ image_obj.alt | default: item.product.title | escape }}"
+                  class="cart-drawer__image"
+                  loading="lazy"
+                >
+              {% else %}
+                <img src="{{ 'placeholder.png' | asset_url }}" alt="{{ item.product.title | default: 'Product' | escape }}" class="cart-drawer__image" loading="lazy">
+              {% endif %}
+            </a>
+
+            <div class="cart-drawer__item-main">
+              <a href="{{ item.url }}" class="cart-drawer__item-title">
+                {{ item.product.title }}
+              </a>
+
+              {% unless item.product.has_only_default_variant %}
+                <div class="cart-drawer__item-variant">
+                  {{ item.variant.title }}
+                </div>
+              {% endunless %}
+
+              {% if item.selling_plan_allocation %}
+                <div class="cart-drawer__item-selling-plan">
+                  {{ item.selling_plan_allocation.selling_plan.name }}
+                </div>
+              {% endif %}
+
+              <div class="cart-drawer__item-meta">
+                {% liquid
+                  assign is_free_gift = false
+                  if item.final_price == 0
+                    assign is_free_gift = true
+                  endif
+                %}
+                {%- unless is_free_gift -%}
+                <div class="cart-drawer__qty">
+                  <button type="button" class="cart-drawer__qty-btn" data-qty-change="decrease" data-line="{{ forloop.index }}">−</button>
+                  <input class="cart-drawer__qty-input" type="number" min="0" name="updates[]" value="{{ item.quantity }}" data-line-input="{{ forloop.index }}">
+                  <button type="button" class="cart-drawer__qty-btn" data-qty-change="increase" data-line="{{ forloop.index }}">+</button>
+                </div>
+              {%- endunless -%}
+
+                <div class="cart-drawer__price">
+                  {{ item.final_line_price | money }}
+                  {% if item.original_line_price > item.final_line_price %}
+                    <span class="cart-drawer__price-original">{{ item.original_line_price | money }}</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+      {%- if enable_free_gift_section -%}
+        {%-
+          render 'free-gift-section',
+          context: 'cart-drawer',
+          free_gift_threshold: gift_threshold,
+          free_gift_collection_handle: gift_collection,
+          show_progress_bar: show_free_gift_progress,
+          max_products: max_gift_products,
+          bg_color: gift_bg_color,
+          progress_color: gift_progress_color
+        -%}
+      {%- endif -%}
+    </ul>
+
+      {%- comment -%}
+        Cross-sell / recommended products
+      {%- endcomment -%}
+      {%- assign show_cross_sells = false -%}
+      {%- assign rec_products = nil -%}
+
+      {%- if cart.item_count > 0 -%}
+        {%- assign first_item = cart.items.first -%}
+        {%- if first_item and first_item.product -%}
+          {%- assign rec_products = first_item.product.recommendations | default: nil -%}
+          {%- if rec_products and rec_products.size > 0 -%}
+            {%- assign show_cross_sells = true -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- if show_cross_sells == false -%}
+        {%- assign fallback_collection = collections['jewellery-piercing-aftercare'] -%}
+        {%- if fallback_collection and fallback_collection.products.size > 0 -%}
+          {%- assign rec_products = fallback_collection.products -%}
+          {%- assign show_cross_sells = true -%}
+        {%- endif -%}
+      {%- endif -%}
+
+      {%- if show_cross_sells and rec_products -%}
+        <div class="cart-drawer__cross-sell" aria-label="Recommended products">
+          <h3 class="cart-drawer__cross-sell-title">Complete Your Monster Kit: Care & Clean Essentials.</h3>
+          <div class="cart-drawer__cross-sell-list">
+            {%- for p in rec_products limit:7 -%}
+              <div class="cart-drawer__cross-item" data-product-id="{{ p.id }}" data-variant-id="{{ p.variants.first.id }}">
+                <a href="{{ p.url }}" class="cart-drawer__cross-image" title="{{ p.title }}">
+                  {% if p.featured_image %}
+                    <img src="{{ p.featured_image | img_url: '200x' }}" alt="{{ p.featured_image.alt | escape }}">
+                  {% else %}
+                    <span class="cart-drawer__cross-image--placeholder" aria-hidden="true"></span>
+                  {% endif %}
+                </a>
+
+                <div class="cart-drawer__cross-meta">
+                  <a class="cart-drawer__cross-title" href="{{ p.url }}">{{ p.title | truncate: 50 }}</a>
+
+                  <div class="cart-drawer__cross-actions">
+                    <button
+                      class="cart-drawer__cross-add button-secondary"
+                      type="button"
+                      data-drawer-add
+                      data-variant-id="{{ p.variants.first.id }}"
+                      aria-label="Add {{ p.title }} to cart">
+                      Add
+                    </button>
+
+                    <div class="cart-drawer__cross-inline-price">
+                      {% if p.price_varies %}
+                        <span class="money">{{ p.price_min | money }}</span>
+                      {% else %}
+                        <span class="money">{{ p.price | money }}</span>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      <footer class="cart-drawer__footer">
+        <div class="cart-drawer__row cart-drawer__total">
+          <span class="cart-drawer__label">Total</span>
+          <span class="cart-drawer__value">{{ cart.total_price | money }}</span>
+        </div>
+
+        <p class="cart-drawer__note" aria-hidden="false">
+          Coupons apply at checkout.
+        </p>
+
+        <div class="cart-drawer__checkout-wrap">
+          <a href="/checkout" class="cart-drawer__checkout-btn">Checkout</a>
+        </div>
+      </footer>
+
+    {% endif %}
+  </form>
+</aside>

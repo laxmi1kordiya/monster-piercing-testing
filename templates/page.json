@@ -1,0 +1,151 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "page",
+      "disabled": true,
+      "settings": {}
+    },
+    "1764055650bdfe3ecf": {
+      "type": "apps",
+      "settings": {
+        "include_padding": true
+      }
+    },
+    "shop_by_type_dajQRV": {
+      "type": "shop-by-type",
+      "name": "Shop by Type",
+      "settings": {
+        "hero_image": "shopify://shop_images/Gemini_Generated_Image_fum3nsfum3nsfum3.png",
+        "heading": "Shop by Type",
+        "subheading": "",
+        "text_alignment": "center",
+        "tab_1_collection": "ear-jewellery",
+        "tab_1_text": "Ear",
+        "tab_1_products": 6,
+        "tab_2_collection": "18k-gold-nose",
+        "tab_2_text": "Nose",
+        "tab_2_products": 6,
+        "tab_3_collection": "",
+        "tab_3_text": "",
+        "tab_3_products": 6,
+        "tab_4_collection": "",
+        "tab_4_text": "",
+        "tab_4_products": 6,
+        "tab_5_collection": "",
+        "tab_5_text": "",
+        "tab_5_products": 6,
+        "more_button_text": "More",
+        "more_collection_1": "14k-ear-jewellery",
+        "more_collection_2": "14k-gold-bioflex-nose",
+        "more_collection_3": "14k-gold-nose",
+        "more_collection_4": "18k-gold",
+        "more_collection_5": "18k-gold-nose",
+        "more_collection_6": "316l-surgical-steel-ear-jewellery",
+        "tab_background": "#f0f0f0",
+        "tab_text_color": "#333333",
+        "tab_active_background": "#db1e37",
+        "tab_active_text_color": "#ffffff",
+        "tab_radius": 20,
+        "show_rating": true,
+        "product_button_text": "View Product",
+        "view_more_text": "View More",
+        "columns": "3",
+        "card_gap": 20,
+        "heading_size": 32,
+        "card_title_size": 16,
+        "background_color": "#e8ecf0",
+        "heading_color": "#1d1d1d",
+        "text_color": "#1d1d1d",
+        "card_background": "#ffffff",
+        "button_background": "#1d1d1d",
+        "button_text_color": "#ffffff",
+        "button_hover_background": "#333333",
+        "border_radius": 12,
+        "card_radius": 8,
+        "button_radius": 0,
+        "padding_top": 50,
+        "padding_bottom": 50
+      }
+    },
+    "featured_banner_products_yppEYG": {
+      "type": "featured-banner-products",
+      "blocks": {
+        "button_j67DWn": {
+          "type": "button",
+          "settings": {
+            "button_text": "Shop Engagement Rings",
+            "button_link": "",
+            "button_style": "solid"
+          }
+        },
+        "button_K9i9AG": {
+          "type": "button",
+          "settings": {
+            "button_text": "Shop Wedding Bands",
+            "button_link": "",
+            "button_style": "solid"
+          }
+        }
+      },
+      "block_order": [
+        "button_j67DWn",
+        "button_K9i9AG"
+      ],
+      "name": "Banner + Products",
+      "settings": {
+        "banner_image": "shopify://shop_images/Collection_Banners_810e812d-3a05-47d1-a114-ba522718a14b.png",
+        "banner_height": 400,
+        "banner_radius": 12,
+        "banner_overlay_color": "#000000",
+        "banner_overlay_opacity": 0,
+        "pretitle": "Eternal Beginnings",
+        "title": "Bridal Jewelry Styles",
+        "subtitle": "",
+        "description": "Celebrate the moment forever begins with bridal designs to honor any love story.",
+        "content_position": "center",
+        "pretitle_size": 20,
+        "title_size": 36,
+        "subtitle_size": 18,
+        "collection": "14k-gold",
+        "products_heading": "Bridal Bestsellers",
+        "products_heading_size": 28,
+        "max_products": 10,
+        "products_per_view": 5,
+        "product_gap": 20,
+        "show_price": false,
+        "show_reviews": true,
+        "show_add_to_cart": true,
+        "show_dots": true,
+        "enable_auto_scroll": false,
+        "auto_scroll_interval": 3000,
+        "card_radius": 8,
+        "section_background": "#6b4a4a",
+        "heading_color": "#1d1d1d",
+        "text_color": "#1d1d1d",
+        "button_background": "#5a4444",
+        "button_text_color": "#ffffff",
+        "button_border_color": "#5a4444",
+        "button_radius": 4,
+        "card_background": "#ffffff",
+        "card_border_color": "#e5e5e5",
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": [
+    "main",
+    "1764055650bdfe3ecf",
+    "shop_by_type_dajQRV",
+    "featured_banner_products_yppEYG"
+  ]
+}

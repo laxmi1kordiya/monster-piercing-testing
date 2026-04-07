@@ -1,0 +1,298 @@
+<script
+  type="application/json"
+  data-section-id="{{ section.id }}"
+  data-section-type="static-announcement">
+</script>
+
+{% assign show_everywhere = false %}
+{% assign homepage_only = false %}
+
+{% if
+  section.settings.show_announcement and
+  section.settings.homepage_announcement == false
+%}
+  {% assign show_everywhere = true %}
+{% endif %}
+
+{% if
+  section.settings.show_announcement and
+  section.settings.homepage_announcement and
+  template == 'index'
+%}
+  {% assign homepage_only = true %}
+{% endif %}
+
+{% if show_everywhere or homepage_only %}
+  {% if section.blocks != blank %}
+    <div class="announcement-bar--slideshow" style="color: {{ section.settings.announcement_color }};
+        background: {{ section.settings.announcement_background }};">
+      <div class="announcement-bar--wrapper">
+        <div class="announcement-bar__social-list">
+          {% render 'social-list' %}
+        </div>
+        <div
+            class="announcement-bar slideshow_announcement-bar"
+            data-announcement-bar
+          >
+            {% for block in section.blocks %}
+              {% if block.settings.announcement_text != blank %}
+              <div class="announcement-bar-slide">
+                  {% if block.settings.announcement_link != blank %}
+                    <a
+                      class="announcement-bar-link"
+                      href="{{ block.settings.announcement_link }}"
+                      ></a>
+                  {% endif %}      
+                  <div class="announcement-bar-text">
+                    {{ block.settings.announcement_text }}
+                  </div>
+              </div>
+              {% endif %}
+            {% endfor %}
+        </div>
+     {% comment %}   {%- render 'localization-selector' -%}  {% endcomment %}
+      </div>
+    </div>
+  {% endif %}
+{% endif %}
+
+<script>
+    let slideIndex = 0;
+    let lastIndex = 0;
+
+    const announcementBar = document.querySelector('.announcement-bar.slideshow_announcement-bar');
+    const temp_slides = announcementBar.querySelectorAll('.announcement-bar-slide');
+
+    if (temp_slides.length == 2) {
+      function copyLastSlideToFirst() {
+        const firstSlide = temp_slides[0];
+        const lastSlide = temp_slides[1];
+        const clonedFirstSlide = firstSlide.cloneNode(true);
+        const clonedLastSlide = lastSlide.cloneNode(true);
+        announcementBar.appendChild(clonedFirstSlide);
+        announcementBar.appendChild(clonedLastSlide);
+      }
+      copyLastSlideToFirst();
+    }
+  
+    showSlides();
+    function showSlides() {
+      const slides = document.getElementsByClassName("announcement-bar-slide");
+      for (let i = 0; i < slides.length; i++) {
+        slides[i].classList.remove('previous');
+      }
+      if (slides[slideIndex - 1]) {
+         slides[slideIndex - 1].classList.remove('active');
+         slides[slideIndex - 1].classList.add('previous'); 
+      }
+      if (slides[lastIndex - 1]) {
+         slides[lastIndex - 1].classList.remove('active');
+        if (slideIndex == 0) {
+          slides[lastIndex - 1].classList.add('previous');
+        } else {
+          slides[lastIndex - 1].classList.remove('previous');
+        }
+      }
+      slides[slideIndex].classList.add('active');
+      slides[slideIndex].classList.remove('previous');
+      slideIndex++;
+      if (slideIndex >= slides.length) {
+        lastIndex = slideIndex;
+        slideIndex = 0;
+      }
+      if (temp_slides.length > 1) {
+        setTimeout(showSlides, 3000);
+      }
+    }
+</script>
+<style>
+    .announcement-bar--slideshow {
+      position: fixed;
+      top: 0;
+      right: 0;
+      max-height: fit-content;
+      left: 0;
+      z-index: 1110;
+    }
+    .announcement-bar--wrapper {
+      --layout-container-max-width: {{ settings.layout_max_width }}px;
+      max-width: var(--layout-container-max-width);
+      margin-inline: auto;
+      display: flex;
+      padding-right: 17px;
+      padding-left: 11px;
+      position: relative;
+    }
+    .announcement-bar.slideshow_announcement-bar {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        min-height: 50px;
+        position:relative;
+        overflow:hidden;
+        color: #fff;
+        z-index: 1;
+    }
+    .announcement-bar-slide {
+        width: 100%;
+        transform: translateX(-100%);
+        visibility: hidden;
+        position:absolute;
+    }
+    .announcement-bar-slide.active {
+      transform: translateX(0);
+      transition: transform 0.5s;
+      visibility: visible;
+    }
+    .announcement-bar-slide.previous {
+      transform: translateX(100%);
+      transition: transform 0.5s;
+      visibility: visible;
+    }
+    .announcement-bar.slideshow_announcement-bar .announcement-bar-text {
+      display:block !important;
+    }
+
+    .announcement-bar--wrapper .announcement-bar__social-list {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      position: absolute;
+      left: 0;
+      height: 100%;
+      z-index: 2;
+      padding-left: 24px;
+    }
+
+    .announcement-bar--wrapper .localization-selectors-form {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      z-index: 99999;
+      padding-right: 14px;
+    }
+  
+    .announcement-bar--wrapper .announcement-bar__social-list .social-icons {
+      margin: 0;
+      display: flex;
+    }
+
+    .announcement-bar--wrapper .currency-button-with-flag {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 10px;
+    }
+    .announcement-bar--wrapper .currency-button-with-flag .disclosure__toggle {
+      display: flex;
+      background: no-repeat;
+      color: #fff;
+      border: none;
+    }
+    .announcement-bar--wrapper .currency-button-with-flag .disclosure__toggle:after {
+      background-color: #ffffff;
+      right: 17px;
+    }
+    .announcement-bar--wrapper .currency-button-with-flag .disclosure__toggle:focus {
+        outline: none;
+    }
+    .announcement-bar--wrapper .currency-button-with-flag img {
+      border-radius: 50%;
+      display: flex;
+      width: 24px;
+      height: 24px;
+      object-fit: cover;
+    }
+    localization-selectors-form {
+      display: block;
+    }
+    .announcement-bar--wrapper .disclosure-list.disclosure-list--visible {
+      top: 45px;
+      right: 11px;
+      z-index: 9999;
+      min-height: fit-content;
+      max-height: 375px;
+      min-width: fit-content;
+    }
+
+    @media screen and (max-width:1023px) {
+      .announcement-bar--wrapper .announcement-bar__social-list,
+      .announcement-bar--wrapper .localization-selectors-form {
+        display: none;
+      }
+    }
+
+    @media screen and (min-width:1024px) {
+      .announcement-bar--slideshow {
+        z-index: 1111;
+      }
+    }
+</style>
+  
+{% schema %}
+  {
+    "name": "Slideshow Announcement",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Slideshow Announcement Bar"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_announcement",
+        "label": "t:sections.announcement_bar.show_announcement.label",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "homepage_announcement",
+        "label": "t:sections.announcement_bar.homepage_announcement.label",
+        "default": false
+      },
+      {
+        "id": "announcement_color",
+        "type": "color",
+        "label": "t:sections.announcement_bar.announcement_color.label",
+        "default": "#000000"
+      },
+      {
+        "id": "announcement_background",
+        "type": "color",
+        "label": "t:sections.announcement_bar.announcement_background.label",
+        "default": "#f5f3ed"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "announcement-bar-block",
+        "name": "Announcement Bar Block",
+        "settings": [
+          {
+            "type": "header",
+            "content": "t:sections.announcement_bar.header_1.content"
+          },
+          {
+            "id": "announcement_text",
+            "type": "textarea",
+            "label": "t:sections.announcement_bar.announcement_text.label",
+            "default": "Announce something here"
+          },
+          {
+            "id": "announcement_link",
+            "type": "url",
+            "label": "t:sections.announcement_bar.announcement_link.label"
+          }
+        ],
+        "limit": 4
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

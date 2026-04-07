@@ -1,0 +1,67 @@
+{% comment %}
+  Get the Look - Product Card Snippet
+  
+  Required variables:
+  - product: The product object
+  - show_badge: Boolean to show/hide the HOT badge
+{% endcomment %}
+
+{% if product != blank %}
+  <a href="{{ product.url }}" class="get-the-look__product-card">
+    {% if show_badge %}
+      {% assign show_badge_tag = false %}
+      {% for tag in product.tags %}
+        {% assign tag_lower = tag | downcase %}
+        {% if tag_lower == 'hot' or tag_lower == 'new' or tag_lower == 'sale' or tag_lower == 'bestseller' %}
+          {% assign show_badge_tag = true %}
+          {% assign badge_text = tag %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+      
+      {% if show_badge_tag %}
+        <div class="get-the-look__product-badge">{{ badge_text }}</div>
+      {% elsif product.compare_at_price > product.price %}
+        <div class="get-the-look__product-badge">Sale</div>
+      {% elsif product.available == false %}
+        <div class="get-the-look__product-badge" style="background: #999;">Sold Out</div>
+      {% endif %}
+    {% endif %}
+
+    {% if product.featured_image != blank %}
+      <img 
+        class="get-the-look__product-image"
+        src="{{ product.featured_image | image_url: width: 300 }}"
+        alt="{{ product.featured_image.alt | default: product.title | escape }}"
+        loading="lazy"
+        width="160"
+        height="160"
+      >
+    {% else %}
+      {{ 'product-1' | placeholder_svg_tag: 'get-the-look__product-image placeholder-svg' }}
+    {% endif %}
+
+    <div class="get-the-look__product-info">
+      <p class="get-the-look__product-title" title="{{ product.title }}">
+        {{ product.title | truncate: 25 }}
+      </p>
+      
+      {% if product.vendor != blank %}
+        <p class="get-the-look__product-vendor">{{ product.vendor }}</p>
+      {% elsif product.type != blank %}
+        <p class="get-the-look__product-vendor">{{ product.type }}</p>
+      {% elsif product.selected_or_first_available_variant.option1 != blank %}
+        <p class="get-the-look__product-vendor">{{ product.selected_or_first_available_variant.option1 }}</p>
+      {% endif %}
+
+      <p class="get-the-look__product-price">
+        <span class="money" data-price>
+          {{ product.price | money }}
+        </span>
+        {% if product.compare_at_price > product.price %}
+          <span class="get-the-look__product-price--compare">{{ product.compare_at_price | money }}</span>
+        {% endif %}
+      </p>
+    </div>
+  </a>
+{% endif %}

@@ -1,0 +1,521 @@
+{% doc %}
+  @prompt
+    So, create an announcement bar with the option to be rotating every 5 seconds, and its functionality to change the text for mobile version as well. , it should have black background, It should also have the functionality to change the texts after certain time in seconds
+
+    It should be sticky all the time. And the height of the section should be exactly size of text. Allow me to add padding
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-announcement-bar-{{ ai_gen_id }} {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    color: {{ block.settings.text_color }};
+    {% comment %} z-index: 10001; {% endcomment %}
+    padding-top: {{ block.settings.padding_top }}px;
+    padding-bottom: {{ block.settings.padding_bottom }}px;
+    padding-left: {{ block.settings.padding_horizontal }}px;
+    padding-right: {{ block.settings.padding_horizontal }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-announcement-bar__content-{{ ai_gen_id }} {
+    text-align: center;
+    font-size: {{ block.settings.font_size }}px;
+    line-height: 1;
+    position: relative;
+    overflow: hidden;
+    flex: 1;
+    min-height: 1em;
+  }
+
+  .ai-announcement-bar__message-{{ ai_gen_id }} {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: opacity 0.5s ease-in-out;
+    min-height: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ai-announcement-bar__message-{{ ai_gen_id }}.active {
+    opacity: 1;
+    position: relative;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ai-announcement-bar__message-{{ ai_gen_id }} span,
+  .ai-announcement-bar__message-{{ ai_gen_id }} p {
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-announcement-bar__content-{{ ai_gen_id }} {
+      font-size: {{ block.settings.font_size_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<announcement-bar-{{ ai_gen_id }}
+  class="ai-announcement-bar-{{ ai_gen_id }}"
+  data-rotation-enabled="{{ block.settings.enable_rotation }}"
+  data-rotation-interval="{{ block.settings.rotation_interval }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-announcement-bar__content-{{ ai_gen_id }}">
+    {% if block.settings.message_1_desktop != blank %}
+      <div
+        class="ai-announcement-bar__message-{{ ai_gen_id }} ai-announcement-bar__message-desktop-{{ ai_gen_id }}"
+        data-message-index="1"
+      >
+        {{ block.settings.message_1_desktop }}
+      </div>
+      <div
+        class="ai-announcement-bar__message-{{ ai_gen_id }} ai-announcement-bar__message-mobile-{{ ai_gen_id }}"
+        data-message-index="1"
+        style="display: none;"
+      >
+        {% if block.settings.message_1_mobile != blank %}
+          {{ block.settings.message_1_mobile }}
+        {% else %}
+          {{ block.settings.message_1_desktop }}
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if block.settings.message_2_desktop != blank %}
+      <div
+        class="ai-announcement-bar__message-{{ ai_gen_id }} ai-announcement-bar__message-desktop-{{ ai_gen_id }}"
+        data-message-index="2"
+      >
+        {{ block.settings.message_2_desktop }}
+      </div>
+      <div
+        class="ai-announcement-bar__message-{{ ai_gen_id }} ai-announcement-bar__message-mobile-{{ ai_gen_id }}"
+        data-message-index="2"
+        style="display: none;"
+      >
+        {% if block.settings.message_2_mobile != blank %}
+          {{ block.settings.message_2_mobile }}
+        {% else %}
+          {{ block.settings.message_2_desktop }}
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if block.settings.message_3_desktop != blank %}
+      <div
+        class="ai-announcement-bar__message-{{ ai_gen_id }} ai-announcement-bar__message-desktop-{{ ai_gen_id }}"
+        data-message-index="3"
+      >
+        {{ block.settings.message_3_desktop }}
+      </div>
+      <div
+        class="ai-announcement-bar__message-{{ ai_gen_id }} ai-announcement-bar__message-mobile-{{ ai_gen_id }}"
+        data-message-index="3"
+        style="display: none;"
+      >
+        {% if block.settings.message_3_mobile != blank %}
+          {{ block.settings.message_3_mobile }}
+        {% else %}
+          {{ block.settings.message_3_desktop }}
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</announcement-bar-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class AnnouncementBar{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentIndex = 0;
+        this.rotationInterval = null;
+        this.isMobile = window.innerWidth <= 749;
+      }
+
+      connectedCallback() {
+        this.rotationEnabled = this.dataset.rotationEnabled === 'true';
+        this.intervalTime = parseInt(this.dataset.rotationInterval) * 1000;
+
+        // Update shipping messages based on currency - with delay to ensure currency is loaded
+        this.updateShippingMessages();
+
+        // Also check after a delay in case currency loads later
+        setTimeout(() => {
+          this.updateShippingMessages();
+        }, 300);
+
+        // Listen for currency changes
+        document.addEventListener('currency:update', () => {
+          this.updateShippingMessages();
+        });
+
+        // Wrap currency values with money class for currency converter
+        this.wrapCurrencyValues();
+
+        this.updateMessagesForScreenSize();
+        this.showMessage(0);
+
+        if (this.rotationEnabled) {
+          this.startRotation();
+        }
+
+        window.addEventListener('resize', this.handleResize.bind(this));
+
+        // Listen for storage changes (when currency is updated)
+        window.addEventListener('storage', (e) => {
+          if (e.key === 'buckscc_customer_currency') {
+            this.updateShippingMessages();
+          }
+        });
+
+        // Also listen for custom currency change events
+        window.addEventListener('currencyChanged', () => {
+          this.updateShippingMessages();
+        });
+      }
+
+      getCustomerCurrency() {
+        try {
+          const sessionData = sessionStorage.getItem('buckscc_customer_currency');
+          if (sessionData) {
+            // Try to parse as JSON first
+            try {
+              const parsed = JSON.parse(sessionData);
+              if (parsed && typeof parsed === 'string') {
+                return parsed;
+              }
+            } catch (e) {
+              // If not JSON, treat as plain string
+              return sessionData;
+            }
+          }
+
+          // Try localStorage
+          const localData = localStorage.getItem('buckscc_customer_currency');
+          if (localData) {
+            try {
+              const parsed = JSON.parse(localData);
+              if (parsed && typeof parsed === 'string') {
+                return parsed;
+              }
+            } catch (e) {
+              return localData;
+            }
+          }
+
+          // Try window.Currency object
+          if (window.Currency) {
+            return window.Currency.currentCurrency || window.Currency.cookie?.read?.('currency');
+          }
+
+          // Try DoublyGlobalCurrency
+          if (window.DoublyGlobalCurrency) {
+            return window.DoublyGlobalCurrency.currentCurrency;
+          }
+        } catch (e) {
+          console.warn('Could not get customer currency', e);
+        }
+
+        return null;
+      }
+
+      updateShippingMessages() {
+        // Get customer currency
+        const customerCurrency = this.getCustomerCurrency();
+
+        // Debug logging
+
+        // Define shipping messages based on currency
+        let shippingMessage = '';
+
+        if (customerCurrency === 'GBP') {
+          shippingMessage = 'Free shipping on orders over £20 🚚';
+        } else if (customerCurrency === 'USD') {
+          shippingMessage = 'Free shipping on orders over $50 🚚';
+        } else if (customerCurrency === 'EUR') {
+          shippingMessage = 'Free shipping on orders over €50 🚚';
+        } else {
+          shippingMessage = 'Worldwide Shipping Available 🚚';
+        }
+
+        // Update ONLY the first message (data-message-index="1") with the shipping message
+        // This preserves other messages like reviews, promotions, etc.
+        const firstMessages = this.querySelectorAll('[data-message-index="1"]');
+        firstMessages.forEach(message => {
+          // Update the content with bold text
+          message.innerHTML = `<span><strong>${shippingMessage}</strong></span>`;
+        });
+      }
+
+      wrapCurrencyValues() {
+        // Currency pattern: matches $, £, €, ¥ followed by numbers (with optional decimals and commas)
+        const currencyPattern = /([$£€¥])\s*(\d{1,3}(?:,\d{3})*(?:\.\d{2})?|\d+(?:\.\d{2})?)/g;
+
+        const messages = this.querySelectorAll('[data-message-index]');
+        messages.forEach(message => {
+          const walker = document.createTreeWalker(message, NodeFilter.SHOW_TEXT, null, false);
+          const textNodes = [];
+
+          while (walker.nextNode()) {
+            textNodes.push(walker.currentNode);
+          }
+
+          textNodes.forEach(textNode => {
+            const text = textNode.nodeValue;
+            if (currencyPattern.test(text)) {
+              const span = document.createElement('span');
+              span.innerHTML = text.replace(currencyPattern, '<span class="money">$1$2</span>');
+              textNode.parentNode.replaceChild(span, textNode);
+            }
+            currencyPattern.lastIndex = 0; // Reset regex
+          });
+        });
+
+        // Trigger currency converter to update the wrapped values
+        this.triggerCurrencyConversion();
+      }
+
+      triggerCurrencyConversion() {
+        const shopCurrency = '{{ shop.currency }}';
+
+        setTimeout(() => {
+          // Bucks Currency Converter - convert .money elements
+          if (window.Currency && typeof window.Currency.convertAll === 'function') {
+            const targetCurrency = window.Currency.currentCurrency || (window.Currency.cookie && window.Currency.cookie.read('currency')) || shopCurrency;
+            window.Currency.convertAll(shopCurrency, targetCurrency);
+          }
+
+          // DoublyGlobalCurrency (some Bucks versions)
+          if (window.DoublyGlobalCurrency && typeof window.DoublyGlobalCurrency.convertAll === 'function') {
+            const targetCurrency = window.Currency?.currentCurrency || shopCurrency;
+            window.DoublyGlobalCurrency.convertAll(shopCurrency, targetCurrency);
+          }
+
+          // Dispatch events for other converters that listen to DOM changes
+          document.dispatchEvent(new CustomEvent('shopify:section:load'));
+          document.dispatchEvent(new CustomEvent('currency:update'));
+        }, 150);
+      }
+
+      disconnectedCallback() {
+        if (this.rotationInterval) {
+          clearInterval(this.rotationInterval);
+        }
+        window.removeEventListener('resize', this.handleResize.bind(this));
+      }
+
+      handleResize() {
+        const wasMobile = this.isMobile;
+        this.isMobile = window.innerWidth <= 749;
+
+        if (wasMobile !== this.isMobile) {
+          this.updateMessagesForScreenSize();
+        }
+      }
+
+      updateMessagesForScreenSize() {
+        const desktopMessages = this.querySelectorAll('.ai-announcement-bar__message-desktop-{{ ai_gen_id }}');
+        const mobileMessages = this.querySelectorAll('.ai-announcement-bar__message-mobile-{{ ai_gen_id }}');
+
+        if (this.isMobile) {
+          desktopMessages.forEach(msg => msg.style.display = 'none');
+          mobileMessages.forEach(msg => msg.style.display = 'block');
+          this.messages = Array.from(mobileMessages);
+        } else {
+          mobileMessages.forEach(msg => msg.style.display = 'none');
+          desktopMessages.forEach(msg => msg.style.display = 'block');
+          this.messages = Array.from(desktopMessages);
+        }
+
+        this.showMessage(this.currentIndex);
+      }
+
+      startRotation() {
+        if (this.messages && this.messages.length > 1) {
+          this.rotationInterval = setInterval(() => {
+            this.nextMessage();
+          }, this.intervalTime);
+        }
+      }
+
+      showMessage(index) {
+        if (!this.messages || this.messages.length === 0) return;
+
+        this.messages.forEach((message, i) => {
+          if (i === index) {
+            message.classList.add('active');
+          } else {
+            message.classList.remove('active');
+          }
+        });
+      }
+
+      nextMessage() {
+        if (!this.messages || this.messages.length === 0) return;
+
+        this.currentIndex = (this.currentIndex + 1) % this.messages.length;
+        this.showMessage(this.currentIndex);
+      }
+    }
+
+    customElements.define('announcement-bar-{{ ai_gen_id }}', AnnouncementBar{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Messages"
+    },
+    {
+      "type": "richtext",
+      "id": "message_1_desktop",
+      "label": "Message 1 (Desktop)",
+      "default": "<p>Free shipping on orders over £20 🚚</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "message_1_mobile",
+      "label": "Message 1 (Mobile)"
+    },
+    {
+      "type": "richtext",
+      "id": "message_2_desktop",
+      "label": "Message 2 (Desktop)",
+      "default": "<p>Shop now and save 15%</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "message_2_mobile",
+      "label": "Message 2 (Mobile)"
+    },
+    {
+      "type": "richtext",
+      "id": "message_3_desktop",
+      "label": "Message 3 (Desktop)",
+      "default": "<p>New arrivals just landed</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "message_3_mobile",
+      "label": "Message 3 (Mobile)"
+    },
+    {
+      "type": "header",
+      "content": "Rotation settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_rotation",
+      "label": "Enable rotation",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "rotation_interval",
+      "min": 2,
+      "max": 20,
+      "step": 1,
+      "unit": "s",
+      "label": "Rotation interval",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size (Desktop)",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size (Mobile)",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "min": 0,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding horizontal",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement bar"
+    }
+  ]
+}
+{% endschema %}

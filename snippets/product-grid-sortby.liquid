@@ -1,0 +1,165 @@
+{%- if type == 'select' -%}
+  <div class="productgrid--utils utils-sortby">
+    <label
+      class="utils-sortby-title"
+      for="product_grid_sort"
+    >
+      {{ 'product_grid.sort_by.title' | t }}
+    </label>
+
+    <button
+      class="utils-sortby-button"
+      data-productgrid-modal-sort
+      aria-label="{{ 'product_grid.sort_by.title' | t }}"
+    >
+      <span class="utils-filter-icon">
+        {% render 'icon-library', id: 'icon-sort' %}
+      </span>
+      <span class="utils-filter-text">
+        {{ 'product_grid.sort_by.title' | t }}
+      </span>
+    </button>
+
+    <div class="utils-sortby-select--wrapper form-field-select-wrapper no-label">
+      <select
+        class="
+          form-field
+          form-field-select
+          utils-sortby-select
+        "
+        id="product_grid_sort"
+        tabindex="0"
+        data-productgrid-trigger-sort>
+        
+        {%- for option in collection.sort_options -%}
+          {% if option.value != 'title-ascending' and option.value != 'title-descending' %}
+            {% assign sort_active = false %}
+            {% if collection.sort_by == blank and collection.default_sort_by == option.value %}
+              {% assign sort_active = true %}
+            {% elsif collection.sort_by == option.value %}
+              {% assign sort_active = true %}
+            {% endif %}
+            <option value="{{ option.value }}" {% if sort_active %}selected="selected"{% endif %}>
+              {{ option.name }}
+            </option>
+          {% endif %}
+        {%- endfor -%}
+
+        <!-- ✅ Custom Highest Discount option -->
+        <option value="highest-discount" {% if collection.sort_by == 'highest-discount' %}selected="selected"{% endif %}>Highest discount</option>
+      </select>
+      {% render 'icon-chevron-down-small' %}
+    </div>
+  </div>
+{%- endif -%}
+
+{%- if type == 'modal' -%}
+  <div class="utils-sortby--modal" aria-hidden="true" data-productgrid-sort-content>
+    <span class="utils-sortby--modal-title">
+      {{ 'product_grid.sort_by.title' | t }}
+    </span>
+
+    <ul class="utils-sortby--modal-list">
+      {%- for option in collection.sort_options -%}
+        {% if option.value != 'title-ascending' and option.value != 'title-descending' %}
+          {% assign sort_active = false %}
+          {% if collection.sort_by == blank and collection.default_sort_by == option.value %}
+            {% assign sort_active = true %}
+          {% elsif collection.sort_by == option.value %}
+            {% assign sort_active = true %}
+          {% endif %}
+
+          {% assign button_class = 'utils-sortby--modal-button' %}
+          {% if sort_active %}
+            {% assign button_class = button_class | append: ' utils-sortby--modal-button--active' %}
+          {% endif %}
+
+          <li class="utils-sortby--modal-item">
+            <button
+              class="{{ button_class }}"
+              value="{{ option.value }}"
+              data-productgrid-trigger-sort-button
+              {% if sort_active %}
+                disabled
+              {% endif %}
+            >
+              {{ option.name }}
+            </button>
+          </li>
+        {% endif %}
+      {%- endfor -%}
+
+      <!-- ✅ Custom Highest Discount option for modal -->
+      <li class="utils-sortby--modal-item">
+        <button
+          class="utils-sortby--modal-button {% if collection.sort_by == 'highest-discount' %}utils-sortby--modal-button--active{% endif %}"
+          value="highest-discount"
+          data-productgrid-trigger-sort-button
+          {% if collection.sort_by == 'highest-discount' %}disabled{% endif %}>
+          Highest discount
+        </button>
+      </li>
+    </ul>
+  </div>
+{%- endif -%}
+
+<!-- ✅ Custom sorting script with URL persistence -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const sortSelect = document.querySelector('#product_grid_sort');
+  const modalButtons = document.querySelectorAll('[data-productgrid-trigger-sort-button]');
+
+  // Function to sort products by discount
+  function sortByDiscount() {
+    const grid = document.querySelector('.productgrid--items, .collection__products, .collection-grid');
+    if (!grid) return;
+    const products = Array.from(grid.children);
+
+    products.sort((a, b) => getDiscount(b) - getDiscount(a));
+    products.forEach(p => grid.appendChild(p));
+  }
+
+  // Get discount percentage from Empire's HTML
+  function getDiscount(product) {
+    const discountEl = product.querySelector('[data-price-percent-saved]');
+    if (!discountEl) return 0;
+    const value = parseInt(discountEl.textContent.trim());
+    return isNaN(value) ? 0 : value;
+  }
+
+  // Apply sorting if URL has highest-discount
+  if (new URL(window.location).searchParams.get('sort_by') === 'highest-discount') {
+    sortByDiscount();
+  }
+
+  // Dropdown change event
+  if (sortSelect) {
+    sortSelect.addEventListener('change', (e) => {
+      if (e.target.value === 'highest-discount') {
+        const url = new URL(window.location);
+        url.searchParams.set('sort_by', 'highest-discount');
+        window.history.pushState({}, '', url);
+
+        sortByDiscount();
+      } else {
+        window.location.search = `?sort_by=${e.target.value}`;
+      }
+    });
+  }
+
+  // Modal buttons click event
+  modalButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.value === 'highest-discount') {
+        const url = new URL(window.location);
+        url.searchParams.set('sort_by', 'highest-discount');
+        window.history.pushState({}, '', url);
+
+        sortByDiscount();
+      } else {
+        window.location.search = `?sort_by=${btn.value}`;
+      }
+    });
+  });
+});
+</script>

@@ -1,0 +1,1321 @@
+{% doc %}
+  Product Hotspot Showcase Section
+  - Static positioning for dots, breakpoints, cards using slider settings
+  - Line endpoint auto-connects to nearest edge center of product card
+  - No drag-and-drop, no position shifting
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-product-hotspot-{{ ai_gen_id }} {
+    display: block;
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .ai-product-hotspot__image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+  }
+
+  .ai-product-hotspot__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ai-product-hotspot__placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+  }
+
+  .ai-product-hotspot__placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    max-height: 500px;
+  }
+
+  /* Hotspot Dot */
+  .ai-product-hotspot__dot-{{ ai_gen_id }} {
+    position: absolute;
+    width: {{ block.settings.dot_size }}px;
+    height: {{ block.settings.dot_size }}px;
+    background-color: {{ block.settings.dot_color }};
+    border: 2px solid {{ block.settings.dot_border_color }};
+    border-radius: 50%;
+    z-index: 10;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .ai-product-hotspot__dot-{{ ai_gen_id }}::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: {{ block.settings.dot_color }};
+    animation: ai-pulse-{{ ai_gen_id }} 2s infinite;
+    opacity: 0.6;
+  }
+
+  @keyframes ai-pulse-{{ ai_gen_id }} {
+    0% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.6;
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(1.5);
+      opacity: 0;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0;
+    }
+  }
+
+  /* Breakpoint Dot */
+  .ai-product-hotspot__breakpoint-{{ ai_gen_id }} {
+    position: absolute;
+    width: {{ block.settings.breakpoint_size }}px;
+    height: {{ block.settings.breakpoint_size }}px;
+    background-color: {{ block.settings.line_color }};
+    border-radius: 50%;
+    z-index: 9;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Line Segments */
+  .ai-product-hotspot__line-segment-{{ ai_gen_id }} {
+    position: absolute;
+    height: {{ block.settings.line_thickness }}px;
+    background-color: {{ block.settings.line_color }};
+    transform-origin: 0 center;
+    z-index: 8;
+    pointer-events: none;
+  }
+
+  /* Product Card */
+  .ai-product-hotspot__card-{{ ai_gen_id }} {
+    position: absolute;
+    width: {{ block.settings.card_width }}px;
+    background-color: {{ block.settings.card_bg_color }};
+    border-radius: {{ block.settings.card_border_radius }}px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    z-index: 11;
+  }
+
+  .ai-product-hotspot__card-{{ ai_gen_id }}:hover {
+    transform: translateY(-2px) rotate(1deg);
+  }
+
+  .ai-product-hotspot__card-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: {{ block.settings.card_image_height }}px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-product-hotspot__card-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: {{ block.settings.card_image_height }}px;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-product-hotspot__card-image-placeholder-{{ ai_gen_id }} svg {
+    width: 50%;
+    height: 50%;
+  }
+
+  .ai-product-hotspot__card-content-{{ ai_gen_id }} {
+    padding: 8px 10px;
+  }
+
+  .ai-product-hotspot__card-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_title_size }}px;
+    font-weight: 600;
+    color: {{ block.settings.card_text_color }};
+    margin: 0 0 4px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+  }
+
+  .ai-product-hotspot__card-price-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+
+  .ai-product-hotspot__card-price-current-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_price_size }}px;
+    font-weight: 700;
+    color: {{ block.settings.card_text_color }};
+  }
+
+  .ai-product-hotspot__card-price-compare-{{ ai_gen_id }} {
+    font-size: {{ block.settings.card_price_size | minus: 2 }}px;
+    color: #999;
+    text-decoration: line-through;
+  }
+
+  .ai-product-hotspot__card-atc-{{ ai_gen_id }} {
+    width: 100%;
+    padding: 6px 10px;
+    background-color: {{ block.settings.button_bg_color }};
+    color: {{ block.settings.button_text_color }};
+    border: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_text_size }}px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+  }
+
+  .ai-product-hotspot__card-atc-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_bg_color }};
+  }
+
+  .ai-product-hotspot__card-atc-{{ ai_gen_id }}:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Mobile Slider */
+  .ai-product-hotspot__mobile-slider-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-product-hotspot__dot-{{ ai_gen_id }},
+    .ai-product-hotspot__breakpoint-{{ ai_gen_id }},
+    .ai-product-hotspot__card-{{ ai_gen_id }},
+    .ai-product-hotspot__line-segment-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-product-hotspot__mobile-slider-{{ ai_gen_id }} {
+      display: block;
+      margin-top: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .ai-product-hotspot__mobile-slider-wrapper-{{ ai_gen_id }} {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 0 16px;
+    }
+
+    .ai-product-hotspot__mobile-slider-wrapper-{{ ai_gen_id }}::-webkit-scrollbar {
+      display: none;
+    }
+
+    .ai-product-hotspot__mobile-card-{{ ai_gen_id }} {
+      flex: 0 0 calc(50% - 6px);
+      scroll-snap-align: start;
+      background-color: {{ block.settings.card_bg_color }};
+      border-radius: {{ block.settings.card_border_radius }}px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+    }
+
+    .ai-product-hotspot__mobile-card-image-{{ ai_gen_id }} {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .ai-product-hotspot__mobile-card-image-placeholder-{{ ai_gen_id }} {
+      width: 100%;
+      height: 120px;
+      background-color: #f4f4f4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ai-product-hotspot__mobile-card-image-placeholder-{{ ai_gen_id }} svg {
+      width: 50%;
+      height: 50%;
+    }
+
+    .ai-product-hotspot__mobile-card-content-{{ ai_gen_id }} {
+      padding: 8px 10px;
+    }
+
+    .ai-product-hotspot__mobile-card-title-{{ ai_gen_id }} {
+      font-size: 13px;
+      font-weight: 600;
+      color: {{ block.settings.card_text_color }};
+      margin: 0 0 4px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.2;
+    }
+
+    .ai-product-hotspot__mobile-card-price-{{ ai_gen_id }} {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+
+    .ai-product-hotspot__mobile-card-price-current-{{ ai_gen_id }} {
+      font-size: 13px;
+      font-weight: 700;
+      color: {{ block.settings.card_text_color }};
+    }
+
+    .ai-product-hotspot__mobile-card-price-compare-{{ ai_gen_id }} {
+      font-size: 11px;
+      color: #999;
+      text-decoration: line-through;
+    }
+
+    .ai-product-hotspot__mobile-card-atc-{{ ai_gen_id }} {
+      width: 100%;
+      padding: 6px 10px;
+      background-color: {{ block.settings.button_bg_color }};
+      color: {{ block.settings.button_text_color }};
+      border: none;
+      border-radius: {{ block.settings.button_border_radius }}px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-align: center;
+    }
+
+    .ai-product-hotspot__mobile-card-atc-{{ ai_gen_id }}:hover {
+      background-color: {{ block.settings.button_hover_bg_color }};
+    }
+
+    .ai-product-hotspot__mobile-card-atc-{{ ai_gen_id }}:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-product-hotspot-{{ ai_gen_id }}" data-hotspot-section="{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-product-hotspot__image-wrapper-{{ ai_gen_id }}">
+    {% if block.settings.main_image %}
+      <img
+        src="{{ block.settings.main_image | image_url: width: 2000 }}"
+        alt="{{ block.settings.main_image.alt | escape }}"
+        class="ai-product-hotspot__image-{{ ai_gen_id }}"
+        loading="lazy"
+        width="{{ block.settings.main_image.width }}"
+        height="{{ block.settings.main_image.height }}"
+      >
+    {% else %}
+      <div class="ai-product-hotspot__placeholder-{{ ai_gen_id }}">
+        {{ 'image' | placeholder_svg_tag }}
+      </div>
+    {% endif %}
+
+    {% for i in (1..6) %}
+      {% liquid
+        assign product_key = 'product_' | append: i
+        assign dot_x_key = 'dot_x_' | append: i
+        assign dot_y_key = 'dot_y_' | append: i
+        assign card_x_key = 'card_x_' | append: i
+        assign card_y_key = 'card_y_' | append: i
+        assign break_x_key = 'line_break_x_' | append: i
+        assign break_y_key = 'line_break_y_' | append: i
+        assign product = block.settings[product_key]
+        assign dot_x = block.settings[dot_x_key]
+        assign dot_y = block.settings[dot_y_key]
+        assign card_x = block.settings[card_x_key]
+        assign card_y = block.settings[card_y_key]
+        assign break_x = block.settings[break_x_key]
+        assign break_y = block.settings[break_y_key]
+      %}
+
+      {% if product != blank %}
+        <!-- Hotspot Dot -->
+        <div
+          class="ai-product-hotspot__dot-{{ ai_gen_id }}"
+          data-hotspot-index="{{ i }}"
+          style="left: {{ dot_x }}%; top: {{ dot_y }}%;"
+        ></div>
+
+        <!-- Line Segment 1: Dot to Breakpoint -->
+        <div
+          class="ai-product-hotspot__line-segment-{{ ai_gen_id }}"
+          data-line-segment="1"
+          data-line-index="{{ i }}"
+          data-start-x="{{ dot_x }}"
+          data-start-y="{{ dot_y }}"
+          data-end-x="{{ break_x }}"
+          data-end-y="{{ break_y }}"
+        ></div>
+
+        <!-- Breakpoint -->
+        <div
+          class="ai-product-hotspot__breakpoint-{{ ai_gen_id }}"
+          data-breakpoint-index="{{ i }}"
+          style="left: {{ break_x }}%; top: {{ break_y }}%;"
+        ></div>
+
+        <!-- Line Segment 2: Breakpoint to Elbow (calculated by JS) -->
+        <div
+          class="ai-product-hotspot__line-segment-{{ ai_gen_id }}"
+          data-line-segment="2"
+          data-line-index="{{ i }}"
+          data-start-x="{{ break_x }}"
+          data-start-y="{{ break_y }}"
+        ></div>
+
+        <!-- Line Segment 3: Elbow to Card Edge (calculated by JS) -->
+        <div
+          class="ai-product-hotspot__line-segment-{{ ai_gen_id }}"
+          data-line-segment="3"
+          data-line-index="{{ i }}"
+        ></div>
+
+        <!-- Product Card -->
+        <div
+          class="ai-product-hotspot__card-{{ ai_gen_id }}"
+          data-card-index="{{ i }}"
+          style="left: {{ card_x }}%; top: {{ card_y }}%;"
+        >
+          {% if product.featured_image %}
+            <img
+              src="{{ product.featured_image | image_url: width: 400 }}"
+              alt="{{ product.featured_image.alt | escape }}"
+              class="ai-product-hotspot__card-image-{{ ai_gen_id }}"
+              loading="lazy"
+            >
+          {% else %}
+            <div class="ai-product-hotspot__card-image-placeholder-{{ ai_gen_id }}">
+              {{ 'product-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+
+          <div class="ai-product-hotspot__card-content-{{ ai_gen_id }}">
+            <h3 class="ai-product-hotspot__card-title-{{ ai_gen_id }}">{{ product.title }}</h3>
+
+            <div class="ai-product-hotspot__card-price-{{ ai_gen_id }}">
+              <span class="ai-product-hotspot__card-price-current-{{ ai_gen_id }}">
+                {{ product.price | money }}
+              </span>
+              {% if product.compare_at_price > product.price %}
+                <span class="ai-product-hotspot__card-price-compare-{{ ai_gen_id }}">
+                  {{ product.compare_at_price | money }}
+                </span>
+              {% endif %}
+            </div>
+
+            <button
+              class="ai-product-hotspot__card-atc-{{ ai_gen_id }}"
+              data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+              type="button"
+            >
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <!-- Mobile Slider -->
+  <div class="ai-product-hotspot__mobile-slider-{{ ai_gen_id }}">
+    <div class="ai-product-hotspot__mobile-slider-wrapper-{{ ai_gen_id }}">
+      {% for i in (1..6) %}
+        {% liquid
+          assign product_key = 'product_' | append: i
+          assign product = block.settings[product_key]
+        %}
+
+        {% if product != blank %}
+          <div class="ai-product-hotspot__mobile-card-{{ ai_gen_id }}">
+            {% if product.featured_image %}
+              <img
+                src="{{ product.featured_image | image_url: width: 400 }}"
+                alt="{{ product.featured_image.alt | escape }}"
+                class="ai-product-hotspot__mobile-card-image-{{ ai_gen_id }}"
+                loading="lazy"
+              >
+            {% else %}
+              <div class="ai-product-hotspot__mobile-card-image-placeholder-{{ ai_gen_id }}">
+                {{ 'product-1' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+
+            <div class="ai-product-hotspot__mobile-card-content-{{ ai_gen_id }}">
+              <h3 class="ai-product-hotspot__mobile-card-title-{{ ai_gen_id }}">{{ product.title }}</h3>
+
+              <div class="ai-product-hotspot__mobile-card-price-{{ ai_gen_id }}">
+                <span class="ai-product-hotspot__mobile-card-price-current-{{ ai_gen_id }}">
+                  {{ product.price | money }}
+                </span>
+                {% if product.compare_at_price > product.price %}
+                  <span class="ai-product-hotspot__mobile-card-price-compare-{{ ai_gen_id }}">
+                    {{ product.compare_at_price | money }}
+                  </span>
+                {% endif %}
+              </div>
+
+              <button
+                class="ai-product-hotspot__mobile-card-atc-{{ ai_gen_id }}"
+                data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                type="button"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const SECTION_ID = '{{ ai_gen_id }}';
+  
+  function initHotspot() {
+    const section = document.querySelector('[data-hotspot-section="' + SECTION_ID + '"]');
+    if (!section) return;
+
+    const wrapper = section.querySelector('.ai-product-hotspot__image-wrapper-' + SECTION_ID);
+    if (!wrapper) return;
+
+    // Draw lines once on load
+    drawLines();
+
+    // Setup Add to Cart
+    setupAddToCart();
+
+    function drawLines() {
+      const wrapperRect = wrapper.getBoundingClientRect();
+      const wrapperWidth = wrapperRect.width;
+      const wrapperHeight = wrapperRect.height;
+
+      // Draw segment 1 lines (dot to breakpoint) - static from data attributes
+      const segment1Lines = section.querySelectorAll('[data-line-segment="1"]');
+      segment1Lines.forEach(line => {
+        const startX = parseFloat(line.dataset.startX);
+        const startY = parseFloat(line.dataset.startY);
+        const endX = parseFloat(line.dataset.endX);
+        const endY = parseFloat(line.dataset.endY);
+
+        const startPxX = (startX / 100) * wrapperWidth;
+        const startPxY = (startY / 100) * wrapperHeight;
+        const endPxX = (endX / 100) * wrapperWidth;
+        const endPxY = (endY / 100) * wrapperHeight;
+
+        const deltaX = endPxX - startPxX;
+        const deltaY = endPxY - startPxY;
+        const length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+
+        line.style.width = length + 'px';
+        line.style.left = startPxX + 'px';
+        line.style.top = startPxY + 'px';
+        line.style.transform = 'rotate(' + angle + 'deg)';
+      });
+
+      // Draw segment 2 and 3 lines (breakpoint to card with L-shaped elbow)
+      const segment2Lines = section.querySelectorAll('[data-line-segment="2"]');
+      segment2Lines.forEach(line => {
+        const index = line.dataset.lineIndex;
+        const card = section.querySelector('[data-card-index="' + index + '"]');
+        const elbowLine = section.querySelector('[data-line-segment="3"][data-line-index="' + index + '"]');
+        if (!card || !elbowLine) return;
+
+        // Breakpoint position (start of segment 2)
+        const breakX = parseFloat(line.dataset.startX);
+        const breakY = parseFloat(line.dataset.startY);
+        const breakPxX = (breakX / 100) * wrapperWidth;
+        const breakPxY = (breakY / 100) * wrapperHeight;
+
+        // Get card's actual rendered position relative to wrapper
+        const cardStyle = card.style;
+        const cardLeftPercent = parseFloat(cardStyle.left);
+        const cardTopPercent = parseFloat(cardStyle.top);
+        
+        // Card position in pixels
+        const cardLeftPx = (cardLeftPercent / 100) * wrapperWidth;
+        const cardTopPx = (cardTopPercent / 100) * wrapperHeight;
+        
+        // Card dimensions
+        const cardWidth = card.offsetWidth;
+        const cardHeight = card.offsetHeight;
+        
+        // Card edge centers
+        const cardCenterX = cardLeftPx + cardWidth / 2;
+        const cardCenterY = cardTopPx + cardHeight / 2;
+        const cardRight = cardLeftPx + cardWidth;
+        const cardBottom = cardTopPx + cardHeight;
+
+        // Calculate all 4 edge centers
+        const edgeCenters = [
+          { x: cardCenterX, y: cardTopPx, name: 'top' },
+          { x: cardCenterX, y: cardBottom, name: 'bottom' },
+          { x: cardLeftPx, y: cardCenterY, name: 'left' },
+          { x: cardRight, y: cardCenterY, name: 'right' }
+        ];
+
+        // Find nearest edge to breakpoint
+        let nearestEdge = edgeCenters[0];
+        let minDist = Infinity;
+
+        edgeCenters.forEach(edge => {
+          const dist = Math.sqrt(Math.pow(breakPxX - edge.x, 2) + Math.pow(breakPxY - edge.y, 2));
+          if (dist < minDist) {
+            minDist = dist;
+            nearestEdge = edge;
+          }
+        });
+
+        // L-shaped elbow: determine corner point
+        let cornerX, cornerY;
+        
+        if (nearestEdge.name === 'top' || nearestEdge.name === 'bottom') {
+          // Go horizontal first (same Y as breakpoint), then vertical to card
+          cornerX = nearestEdge.x;
+          cornerY = breakPxY;
+        } else {
+          // Go vertical first (same X as breakpoint), then horizontal to card
+          cornerX = breakPxX;
+          cornerY = nearestEdge.y;
+        }
+
+        // Segment 2: Breakpoint to corner
+        const len2X = cornerX - breakPxX;
+        const len2Y = cornerY - breakPxY;
+        const length2 = Math.sqrt(len2X * len2X + len2Y * len2Y);
+        
+        if (length2 > 1) {
+          const angle2 = Math.atan2(len2Y, len2X) * (180 / Math.PI);
+          line.style.width = length2 + 'px';
+          line.style.left = breakPxX + 'px';
+          line.style.top = breakPxY + 'px';
+          line.style.transform = 'rotate(' + angle2 + 'deg)';
+          line.style.display = 'block';
+        } else {
+          line.style.display = 'none';
+        }
+
+        // Segment 3: Corner to card edge
+        const len3X = nearestEdge.x - cornerX;
+        const len3Y = nearestEdge.y - cornerY;
+        const length3 = Math.sqrt(len3X * len3X + len3Y * len3Y);
+
+        if (length3 > 1) {
+          const angle3 = Math.atan2(len3Y, len3X) * (180 / Math.PI);
+          elbowLine.style.width = length3 + 'px';
+          elbowLine.style.left = cornerX + 'px';
+          elbowLine.style.top = cornerY + 'px';
+          elbowLine.style.transform = 'rotate(' + angle3 + 'deg)';
+          elbowLine.style.display = 'block';
+        } else {
+          elbowLine.style.display = 'none';
+        }
+      });
+    }
+
+    function setupAddToCart() {
+      const buttons = section.querySelectorAll('[class*="card-atc"]');
+      
+      buttons.forEach(button => {
+        button.addEventListener('click', async function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          const variantId = this.getAttribute('data-variant-id');
+          if (!variantId) return;
+
+          this.disabled = true;
+          const originalText = this.textContent;
+          this.textContent = 'Adding...';
+
+          try {
+            const response = await fetch('/cart/add.js', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                items: [{ id: variantId, quantity: 1 }]
+              })
+            });
+
+            if (response.ok) {
+              this.textContent = 'Added!';
+              
+              // Update cart count
+              fetch('/cart.js')
+                .then(res => res.json())
+                .then(cart => {
+                  const count = cart.item_count;
+                  document.querySelectorAll('[data-header-cart-count], .cart-count, .cart-item-count, .cart__count, [data-cart-count], .js-cart-count, .cart-count-bubble, .site-header-cart--count').forEach(el => {
+                    el.textContent = count;
+                    if (count > 0) el.classList.add('visible');
+                  });
+                });
+
+              // Dispatch events for theme compatibility
+              document.dispatchEvent(new CustomEvent('cart:updated'));
+              document.documentElement.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
+
+              setTimeout(() => {
+                this.textContent = originalText;
+                this.disabled = false;
+              }, 2000);
+            } else {
+              throw new Error('Failed');
+            }
+          } catch (error) {
+            this.textContent = 'Error';
+            setTimeout(() => {
+              this.textContent = originalText;
+              this.disabled = false;
+            }, 2000);
+          }
+        });
+      });
+    }
+  }
+
+  // Initialize on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHotspot);
+  } else {
+    initHotspot();
+  }
+
+  // Re-initialize on Shopify section events (for theme editor)
+  document.addEventListener('shopify:section:load', initHotspot);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Product hotspot showcase",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Main image"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Image"
+    },
+    {
+      "type": "paragraph",
+      "content": "Use sliders to position dots, breakpoints, and cards. The connection line creates an L-shaped elbow from breakpoint to the nearest edge center of each card."
+    },
+    {
+      "type": "header",
+      "content": "Hotspot style"
+    },
+    {
+      "type": "range",
+      "id": "dot_size",
+      "min": 6,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Dot size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "dot_border_color",
+      "label": "Dot border color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "breakpoint_size",
+      "min": 2,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Breakpoint dot size",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Connection line color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "line_thickness",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "unit": "px",
+      "label": "Line thickness",
+      "default": 2
+    },
+    {
+      "type": "header",
+      "content": "Product card style"
+    },
+    {
+      "type": "range",
+      "id": "card_width",
+      "min": 120,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Card width",
+      "default": 150
+    },
+    {
+      "type": "range",
+      "id": "card_image_height",
+      "min": 60,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "label": "Card image height",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_text_color",
+      "label": "Card text color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "card_title_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Title size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "card_price_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Price size",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Button hover background",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "min": 10,
+      "max": 14,
+      "step": 1,
+      "unit": "px",
+      "label": "Button text size",
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Product 1"
+    },
+    {
+      "type": "product",
+      "id": "product_1",
+      "label": "Product"
+    },
+    {
+      "type": "range",
+      "id": "dot_x_1",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot X position",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "dot_y_1",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot Y position",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "line_break_x_1",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Line breakpoint X",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "line_break_y_1",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Line breakpoint Y",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "card_x_1",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card X position",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "card_y_1",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card Y position",
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Product 2"
+    },
+    {
+      "type": "product",
+      "id": "product_2",
+      "label": "Product"
+    },
+    {
+      "type": "range",
+      "id": "dot_x_2",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot X position",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "dot_y_2",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot Y position",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "line_break_x_2",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Line breakpoint X",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "line_break_y_2",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Line breakpoint Y",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "card_x_2",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card X position",
+      "default": 35
+    },
+    {
+      "type": "range",
+      "id": "card_y_2",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card Y position",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Product 3"
+    },
+    {
+      "type": "product",
+      "id": "product_3",
+      "label": "Product"
+    },
+    {
+      "type": "range",
+      "id": "dot_x_3",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot X position",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "dot_y_3",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot Y position",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "line_break_x_3",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Line breakpoint X",
+      "default": 78
+    },
+    {
+      "type": "range",
+      "id": "line_break_y_3",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Line breakpoint Y",
+      "default": 35
+    },
+    {
+      "type": "range",
+      "id": "card_x_3",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card X position",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "card_y_3",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card Y position",
+      "default": 25
+    },
+    {
+      "type": "header",
+      "content": "Product 4"
+    },
+    {
+      "type": "product",
+      "id": "product_4",
+      "label": "Product"
+    },
+    {
+      "type": "range",
+      "id": "dot_x_4",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot X position",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "dot_y_4",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot Y position",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "line_break_x_4",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Line breakpoint X",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "line_break_y_4",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Line breakpoint Y",
+      "default": 62
+    },
+    {
+      "type": "range",
+      "id": "card_x_4",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card X position",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "card_y_4",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card Y position",
+      "default": 55
+    },
+    {
+      "type": "header",
+      "content": "Product 5"
+    },
+    {
+      "type": "product",
+      "id": "product_5",
+      "label": "Product"
+    },
+    {
+      "type": "range",
+      "id": "dot_x_5",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot X position",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "dot_y_5",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot Y position",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "line_break_x_5",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Line breakpoint X",
+      "default": 55
+    },
+    {
+      "type": "range",
+      "id": "line_break_y_5",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Line breakpoint Y",
+      "default": 75
+    },
+    {
+      "type": "range",
+      "id": "card_x_5",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card X position",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "card_y_5",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card Y position",
+      "default": 70
+    },
+    {
+      "type": "header",
+      "content": "Product 6"
+    },
+    {
+      "type": "product",
+      "id": "product_6",
+      "label": "Product"
+    },
+    {
+      "type": "range",
+      "id": "dot_x_6",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot X position",
+      "default": 85
+    },
+    {
+      "type": "range",
+      "id": "dot_y_6",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot Y position",
+      "default": 85
+    },
+    {
+      "type": "range",
+      "id": "line_break_x_6",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Line breakpoint X",
+      "default": 82
+    },
+    {
+      "type": "range",
+      "id": "line_break_y_6",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Line breakpoint Y",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "card_x_6",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card X position",
+      "default": 75
+    },
+    {
+      "type": "range",
+      "id": "card_y_6",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card Y position",
+      "default": 75
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product hotspot showcase"
+    }
+  ]
+}
+{% endschema %}

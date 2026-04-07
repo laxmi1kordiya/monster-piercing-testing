@@ -1,0 +1,1981 @@
+{% doc %}
+  @prompt
+    create a hero section banner in which we can have a background photo and in that provide a on and off button in th e admin to start the slider or off it and a header text and its all setting to adjust the font size and style and for all the header and discription and a ctr button and adjust the backgound of hte button and its size and color and border and font style it should also have the dot slider at the end  in the bottom only oif the slider button is on , why the image is not coming properly , the backgound image will be 2000*500, replace the banner background size to 2000*700
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% comment %} Import elegant Valentine's fonts {% endcomment %}
+{% if block.settings.use_custom_font %}
+  {% case block.settings.cursive_font_style %}
+    {% when 'playfair_display' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    {% when 'cormorant_garamond' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    {% when 'italiana' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Italiana&display=swap" rel="stylesheet">
+    {% when 'satisfy' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
+    {% when 'pacifico' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    {% when 'lobster_two' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    {% when 'kaushan_script' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap" rel="stylesheet">
+    {% when 'cinzel' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    {% when 'great_vibes' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    {% when 'allura' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Allura&display=swap" rel="stylesheet">
+    {% when 'dancing_script' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    {% when 'parisienne' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
+    {% when 'tangerine' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
+    {% when 'sacramento' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Sacramento&display=swap" rel="stylesheet">
+    {% when 'alex_brush' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&display=swap" rel="stylesheet">
+    {% when 'pinyon_script' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap" rel="stylesheet">
+    {% when 'mr_dafoe' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Mr+Dafoe&display=swap" rel="stylesheet">
+    {% when 'mr_de_haviland' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Mr+De+Haviland&display=swap" rel="stylesheet">
+    {% when 'rouge_script' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Rouge+Script&display=swap" rel="stylesheet">
+    {% when 'euphoria_script' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Euphoria+Script&display=swap" rel="stylesheet">
+    {% when 'marck_script' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Marck+Script&display=swap" rel="stylesheet">
+    {% when 'meddon' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Meddon&display=swap" rel="stylesheet">
+    {% when 'norican' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Norican&display=swap" rel="stylesheet">
+    {% when 'cookie' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Cookie&display=swap" rel="stylesheet">
+    {% when 'leckerli_one' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Leckerli+One&display=swap" rel="stylesheet">
+    {% when 'yellowtail' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Yellowtail&display=swap" rel="stylesheet">
+    {% when 'montez' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Montez&display=swap" rel="stylesheet">
+    {% when 'devonshire' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Devonshire&display=swap" rel="stylesheet">
+    {% when 'engagement' %}
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Engagement&display=swap" rel="stylesheet">
+  {% endcase %}
+{% endif %}
+
+{% comment %} Import Nunito Sans font for description {% endcomment %}
+{% if block.settings.use_custom_desc_font and block.settings.description_custom_font == 'nunito_sans' %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
+{% endif %}
+
+{% style %}
+  .ai-hero-slider-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    display: block;
+  }
+
+  .ai-hero-slider__slides-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2000 / 700;
+  }
+
+  .ai-hero-slider__slide-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.6s ease-in-out;
+    pointer-events: none;
+  }
+
+  .ai-hero-slider__slide-{{ ai_gen_id }}.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .ai-hero-slider__background-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+  }
+
+  .ai-hero-slider__background-mobile-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    display: none;
+  }
+
+  .ai-hero-slider__placeholder-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  .ai-hero-slider__placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    max-height: 500px;
+  }
+
+  .ai-hero-slider__placeholder-mobile-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-hero-slider__placeholder-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-hero-slider__placeholder-mobile-{{ ai_gen_id }} {
+      display: flex;
+    }
+  }
+
+  .ai-hero-slider__overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: {{ block.settings.overlay_color }};
+    opacity: {{ block.settings.overlay_opacity | divided_by: 100.0 }};
+    z-index: 2;
+  }
+
+  .ai-hero-slider__content-wrapper-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    {% if block.settings.constrain_content_area %}
+      {% if block.settings.content_alignment == 'flex-start' %}
+        left: 0;
+        width: {{ block.settings.content_area_width }}%;
+      {% elsif block.settings.content_alignment == 'flex-end' %}
+        right: 0;
+        width: {{ block.settings.content_area_width }}%;
+      {% else %}
+        left: 0;
+        width: 100%;
+      {% endif %}
+    {% else %}
+      left: 0;
+      width: 100%;
+    {% endif %}
+    height: 100%;
+    display: flex;
+    align-items: {{ block.settings.content_vertical_alignment }};
+    justify-content: {{ block.settings.content_alignment }};
+    z-index: 3;
+    padding: 40px 20px;
+  }
+
+  .ai-hero-slider__content-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: {{ block.settings.content_alignment }};
+    max-width: {{ block.settings.content_max_width }}px;
+    width: 100%;
+    text-align: {{ block.settings.text_alignment }};
+    {% if block.settings.constrain_content_area %}
+      padding: 0 20px;
+    {% endif %}
+  }
+
+  .ai-hero-slider__heading-{{ ai_gen_id }} {
+    margin: 0;
+    color: {{ block.settings.heading_color }};
+    font-size: {{ block.settings.heading_size }}px;
+    visibility: visible;
+    opacity: 1;
+    {% if block.settings.use_custom_font %}
+      {% case block.settings.cursive_font_style %}
+        {% when 'playfair_display' %}
+          font-family: 'Playfair Display', serif;
+          font-weight: {{ block.settings.cursive_font_weight }};
+          font-style: {{ block.settings.font_style_italic }};
+        {% when 'cormorant_garamond' %}
+          font-family: 'Cormorant Garamond', serif;
+          font-weight: {{ block.settings.cursive_font_weight }};
+          font-style: {{ block.settings.font_style_italic }};
+        {% when 'italiana' %}
+          font-family: 'Italiana', serif;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'satisfy' %}
+          font-family: 'Satisfy', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'pacifico' %}
+          font-family: 'Pacifico', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'lobster_two' %}
+          font-family: 'Lobster Two', display;
+          font-weight: {{ block.settings.cursive_font_weight }};
+          font-style: {{ block.settings.font_style_italic }};
+        {% when 'kaushan_script' %}
+          font-family: 'Kaushan Script', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'cinzel' %}
+          font-family: 'Cinzel', serif;
+          font-weight: {{ block.settings.cursive_font_weight }};
+          font-style: normal;
+        {% when 'great_vibes' %}
+          font-family: 'Great Vibes', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'allura' %}
+          font-family: 'Allura', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'dancing_script' %}
+          font-family: 'Dancing Script', cursive;
+          font-weight: {{ block.settings.cursive_font_weight }};
+          font-style: normal;
+        {% when 'parisienne' %}
+          font-family: 'Parisienne', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'tangerine' %}
+          font-family: 'Tangerine', cursive;
+          font-weight: {{ block.settings.cursive_font_weight }};
+          font-style: normal;
+        {% when 'sacramento' %}
+          font-family: 'Sacramento', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'alex_brush' %}
+          font-family: 'Alex Brush', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'pinyon_script' %}
+          font-family: 'Pinyon Script', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'mr_dafoe' %}
+          font-family: 'Mr Dafoe', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'mr_de_haviland' %}
+          font-family: 'Mr De Haviland', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'rouge_script' %}
+          font-family: 'Rouge Script', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'euphoria_script' %}
+          font-family: 'Euphoria Script', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'marck_script' %}
+          font-family: 'Marck Script', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'meddon' %}
+          font-family: 'Meddon', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'norican' %}
+          font-family: 'Norican', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'cookie' %}
+          font-family: 'Cookie', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'leckerli_one' %}
+          font-family: 'Leckerli One', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'yellowtail' %}
+          font-family: 'Yellowtail', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'montez' %}
+          font-family: 'Montez', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'devonshire' %}
+          font-family: 'Devonshire', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'engagement' %}
+          font-family: 'Engagement', cursive;
+          font-weight: 400;
+          font-style: normal;
+      {% endcase %}
+    {% else %}
+      font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+      font-weight: {{ block.settings.heading_font.weight }};
+      font-style: {{ block.settings.heading_font.style }};
+    {% endif %}
+    line-height: 1.3;
+    display: block;
+    letter-spacing: {{ block.settings.letter_spacing }}px;
+    {% if block.settings.text_shadow_style == 'custom' %}
+      text-shadow: {{ block.settings.text_shadow_custom }};
+    {% else %}
+      text-shadow: {{ block.settings.text_shadow_style }};
+    {% endif %}
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .ai-hero-slider__heading-wrapper-{{ ai_gen_id }} {
+    display: block;
+    margin-bottom: {{ block.settings.heading_spacing }}px;
+    position: relative;
+  }
+
+  {% if block.settings.enable_typewriter %}
+  .ai-hero-slider__heading-{{ ai_gen_id }} .typewriter-text {
+    border-right: {{ block.settings.cursor_width }}px solid {{ block.settings.cursor_color }};
+    padding-right: 5px;
+    animation: blink-cursor {{ block.settings.cursor_blink_speed }}s step-end infinite;
+    display: inline;
+    visibility: visible;
+  }
+
+  @keyframes blink-cursor {
+    0%, 100% { border-color: {{ block.settings.cursor_color }}; }
+    50% { border-color: transparent; }
+  }
+
+  .ai-hero-slider__heading-{{ ai_gen_id }} .typewriter-text.typing {
+    border-color: {{ block.settings.cursor_color }};
+  }
+  {% endif %}
+
+  .ai-hero-slider__description-{{ ai_gen_id }} {
+    margin: 0 0 {{ block.settings.description_spacing }}px;
+    color: {{ block.settings.description_color }};
+    font-size: {{ block.settings.description_size }}px;
+    {% if block.settings.use_custom_desc_font %}
+      {% case block.settings.description_custom_font %}
+        {% when 'playfair_display' %}
+          font-family: 'Playfair Display', serif;
+          font-weight: {{ block.settings.description_font_weight }};
+          font-style: {{ block.settings.description_font_style_italic }};
+        {% when 'cormorant_garamond' %}
+          font-family: 'Cormorant Garamond', serif;
+          font-weight: {{ block.settings.description_font_weight }};
+          font-style: {{ block.settings.description_font_style_italic }};
+        {% when 'italiana' %}
+          font-family: 'Italiana', serif;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'cinzel' %}
+          font-family: 'Cinzel', serif;
+          font-weight: {{ block.settings.description_font_weight }};
+          font-style: normal;
+        {% when 'great_vibes' %}
+          font-family: 'Great Vibes', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'allura' %}
+          font-family: 'Allura', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'dancing_script' %}
+          font-family: 'Dancing Script', cursive;
+          font-weight: {{ block.settings.description_font_weight }};
+          font-style: normal;
+        {% when 'parisienne' %}
+          font-family: 'Parisienne', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'sacramento' %}
+          font-family: 'Sacramento', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'satisfy' %}
+          font-family: 'Satisfy', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'pacifico' %}
+          font-family: 'Pacifico', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'kaushan_script' %}
+          font-family: 'Kaushan Script', cursive;
+          font-weight: 400;
+          font-style: normal;
+        {% when 'nunito_sans' %}
+          font-family: 'Nunito Sans', sans-serif;
+          font-weight: {{ block.settings.description_font_weight }};
+          font-style: {{ block.settings.description_font_style_italic }};
+      {% endcase %}
+    {% else %}
+      font-family: {{ block.settings.description_font.family }}, {{ block.settings.description_font.fallback_families }};
+      font-weight: {{ block.settings.description_font.weight }};
+      font-style: {{ block.settings.description_font.style }};
+    {% endif %}
+    line-height: 1.6;
+    max-width: 600px;
+  }
+
+  .ai-hero-slider__button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    font-size: {{ block.settings.button_font_size }}px;
+    font-family: {{ block.settings.button_font.family }}, {{ block.settings.button_font.fallback_families }};
+    font-weight: {{ block.settings.button_font.weight }};
+    font-style: {{ block.settings.button_font.style }};
+    border: {{ block.settings.button_border_width }}px solid {{ block.settings.button_border_color }};
+    border-radius: {{ block.settings.button_border_radius }}px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .ai-hero-slider__button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_background_hover }};
+    color: {{ block.settings.button_text_color_hover }};
+    border-color: {{ block.settings.button_border_color_hover }};
+  }
+
+  .ai-hero-slider__dots-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+  }
+
+  .ai-hero-slider__dot-{{ ai_gen_id }} {
+    width: {{ block.settings.dot_size }}px;
+    height: {{ block.settings.dot_size }}px;
+    border-radius: 50%;
+    background-color: {{ block.settings.dot_color }};
+    opacity: 0.5;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .ai-hero-slider__dot-{{ ai_gen_id }}.active {
+    opacity: 1;
+    background-color: {{ block.settings.dot_active_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-hero-slider__slides-{{ ai_gen_id }} {
+      aspect-ratio: {{ block.settings.mobile_aspect_ratio }};
+    }
+
+    .ai-hero-slider__background-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-hero-slider__background-mobile-{{ ai_gen_id }} {
+      display: block;
+    }
+
+    .ai-hero-slider__heading-{{ ai_gen_id }} {
+      {% if block.settings.use_mobile_heading_size %}
+        font-size: {{ block.settings.mobile_heading_size }}px;
+        min-height: auto;
+      {% else %}
+        font-size: {{ block.settings.heading_size | times: 0.5 }}px;
+        min-height: auto;
+      {% endif %}
+      letter-spacing: {{ block.settings.letter_spacing | times: 0.5 }}px;
+      {% if block.settings.mobile_text_shadow_style == 'custom' %}
+        text-shadow: {{ block.settings.mobile_text_shadow_custom }};
+      {% elsif block.settings.mobile_text_shadow_style != 'same_as_desktop' %}
+        text-shadow: {{ block.settings.mobile_text_shadow_style }};
+      {% endif %}
+      margin-bottom: 10px !important;
+    }
+
+    .ai-hero-slider__heading-wrapper-{{ ai_gen_id }} {
+      margin-bottom: 8px !important;
+    }
+
+    .ai-hero-slider__description-{{ ai_gen_id }} {
+      {% if block.settings.use_mobile_description_size %}
+        font-size: {{ block.settings.mobile_description_size }}px;
+      {% else %}
+        font-size: {{ block.settings.description_size | times: 0.75 }}px;
+      {% endif %}
+      margin-top: 8px !important;
+      margin-bottom: {{ block.settings.description_spacing }}px;
+    }
+
+    .ai-hero-slider__button-{{ ai_gen_id }} {
+      font-size: {{ block.settings.button_font_size | times: 0.85 }}px;
+    }
+
+    .ai-hero-slider__content-wrapper-{{ ai_gen_id }} {
+      padding: {{ block.settings.mobile_content_padding_top }}px 15px {{ block.settings.mobile_content_padding_bottom }}px 10px;
+      width: 100% !important;
+      justify-content: flex-start !important;
+      {% if block.settings.mobile_content_vertical_alignment != 'same_as_desktop' %}
+        align-items: {{ block.settings.mobile_content_vertical_alignment }};
+      {% endif %}
+    }
+
+    .ai-hero-slider__content-{{ ai_gen_id }} {
+      max-width: 60% !important;
+      padding: 0 !important;
+      margin-left: 0;
+      margin-right: auto;
+      align-items: flex-start !important;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .ai-hero-slider__heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.4 }}px;
+      min-height: auto;
+      margin-bottom: 8px !important;
+    }
+
+    .ai-hero-slider__description-{{ ai_gen_id }} {
+      font-size: {{ block.settings.description_size | times: 0.7 }}px;
+      margin-top: 6px !important;
+    }
+
+    .ai-hero-slider__content-wrapper-{{ ai_gen_id }} {
+      padding: {{ block.settings.mobile_content_padding_top }}px 10px {{ block.settings.mobile_content_padding_bottom }}px 8px;
+    }
+
+    .ai-hero-slider__content-{{ ai_gen_id }} {
+      max-width: 60% !important;
+    }
+  }
+{% endstyle %}
+
+<hero-slider-{{ ai_gen_id }}
+  class="ai-hero-slider-{{ ai_gen_id }}"
+  data-autoplay="{{ block.settings.enable_slider }}"
+  data-interval="{{ block.settings.slider_interval }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-hero-slider__slides-{{ ai_gen_id }}">
+    {% for i in (1..3) %}
+      {% liquid
+        assign slide_enabled_key = 'slide_' | append: i | append: '_enabled'
+        assign slide_image_key = 'slide_' | append: i | append: '_image'
+        assign slide_heading_key = 'slide_' | append: i | append: '_heading'
+        assign slide_description_key = 'slide_' | append: i | append: '_description'
+        assign slide_button_text_key = 'slide_' | append: i | append: '_button_text'
+        assign slide_button_link_key = 'slide_' | append: i | append: '_button_link'
+        assign slide_mobile_image_key = 'slide_' | append: i | append: '_mobile_image'
+
+        assign slide_enabled = block.settings[slide_enabled_key]
+        assign slide_image = block.settings[slide_image_key]
+        assign slide_mobile_image = block.settings[slide_mobile_image_key]
+        assign slide_heading = block.settings[slide_heading_key]
+        assign slide_description = block.settings[slide_description_key]
+        assign slide_button_text = block.settings[slide_button_text_key]
+        assign slide_button_link = block.settings[slide_button_link_key]
+      %}
+
+      {% if slide_enabled %}
+        <div
+          class="ai-hero-slider__slide-{{ ai_gen_id }} {% if forloop.first %}active{% endif %}"
+          data-slide="{{ i }}"
+        >
+          {% comment %} Desktop Image {% endcomment %}
+          {% if slide_image %}
+            <img
+              src="{{ slide_image | image_url: width: 2000 }}"
+              alt="{{ slide_image.alt | escape }}"
+              loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+              width="2000"
+              height="700"
+              class="ai-hero-slider__background-{{ ai_gen_id }}"
+            >
+          {% else %}
+            <div class="ai-hero-slider__placeholder-{{ ai_gen_id }}">
+              {{ 'hero-apparel-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+
+          {% comment %} Mobile Image {% endcomment %}
+          {% if slide_mobile_image %}
+            <img
+              src="{{ slide_mobile_image | image_url: width: 1000 }}"
+              alt="{{ slide_mobile_image.alt | escape }}"
+              loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+              width="750"
+              height="1000"
+              class="ai-hero-slider__background-mobile-{{ ai_gen_id }}"
+            >
+          {% elsif slide_image %}
+            {% comment %} Fallback to desktop image if no mobile image {% endcomment %}
+            <img
+              src="{{ slide_image | image_url: width: 1000 }}"
+              alt="{{ slide_image.alt | escape }}"
+              loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+              width="750"
+              height="1000"
+              class="ai-hero-slider__background-mobile-{{ ai_gen_id }}"
+            >
+          {% else %}
+            {% comment %} Show placeholder on mobile if no images {% endcomment %}
+            <div class="ai-hero-slider__placeholder-mobile-{{ ai_gen_id }}">
+              {{ 'hero-apparel-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+
+          <div class="ai-hero-slider__overlay-{{ ai_gen_id }}"></div>
+
+          <div class="ai-hero-slider__content-wrapper-{{ ai_gen_id }}">
+            <div class="ai-hero-slider__content-{{ ai_gen_id }}">
+              {% if slide_heading != blank %}
+                <div class="ai-hero-slider__heading-wrapper-{{ ai_gen_id }}">
+                  <h1 class="ai-hero-slider__heading-{{ ai_gen_id }}"
+                      data-typewriter="{{ block.settings.enable_typewriter }}"
+                      data-typing-speed="{{ block.settings.typing_speed }}"
+                      data-erasing-speed="{{ block.settings.erasing_speed }}"
+                      data-pause-duration="{{ block.settings.pause_duration }}"
+                      data-original-text="{{ slide_heading | escape }}">
+                    {% if block.settings.enable_typewriter %}
+                      <span class="typewriter-text"></span>
+                    {% else %}
+                      {{ slide_heading | newline_to_br }}
+                    {% endif %}
+                  </h1>
+                </div>
+              {% endif %}
+
+              {% if slide_description != blank %}
+                <div class="ai-hero-slider__description-{{ ai_gen_id }}">{{ slide_description }}</div>
+              {% endif %}
+
+              {% if slide_button_text != blank and block.settings.show_button %}
+                <a
+                  href="{{ slide_button_link }}"
+                  class="ai-hero-slider__button-{{ ai_gen_id }}"
+                >
+                  {{ slide_button_text }}
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  {% if block.settings.enable_slider and block.settings.show_dots %}
+    <div class="ai-hero-slider__dots-{{ ai_gen_id }}">
+      {% for i in (1..3) %}
+        {% liquid
+          assign slide_enabled_key = 'slide_' | append: i | append: '_enabled'
+          assign slide_enabled = block.settings[slide_enabled_key]
+        %}
+        {% if slide_enabled %}
+          <button
+            class="ai-hero-slider__dot-{{ ai_gen_id }} {% if forloop.first %}active{% endif %}"
+            data-slide="{{ i }}"
+            aria-label="Go to slide {{ i }}"
+          ></button>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</hero-slider-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class HeroSlider{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentSlide = 0;
+        this.autoplayInterval = null;
+      }
+
+      connectedCallback() {
+        this.slides = this.querySelectorAll('.ai-hero-slider__slide-{{ ai_gen_id }}');
+        this.dots = this.querySelectorAll('.ai-hero-slider__dot-{{ ai_gen_id }}');
+        this.autoplay = this.dataset.autoplay === 'true';
+        this.interval = parseInt(this.dataset.interval) * 1000;
+
+        if (this.slides.length > 1) {
+          this.setupEventListeners();
+          if (this.autoplay) {
+            this.startAutoplay();
+          }
+        }
+
+        // Initialize typewriter effect after a short delay to ensure fonts are loaded
+        setTimeout(() => {
+          this.initTypewriter();
+        }, 300);
+      }
+
+      initTypewriter() {
+        const headings = this.querySelectorAll('.ai-hero-slider__heading-{{ ai_gen_id }}');
+
+        headings.forEach(heading => {
+          const enableTypewriter = heading.dataset.typewriter === 'true';
+
+          if (enableTypewriter) {
+            const originalText = heading.dataset.originalText;
+            const typingSpeed = parseInt(heading.dataset.typingSpeed) || 100;
+            const erasingSpeed = parseInt(heading.dataset.erasingSpeed) || 50;
+            const pauseDuration = parseInt(heading.dataset.pauseDuration) || 2000;
+            const textElement = heading.querySelector('.typewriter-text');
+
+            if (textElement && originalText) {
+              let charIndex = 0;
+              let isTyping = true;
+
+              // Measure and set min-height to prevent layout shift
+              const setMinHeight = () => {
+                const currentContent = textElement.innerHTML;
+                // Use innerHTML with <br> for proper measurement
+                textElement.innerHTML = originalText.replace(/\n/g, '<br>');
+                const fullHeight = heading.offsetHeight;
+                textElement.innerHTML = currentContent;
+                heading.style.minHeight = fullHeight + 'px';
+              };
+
+              const typeWriter = () => {
+                if (isTyping) {
+                  if (charIndex < originalText.length) {
+                    // Convert \n to <br> for proper line breaks
+                    const displayText = originalText.substring(0, charIndex + 1).replace(/\n/g, '<br>');
+                    textElement.innerHTML = displayText;
+                    // Set min-height on first character to lock layout
+                    if (charIndex === 0) {
+                      setTimeout(setMinHeight, 50);
+                    }
+                    charIndex++;
+                    setTimeout(typeWriter, typingSpeed);
+                  } else {
+                    textElement.classList.add('typing');
+                    setTimeout(() => {
+                      isTyping = false;
+                      textElement.classList.remove('typing');
+                      typeWriter();
+                    }, pauseDuration);
+                  }
+                } else {
+                  if (charIndex > 0) {
+                    // Convert \n to <br> for proper line breaks during erasing
+                    const displayText = originalText.substring(0, charIndex - 1).replace(/\n/g, '<br>');
+                    textElement.innerHTML = displayText;
+                    charIndex--;
+                    setTimeout(typeWriter, erasingSpeed);
+                  } else {
+                    setTimeout(() => {
+                      isTyping = true;
+                      typeWriter();
+                    }, pauseDuration / 2);
+                  }
+                }
+              };
+
+              // Start typing immediately
+              typeWriter();
+            }
+          }
+        });
+      }
+
+      setupEventListeners() {
+        this.dots.forEach((dot, index) => {
+          dot.addEventListener('click', () => {
+            this.goToSlide(index);
+            if (this.autoplay) {
+              this.resetAutoplay();
+            }
+          });
+        });
+      }
+
+      goToSlide(index) {
+        this.slides[this.currentSlide].classList.remove('active');
+        if (this.dots.length > 0) {
+          this.dots[this.currentSlide].classList.remove('active');
+        }
+
+        this.currentSlide = index;
+
+        this.slides[this.currentSlide].classList.add('active');
+        if (this.dots.length > 0) {
+          this.dots[this.currentSlide].classList.add('active');
+        }
+      }
+
+      nextSlide() {
+        const nextIndex = (this.currentSlide + 1) % this.slides.length;
+        this.goToSlide(nextIndex);
+      }
+
+      startAutoplay() {
+        this.autoplayInterval = setInterval(() => {
+          this.nextSlide();
+        }, this.interval);
+      }
+
+      resetAutoplay() {
+        clearInterval(this.autoplayInterval);
+        this.startAutoplay();
+      }
+
+      disconnectedCallback() {
+        if (this.autoplayInterval) {
+          clearInterval(this.autoplayInterval);
+        }
+      }
+    }
+
+    customElements.define('hero-slider-{{ ai_gen_id }}', HeroSlider{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Hero banner slider",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Slider settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_slider",
+      "label": "Enable slider",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "mobile_aspect_ratio",
+      "label": "Mobile aspect ratio",
+      "info": "Aspect ratio for mobile banner images",
+      "options": [
+        {
+          "value": "3 / 4",
+          "label": "3:4 (Portrait)"
+        },
+        {
+          "value": "9 / 16",
+          "label": "9:16 (Tall Portrait)"
+        },
+        {
+          "value": "2 / 3",
+          "label": "2:3 (Vertical)"
+        },
+        {
+          "value": "1 / 1",
+          "label": "1:1 (Square)"
+        },
+        {
+          "value": "4 / 5",
+          "label": "4:5 (Instagram Portrait)"
+        },
+        {
+          "value": "16 / 9",
+          "label": "16:9 (Landscape)"
+        }
+      ],
+      "default": "3 / 4"
+    },
+    {
+      "type": "range",
+      "id": "slider_interval",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Slide interval",
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show dot navigation",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "content_max_width",
+      "min": 600,
+      "max": 1400,
+      "step": 100,
+      "unit": "px",
+      "label": "Content max width",
+      "default": 1200
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content horizontal alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "content_vertical_alignment",
+      "label": "Content vertical alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "checkbox",
+      "id": "constrain_content_area",
+      "label": "Constrain content to half width",
+      "info": "Prevents text from overlapping images/cards on the other half",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "content_area_width",
+      "min": 30,
+      "max": 70,
+      "step": 5,
+      "unit": "%",
+      "label": "Content area width",
+      "info": "Width of the content area when constrained",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_custom_font",
+      "label": "Use Valentine's elegant fonts",
+      "info": "Enable to use beautiful fonts perfect for Valentine's Day",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "cursive_font_style",
+      "label": "Valentine's font style",
+      "info": "Choose an elegant font for your heading",
+      "options": [
+        {
+          "value": "playfair_display",
+          "label": "Playfair Display (Elegant Serif)"
+        },
+        {
+          "value": "cormorant_garamond",
+          "label": "Cormorant Garamond (Classic Luxury)"
+        },
+        {
+          "value": "italiana",
+          "label": "Italiana (Sophisticated)"
+        },
+        {
+          "value": "cinzel",
+          "label": "Cinzel (Royal & Elegant)"
+        },
+        {
+          "value": "great_vibes",
+          "label": "Great Vibes (Flowing Elegance)"
+        },
+        {
+          "value": "allura",
+          "label": "Allura (Romantic Script)"
+        },
+        {
+          "value": "pinyon_script",
+          "label": "Pinyon Script (Classic Cursive)"
+        },
+        {
+          "value": "dancing_script",
+          "label": "Dancing Script (Playful)"
+        },
+        {
+          "value": "parisienne",
+          "label": "Parisienne (French Style)"
+        },
+        {
+          "value": "sacramento",
+          "label": "Sacramento (Handwritten)"
+        },
+        {
+          "value": "tangerine",
+          "label": "Tangerine (Delicate)"
+        },
+        {
+          "value": "alex_brush",
+          "label": "Alex Brush (Brush Script)"
+        },
+        {
+          "value": "satisfy",
+          "label": "Satisfy (Casual Script)"
+        },
+        {
+          "value": "pacifico",
+          "label": "Pacifico (Friendly)"
+        },
+        {
+          "value": "kaushan_script",
+          "label": "Kaushan Script (Bold Handwritten)"
+        },
+        {
+          "value": "mr_dafoe",
+          "label": "Mr Dafoe (Signature Style)"
+        },
+        {
+          "value": "mr_de_haviland",
+          "label": "Mr De Haviland (Elegant Cursive)"
+        },
+        {
+          "value": "rouge_script",
+          "label": "Rouge Script (Vintage)"
+        },
+        {
+          "value": "euphoria_script",
+          "label": "Euphoria Script (Artistic)"
+        },
+        {
+          "value": "marck_script",
+          "label": "Marck Script (Handwriting)"
+        },
+        {
+          "value": "meddon",
+          "label": "Meddon (Casual Cursive)"
+        },
+        {
+          "value": "norican",
+          "label": "Norican (Smooth Script)"
+        },
+        {
+          "value": "cookie",
+          "label": "Cookie (Sweet Script)"
+        },
+        {
+          "value": "leckerli_one",
+          "label": "Leckerli One (Fun & Friendly)"
+        },
+        {
+          "value": "yellowtail",
+          "label": "Yellowtail (Flowing)"
+        },
+        {
+          "value": "montez",
+          "label": "Montez (Elegant Cursive)"
+        },
+        {
+          "value": "devonshire",
+          "label": "Devonshire (Victorian)"
+        },
+        {
+          "value": "engagement",
+          "label": "Engagement (Wedding Style)"
+        },
+        {
+          "value": "lobster_two",
+          "label": "Lobster Two (Bold Display)"
+        }
+      ],
+      "default": "allura"
+    },
+    {
+      "type": "range",
+      "id": "cursive_font_weight",
+      "min": 400,
+      "max": 700,
+      "step": 100,
+      "label": "Font weight",
+      "info": "Regular (400) or Bold (700) - applies to select fonts",
+      "default": 700
+    },
+    {
+      "type": "select",
+      "id": "font_style_italic",
+      "label": "Font style",
+      "info": "Normal or Italic - applies to select fonts",
+      "options": [
+        {
+          "value": "normal",
+          "label": "Normal"
+        },
+        {
+          "value": "italic",
+          "label": "Italic"
+        }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Standard font (when cursive is disabled)",
+      "info": "Used when 'Use Valentine's cursive fonts' is off",
+      "default": "helvetica_n7"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 24,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "label": "Font size",
+      "info": "Elegant fonts look best at larger sizes (60-80px recommended)",
+      "default": 72
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "min": -2,
+      "max": 10,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Letter spacing",
+      "info": "Adjust spacing between letters",
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "text_shadow_style",
+      "label": "Text shadow preset",
+      "info": "Choose a preset or select 'Custom' to enter your own CSS",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "2px 2px 4px rgba(0,0,0,0.3)",
+          "label": "Subtle Dark Shadow"
+        },
+        {
+          "value": "2px 2px 8px rgba(0,0,0,0.5)",
+          "label": "Medium Dark Shadow"
+        },
+        {
+          "value": "3px 3px 12px rgba(0,0,0,0.7)",
+          "label": "Strong Dark Shadow"
+        },
+        {
+          "value": "4px 4px 16px rgba(0,0,0,0.8)",
+          "label": "Extra Strong Dark Shadow"
+        },
+        {
+          "value": "0px 0px 10px rgba(255,255,255,0.8)",
+          "label": "White Glow"
+        },
+        {
+          "value": "0px 0px 15px rgba(255,255,255,1)",
+          "label": "Strong White Glow"
+        },
+        {
+          "value": "0px 4px 8px rgba(0,0,0,0.4)",
+          "label": "Bottom Drop Shadow"
+        },
+        {
+          "value": "custom",
+          "label": "Custom CSS"
+        }
+      ],
+      "default": "2px 2px 8px rgba(0,0,0,0.5)"
+    },
+    {
+      "type": "text",
+      "id": "text_shadow_custom",
+      "label": "Custom text shadow CSS",
+      "info": "Only used when 'Custom CSS' is selected above. e.g., '2px 2px 8px rgba(0,0,0,0.4)'",
+      "default": "2px 2px 8px rgba(0,0,0,0.3)"
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Typewriter Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_typewriter",
+      "label": "Enable typewriter effect",
+      "info": "Animate heading text with typing and erasing effect",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "typing_speed",
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "unit": "ms",
+      "label": "Typing speed",
+      "info": "Speed of typing animation (lower = faster)",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "erasing_speed",
+      "min": 20,
+      "max": 200,
+      "step": 10,
+      "unit": "ms",
+      "label": "Erasing speed",
+      "info": "Speed of erasing animation (lower = faster)",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "pause_duration",
+      "min": 500,
+      "max": 5000,
+      "step": 250,
+      "unit": "ms",
+      "label": "Pause duration",
+      "info": "Pause time after typing/erasing is complete",
+      "default": 2000
+    },
+    {
+      "type": "color",
+      "id": "cursor_color",
+      "label": "Cursor color",
+      "info": "Color of the blinking cursor",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "cursor_width",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Cursor width",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "cursor_blink_speed",
+      "min": 0.3,
+      "max": 2.0,
+      "step": 0.1,
+      "unit": "s",
+      "label": "Cursor blink speed",
+      "info": "Speed of cursor blinking animation",
+      "default": 0.7
+    },
+    {
+      "type": "header",
+      "content": "Mobile Settings"
+    },
+    {
+      "type": "paragraph",
+      "content": "Customize how the title and description appear on mobile devices"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_mobile_heading_size",
+      "label": "Use custom mobile title size",
+      "info": "Enable to set a different title size for mobile",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "mobile_heading_size",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile title font size",
+      "default": 36
+    },
+    {
+      "type": "select",
+      "id": "mobile_text_shadow_style",
+      "label": "Mobile text shadow",
+      "info": "Text shadow for mobile title",
+      "options": [
+        {
+          "value": "same_as_desktop",
+          "label": "Same as Desktop"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "2px 2px 4px rgba(0,0,0,0.3)",
+          "label": "Subtle Dark Shadow"
+        },
+        {
+          "value": "2px 2px 8px rgba(0,0,0,0.5)",
+          "label": "Medium Dark Shadow"
+        },
+        {
+          "value": "3px 3px 12px rgba(0,0,0,0.7)",
+          "label": "Strong Dark Shadow"
+        },
+        {
+          "value": "0px 0px 10px rgba(255,255,255,0.8)",
+          "label": "White Glow"
+        },
+        {
+          "value": "custom",
+          "label": "Custom CSS"
+        }
+      ],
+      "default": "same_as_desktop"
+    },
+    {
+      "type": "text",
+      "id": "mobile_text_shadow_custom",
+      "label": "Custom mobile text shadow",
+      "info": "Only used when 'Custom CSS' is selected above",
+      "default": "2px 2px 8px rgba(0,0,0,0.5)"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_mobile_description_size",
+      "label": "Use custom mobile description size",
+      "info": "Enable to set a different description size for mobile",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "mobile_description_size",
+      "min": 12,
+      "max": 28,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile description font size",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "mobile_content_vertical_alignment",
+      "label": "Mobile vertical alignment",
+      "info": "Vertical position of content on mobile",
+      "options": [
+        {
+          "value": "same_as_desktop",
+          "label": "Same as Desktop"
+        },
+        {
+          "value": "flex-start",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom"
+        }
+      ],
+      "default": "same_as_desktop"
+    },
+    {
+      "type": "range",
+      "id": "mobile_content_padding_top",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile content padding top",
+      "info": "Add top padding to push content down",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_content_padding_bottom",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile content padding bottom",
+      "info": "Add bottom padding to pull content up",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Description"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_custom_desc_font",
+      "label": "Use custom description font",
+      "info": "Enable to use elegant fonts for description text",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "description_custom_font",
+      "label": "Description font style",
+      "info": "Choose an elegant font for description",
+      "options": [
+        {
+          "value": "playfair_display",
+          "label": "Playfair Display (Elegant Serif)"
+        },
+        {
+          "value": "cormorant_garamond",
+          "label": "Cormorant Garamond (Classic)"
+        },
+        {
+          "value": "italiana",
+          "label": "Italiana (Sophisticated)"
+        },
+        {
+          "value": "cinzel",
+          "label": "Cinzel (Royal)"
+        },
+        {
+          "value": "great_vibes",
+          "label": "Great Vibes (Elegant Script)"
+        },
+        {
+          "value": "allura",
+          "label": "Allura (Romantic)"
+        },
+        {
+          "value": "dancing_script",
+          "label": "Dancing Script (Playful)"
+        },
+        {
+          "value": "parisienne",
+          "label": "Parisienne (French)"
+        },
+        {
+          "value": "sacramento",
+          "label": "Sacramento (Handwritten)"
+        },
+        {
+          "value": "satisfy",
+          "label": "Satisfy (Casual)"
+        },
+        {
+          "value": "pacifico",
+          "label": "Pacifico (Friendly)"
+        },
+        {
+          "value": "kaushan_script",
+          "label": "Kaushan Script (Bold)"
+        },
+        {
+          "value": "nunito_sans",
+          "label": "Nunito Sans (Clean Modern)"
+        }
+      ],
+      "default": "playfair_display"
+    },
+    {
+      "type": "range",
+      "id": "description_font_weight",
+      "min": 400,
+      "max": 700,
+      "step": 100,
+      "label": "Description font weight",
+      "info": "Regular (400) or Bold (700)",
+      "default": 400
+    },
+    {
+      "type": "select",
+      "id": "description_font_style_italic",
+      "label": "Description font style",
+      "info": "Normal or Italic",
+      "options": [
+        {
+          "value": "normal",
+          "label": "Normal"
+        },
+        {
+          "value": "italic",
+          "label": "Italic"
+        }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "font_picker",
+      "id": "description_font",
+      "label": "Standard font (when custom is disabled)",
+      "info": "Used when 'Use custom description font' is off",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "min": 12,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Font size",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "description_spacing",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Bottom spacing",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show button",
+      "info": "Toggle to show or hide the button",
+      "default": false
+    },
+    {
+      "type": "font_picker",
+      "id": "button_font",
+      "label": "Font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_background_hover",
+      "label": "Hover background color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color_hover",
+      "label": "Hover text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Border color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color_hover",
+      "label": "Hover border color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Dot navigation"
+    },
+    {
+      "type": "range",
+      "id": "dot_size",
+      "min": 8,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Dot size",
+      "default": 12
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "dot_active_color",
+      "label": "Active dot color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Slide 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "slide_1_enabled",
+      "label": "Enable slide 1",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_1_image",
+      "label": "Desktop background image",
+      "info": "Recommended: 2000x700px (landscape)"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_1_mobile_image",
+      "label": "Mobile background image",
+      "info": "Recommended: 750x1000px (portrait). If not set, desktop image will be used."
+    },
+    {
+      "type": "textarea",
+      "id": "slide_1_heading",
+      "label": "Heading",
+      "info": "Press Enter to create line breaks. For SEO, this remains a single H1 tag.",
+      "default": "Welcome to our store"
+    },
+    {
+      "type": "textarea",
+      "id": "slide_1_description",
+      "label": "Description",
+      "default": "Discover our amazing collection of products"
+    },
+    {
+      "type": "text",
+      "id": "slide_1_button_text",
+      "label": "Button text",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "slide_1_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Slide 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "slide_2_enabled",
+      "label": "Enable slide 2",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_2_image",
+      "label": "Desktop background image",
+      "info": "Recommended: 2000x700px (landscape)"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_2_mobile_image",
+      "label": "Mobile background image",
+      "info": "Recommended: 750x1000px (portrait). If not set, desktop image will be used."
+    },
+    {
+      "type": "textarea",
+      "id": "slide_2_heading",
+      "label": "Heading",
+      "info": "Press Enter to create line breaks. For SEO, this remains a single H1 tag.",
+      "default": "New arrivals"
+    },
+    {
+      "type": "textarea",
+      "id": "slide_2_description",
+      "label": "Description",
+      "default": "Check out our latest products"
+    },
+    {
+      "type": "text",
+      "id": "slide_2_button_text",
+      "label": "Button text",
+      "default": "Explore"
+    },
+    {
+      "type": "url",
+      "id": "slide_2_button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Slide 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "slide_3_enabled",
+      "label": "Enable slide 3",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_3_image",
+      "label": "Desktop background image",
+      "info": "Recommended: 2000x700px (landscape)"
+    },
+    {
+      "type": "image_picker",
+      "id": "slide_3_mobile_image",
+      "label": "Mobile background image",
+      "info": "Recommended: 750x1000px (portrait). If not set, desktop image will be used."
+    },
+    {
+      "type": "textarea",
+      "id": "slide_3_heading",
+      "label": "Heading",
+      "info": "Press Enter to create line breaks. For SEO, this remains a single H1 tag.",
+      "default": "Special offers"
+    },
+    {
+      "type": "textarea",
+      "id": "slide_3_description",
+      "label": "Description",
+      "default": "Save big on selected items"
+    },
+    {
+      "type": "text",
+      "id": "slide_3_button_text",
+      "label": "Button text",
+      "default": "View deals"
+    },
+    {
+      "type": "url",
+      "id": "slide_3_button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero banner slider"
+    }
+  ]
+}
+{% endschema %}

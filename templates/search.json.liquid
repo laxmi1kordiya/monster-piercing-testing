@@ -1,0 +1,46 @@
+{% layout none %}
+{%- paginate search.results by 50 -%}
+{%- capture product_results -%}
+  {%- for item in search.results -%}
+    {%- if item.object_type == 'product' -%}
+      {%- assign total_inventory = 0 -%}
+      {%- for variant in item.variants -%}
+        {%- if variant.inventory_management -%}
+          {%- assign total_inventory = total_inventory | plus: variant.inventory_quantity -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- assign is_best_seller = false -%}
+      {%- assign is_new = false -%}
+      {%- for tag in item.tags -%}
+        {%- assign tag_lower = tag | downcase -%}
+        {%- if tag_lower == 'best seller' or tag_lower == 'bestseller' or tag_lower == 'best-seller' -%}
+          {%- assign is_best_seller = true -%}
+        {%- endif -%}
+        {%- if tag_lower == 'new' -%}
+          {%- assign is_new = true -%}
+        {%- endif -%}
+      {%- endfor -%}
+      ,
+      {
+        "id": {{ item.id | json }},
+        "title": {{ item.title | json }},
+        "url": {{ item.url | json }},
+        "vendor": {{ item.vendor | json }},
+        "type": {{ item.type | json }},
+        "price": {{ item.price }},
+        "compare_at_price": {{ item.compare_at_price | default: 0 }},
+        "image": {{ item.featured_image | image_url: width: 300 | json }},
+        "available": {{ item.available | json }},
+        "inventory_quantity": {{ total_inventory }},
+        "is_best_seller": {{ is_best_seller | json }},
+        "is_new": {{ is_new | json }}
+      }
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- endpaginate -%}
+{
+  "products": [{{ product_results | strip_newlines | remove_first: ',' }}],
+  "terms": {{ search.terms | json }},
+  "total": {{ search.results_count }}
+}

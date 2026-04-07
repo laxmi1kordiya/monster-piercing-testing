@@ -1,0 +1,232 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "blocks_yQncrE": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_f1f6909_zWVdfz": {
+          "type": "ai_gen_block_f1f6909",
+          "settings": {
+            "text_1": "FLAT 25% OFF",
+            "text_2": "No Exclusions",
+            "text_3": "FLAT 25% OFF",
+            "text_4": "Limited Time",
+            "text_5": "",
+            "initial_direction": "right",
+            "animation_speed": 10,
+            "background_color": "#fec0c7",
+            "text_color": "#810000",
+            "font_size": 17,
+            "bar_padding": 10,
+            "text_spacing": 40,
+            "show_toggle_button": false,
+            "button_background": "#ffffff",
+            "button_color": "#000000",
+            "button_padding": 8,
+            "button_border_radius": 4,
+            "button_icon_size": 20,
+            "button_position": 20
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_f1f6909_zWVdfz"
+      ],
+      "name": "Sliding announcement bar",
+      "settings": {}
+    },
+    "dynamic_slideshow_AjpxW7": {
+      "type": "dynamic-slideshow",
+      "blocks": {
+        "slide_4BRcHQ": {
+          "type": "slide",
+          "settings": {
+            "background_image": "shopify://shop_images/ear_nose_clickers.png",
+            "mobile_background_image": "shopify://shop_images/ear_noser_clickers_6e9784eb-3a85-4c0d-af23-d038058898bc.png",
+            "title": "Segment Clickers",
+            "text": "Shop Titanium, Gold, Silver and Surgical Steel Segment Clickers. Premium, Hypoallergenic Piercing Jewellery for Every Style",
+            "color": "#000000",
+            "link": "",
+            "text_alignment": "left",
+            "content_position": "center",
+            "vertical_position": "center",
+            "content_max_width": 700,
+            "content_padding": 40,
+            "heading_size": 40,
+            "heading_line_height": 120,
+            "heading_max_width": 600,
+            "heading_margin_bottom": 10,
+            "subheading_size": 16,
+            "subheading_line_height": 150,
+            "subheading_margin_bottom": 16,
+            "desktop_heading_margin_bottom": 10,
+            "desktop_subheading_margin_bottom": 16,
+            "button_margin_top": 0,
+            "desktop_button_margin_top": 0,
+            "button_size": 14,
+            "button_background_color": "#000000",
+            "button_text_color": "#ffffff",
+            "button_layout_desktop": "side-by-side",
+            "button_alignment": "center",
+            "button_gap": 10,
+            "mobile_content_position": "center",
+            "mobile_vertical_position": "center",
+            "mobile_text_alignment": "center",
+            "mobile_content_padding": 15,
+            "mobile_heading_size": 24,
+            "mobile_heading_line_height": 120,
+            "mobile_heading_max_width": 300,
+            "mobile_subheading_size": 14,
+            "mobile_subheading_line_height": 150,
+            "mobile_button_size": 12,
+            "button_layout_mobile": "stacked",
+            "button_one_label": "",
+            "button_one_link": "",
+            "button_two_label": "",
+            "button_two_link": "",
+            "button_three_label": "",
+            "button_three_link": "",
+            "button_four_label": "",
+            "button_four_link": "",
+            "show_overlay": false,
+            "overlay_color": "#000000",
+            "overlay_opacity": 23
+          }
+        }
+      },
+      "block_order": [
+        "slide_4BRcHQ"
+      ],
+      "disabled": true,
+      "name": "t:sections.slideshow.presets.slideshow.name",
+      "settings": {
+        "enable_autoplay": true,
+        "autoplay_duration": 8,
+        "slideshow_width": "full",
+        "slideshow_height": "medium",
+        "slideshow_height_mobile": "x-large",
+        "slideshow_text_below_image": true,
+        "heading_font_weight": "700",
+        "heading_text_transform": "none",
+        "subheading_font_weight": "400",
+        "subheading_text_transform": "none",
+        "button_font_weight": "600",
+        "button_text_transform": "none",
+        "button_border_radius": 0,
+        "button_padding_vertical": 12,
+        "button_padding_horizontal": 24,
+        "enable_text_shadow": false
+      }
+    },
+    "main": {
+      "type": "static-collection",
+      "blocks": {
+        "filter-1": {
+          "type": "filter",
+          "settings": {
+            "filter_option": "tag",
+            "filter_groups": "collapse_all",
+            "show_filter_product_count": true,
+            "filter_style": "groups",
+            "filter_limit": "6",
+            "grid_categories": "",
+            "custom_ordered_categories": "Type, Material, Thread Type, Stone, Colour",
+            "custom_ordered_tags": "",
+            "excluded_tags": "Colour_Black, Colour_Steel, Colour_Gold, Colour_Luminescent, Colour_Red, Colour_Yellow",
+            "excluded_groups": "Colour_Black, Colour_Steel, Colour_Gold, Colour_Luminescent, Colour_Red, Colour_Yellow"
+          }
+        }
+      },
+      "block_order": [
+        "filter-1"
+      ],
+      "settings": {
+        "show_collection_image": false,
+        "products_per_page_range": 24,
+        "products_per_row": "5",
+        "sort_by": true,
+        "grid_list": true,
+        "default_view": "grid-view",
+        "enable_subcollection": true,
+        "show_product_count": false,
+        "thumbnail_image": "collection-image",
+        "image_crop": "original",
+        "show_related_searches": true,
+        "rs_heading": "People Also Searched For",
+        "rs_max_tags": 9,
+        "rs_section_bg_color": "#ffffff",
+        "rs_padding_top": 30,
+        "rs_padding_bottom": 30,
+        "rs_title_color": "#333333",
+        "rs_title_font_size": 22,
+        "rs_tag_bg_color": "#efefef",
+        "rs_tag_text_color": "#333333",
+        "rs_tag_hover_bg_color": "#dddddd",
+        "rs_tag_hover_text_color": "#db1e37",
+        "rs_tag_font_size": 14,
+        "rs_tag_border_radius": 20,
+        "rs_tag_padding_vertical": 10,
+        "rs_tag_padding_horizontal": 18,
+        "rs_tag_gap": 10
+      }
+    },
+    "1774368893d0262c2a": {
+      "type": "apps",
+      "blocks": {
+        "webrex_ai_seo_optimizer_product_description_tabs_EpqVpx": {
+          "type": "shopify://apps/webrex-ai-seo-optimizer/blocks/productDescriptionTabs/b26797ad-bb4d-48f5-8ef3-7c561521049c",
+          "settings": {
+            "layout_view": "tabs",
+            "description_position": "hidden",
+            "description_tab_title": "Description",
+            "max_width": 1100,
+            "tab_design_style": "cards",
+            "tab_title_font_size": 16,
+            "tab_title_text_color": "#212529",
+            "active_tab_title_text_color": "#ffffff",
+            "tab_background_color": "#f8f9fa",
+            "tab_active_background_color": "#db1e37",
+            "tab_border_color": "#e9ecef",
+            "classic_underline_color": "#db1e37",
+            "classic_underline_thickness": 3,
+            "tab_content_background_color": "#ffffff",
+            "accordion_title_font_size": 16,
+            "accordion_title_text_color": "#212529",
+            "accordion_active_title_text_color": "#212529",
+            "accordion_title_bg_color": "#f5f5f5",
+            "accordion_active_title_bg_color": "#ffffff",
+            "accordion_content_background_color": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "webrex_ai_seo_optimizer_product_description_tabs_EpqVpx"
+      ],
+      "settings": {
+        "include_padding": true
+      }
+    },
+    "static-recently-viewed": {
+      "type": "static-recently-viewed",
+      "settings": {
+        "enable_recently_viewed_products": true
+      }
+    }
+  },
+  "order": [
+    "blocks_yQncrE",
+    "dynamic_slideshow_AjpxW7",
+    "main",
+    "1774368893d0262c2a",
+    "static-recently-viewed"
+  ]
+}

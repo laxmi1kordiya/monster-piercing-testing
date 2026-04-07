@@ -1,0 +1,1330 @@
+{%- liquid
+  assign filter_block = nil
+  assign sidebar_blocks = false
+  assign menu_block_count = 0
+  assign products_per_row = section.settings.products_per_row
+
+  for block in section.blocks
+    if block.type == 'filter'
+      assign filter_block = block
+      assign sidebar_blocks = true
+    elsif block.type == 'menu'
+      assign sidebar_blocks = true
+      assign menu_block_count = menu_block_count | plus: 1
+    endif
+  endfor
+
+  assign filter_type = 'tag'
+  if filter_block and filter_block.settings.filter_option == 'faceted'
+    assign filter_type = 'faceted'
+  endif
+
+  comment
+    SEO: Build clean filter names for H1, Meta Title, and Meta Description
+    Only include exact "Material" and "Type" filters (not "Thread type" etc.)
+    Format: [Material] [Collection Title] [Type]
+    Clean values: Remove prefixes like "Type_" or "Material_"
+  endcomment
+  assign seo_material_filters = ''
+  assign seo_type_filters = ''
+  assign seo_filter_count = 0
+
+  if filter_type == 'faceted'
+    for filter in collection.filters
+      assign filter_label_lower = filter.label | downcase | strip
+      assign filter_label_cap = filter.label | strip
+
+      comment
+        ONLY process Material and Type filters
+        Skip all others (Stone, Thread type, etc.)
+      endcomment
+      if filter_label_lower == 'material'
+        for value in filter.active_values
+          assign seo_filter_count = seo_filter_count | plus: 1
+          comment
+            Strip filter label prefix from value if present
+          endcomment
+          assign raw_val = value.label | strip
+          assign clean_val = raw_val | remove_first: filter_label_cap | remove_first: 'Material' | remove_first: 'material' | remove_first: 'MATERIAL' | strip
+
+          comment
+            Title case for material values
+          endcomment
+          assign mat_words = clean_val | split: ' '
+          assign clean_value = ''
+          for word in mat_words
+            assign cap_word = word | capitalize
+            if clean_value == ''
+              assign clean_value = cap_word
+            else
+              assign clean_value = clean_value | append: ' ' | append: cap_word
+            endif
+          endfor
+
+          if seo_material_filters == ''
+            assign seo_material_filters = clean_value
+          else
+            assign seo_material_filters = seo_material_filters | append: ', ' | append: clean_value
+          endif
+        endfor
+
+      elsif filter_label_lower == 'type'
+        for value in filter.active_values
+          assign seo_filter_count = seo_filter_count | plus: 1
+          comment
+            Strip filter label prefix from value if present
+          endcomment
+          assign raw_val = value.label | strip
+          assign clean_val = raw_val | remove_first: filter_label_cap | remove_first: 'Type' | remove_first: 'type' | remove_first: 'TYPE' | strip
+
+          comment
+            Title case for type values
+          endcomment
+          assign type_words = clean_val | split: ' '
+          assign clean_type = ''
+          for word in type_words
+            assign capitalized_word = word | capitalize
+            if clean_type == ''
+              assign clean_type = capitalized_word
+            else
+              assign clean_type = clean_type | append: ' ' | append: capitalized_word
+            endif
+          endfor
+
+          if seo_type_filters == ''
+            assign seo_type_filters = clean_type
+          else
+            assign seo_type_filters = seo_type_filters | append: ', ' | append: clean_type
+          endif
+        endfor
+      endif
+    endfor
+  else
+    for tag in current_tags
+      assign tag_lower = tag | downcase
+
+      comment
+        SKIP tags containing stone or thread - only process Material and Type
+      endcomment
+      assign is_stone_tag = false
+      assign is_thread_tag = false
+      if tag_lower contains 'stone'
+        assign is_stone_tag = true
+      endif
+      if tag_lower contains 'thread'
+        assign is_thread_tag = true
+      endif
+
+      unless is_stone_tag or is_thread_tag
+        comment
+          Clean the tag value - remove Material/Type prefix
+        endcomment
+        assign clean_tag = tag | replace: '-', ' ' | replace: '_', ' '
+        assign clean_tag = clean_tag | remove_first: 'Material ' | remove_first: 'material ' | remove_first: 'MATERIAL '
+        assign clean_tag = clean_tag | remove_first: 'Type ' | remove_first: 'type ' | remove_first: 'TYPE '
+        assign clean_tag = clean_tag | strip
+
+        comment
+          Check if this is a Material tag
+        endcomment
+        if tag_lower contains 'gold' or tag_lower contains 'silver' or tag_lower contains 'steel' or tag_lower contains 'titanium' or tag_lower contains '14k' or tag_lower contains '18k' or tag_lower contains '9k' or tag_lower contains 'material'
+          assign seo_filter_count = seo_filter_count | plus: 1
+          comment
+            Title case for material values
+          endcomment
+          assign mat_words = clean_tag | split: ' '
+          assign material_value = ''
+          for word in mat_words
+            assign cap_word = word | capitalize
+            if material_value == ''
+              assign material_value = cap_word
+            else
+              assign material_value = material_value | append: ' ' | append: cap_word
+            endif
+          endfor
+          if seo_material_filters == ''
+            assign seo_material_filters = material_value
+          else
+            assign seo_material_filters = seo_material_filters | append: ', ' | append: material_value
+          endif
+
+        comment
+          Check if this is a Type tag (ball back, flat back, clicker, hoop, stud, barbell)
+        endcomment
+        elsif tag_lower contains 'ball back' or tag_lower contains 'flat back' or tag_lower contains 'clicker' or tag_lower contains 'hoop' or tag_lower contains 'stud' or tag_lower contains 'barbell' or tag_lower contains 'type'
+          assign seo_filter_count = seo_filter_count | plus: 1
+          comment
+            Title case for type values
+          endcomment
+          assign type_words = clean_tag | split: ' '
+          assign type_value = ''
+          for word in type_words
+            assign cap_word = word | capitalize
+            if type_value == ''
+              assign type_value = cap_word
+            else
+              assign type_value = type_value | append: ' ' | append: cap_word
+            endif
+          endfor
+          if seo_type_filters == ''
+            assign seo_type_filters = type_value
+          else
+            assign seo_type_filters = seo_type_filters | append: ', ' | append: type_value
+          endif
+        endif
+      endunless
+    endfor
+  endif
+
+  comment
+    SEO: Build dynamic title - Format: [Material] [Collection Title] [Type]
+  endcomment
+  assign seo_page_title = ''
+  assign seo_has_seo_filters = false
+
+  if seo_material_filters != ''
+    assign seo_page_title = seo_material_filters
+    assign seo_has_seo_filters = true
+  endif
+
+  assign seo_page_title = seo_page_title | append: ' ' | append: collection.title | strip
+
+  if seo_type_filters != ''
+    assign seo_page_title = seo_page_title | append: ' ' | append: seo_type_filters
+    assign seo_has_seo_filters = true
+  endif
+
+  if seo_has_seo_filters
+    assign seo_filter_text = ''
+    if seo_material_filters != ''
+      assign seo_filter_text = seo_material_filters
+    endif
+    if seo_type_filters != ''
+      if seo_filter_text != ''
+        assign seo_filter_text = seo_filter_text | append: ' ' | append: seo_type_filters
+      else
+        assign seo_filter_text = seo_type_filters
+      endif
+    endif
+    assign seo_meta_description = 'Shop ' | append: seo_filter_text | append: ' ' | append: collection.title | append: ' at ' | append: shop.name | append: '. Free shipping available.'
+  else
+    assign seo_page_title = collection.title
+    assign seo_meta_description = collection.description | strip_html | truncate: 160
+  endif
+
+  capture section_type
+    if filter_type == 'faceted'
+      echo 'static-collection-faceted-filters'
+    else
+      echo 'static-collection'
+    endif
+  endcapture
+
+  assign current_tag_handles = ''
+
+  for tag in current_tags
+    assign current_tag = tag | handle
+    assign current_tag_handles = current_tag_handles | append: current_tag
+    unless forloop.last
+      assign current_tag_handles = current_tag_handles | append: '|'
+    endunless
+  endfor
+
+  assign current_tag_array = current_tag_handles | split: '|'
+
+  assign show_sidebar = false
+  assign show_filters = true
+  assign show_filter_trigger = false
+
+  if filter_block == nil or filter_block.settings.filter_option == 'tag' and collection.all_tags.size == 0
+    assign show_filters = false
+  endif
+
+  if sidebar_blocks
+    # Sidebar toggle is used on mobile only, and will only show Filters
+    if show_filters or menu_block_count > 0
+      assign show_filter_trigger = true
+    endif
+
+    # Sidebar to show only if there are tags in the collection, or there are menus
+    if sidebar_blocks or show_filters
+      assign show_sidebar = true
+    endif
+  endif
+
+  assign paginate_by = section.settings.products_per_page_range
+
+  capture collection_classes
+    # Add extra space after string to prevent string coercion in the result output
+    if show_sidebar
+      echo 'layout--has-sidebar '
+    else
+      echo 'layout--no-sidebar '
+    endif
+
+    if section.settings.default_view == 'grid-view'
+      echo 'productgrid-gridview'
+    else
+      echo 'productgrid-listview'
+    endif
+  endcapture
+-%}
+
+<script
+  type="application/json"
+  data-section-type="{{ section_type | strip }}"
+  data-section-id="{{ section.id }}"
+  data-section-data
+>
+  {
+    "show_filter_product_count": {{ filter_block.settings.show_filter_product_count | json }},
+    "product_count": {{ collection.products_count | json }},
+    "filter_type": {{ filter_type | json }},
+    "filter_groups": {{ filter_block.settings.filter_groups | json }},
+    "filter_style": {{ filter_block.settings.filter_style | json }},
+    "no_matched_products_text": {{ 'general.accessibility.no_matched_products' | t: tag: '*tag*' | json }},
+    "context": {
+      "see_more": {{ 'general.general.see_more' | t | json }},
+      "see_less": {{ 'general.general.see_less' | t | json }},
+      "grid_list": {{ section.settings.default_view | json }},
+      "collectionUrl": {{ collection.url | default: '/collections/all' | json }},
+      "current_tags": {{ current_tag_array | json }}
+    }
+  }
+</script>
+
+{% style %}
+  #shopify-section-{{ section.id }} .subcollections-list__content {
+    grid-template-columns: repeat(7, minmax(auto, 1fr));
+  }
+  @media only screen and (max-width: 860px) {
+    #shopify-section-{{ section.id }} .subcollections-list__content {
+      grid-template-columns: repeat(5, minmax(auto, 1fr));
+    }
+  }
+  @media only screen and (max-width: 480px) {
+    #shopify-section-{{ section.id }} .subcollections-list__content {
+      grid-template-columns: repeat(3, minmax(auto, 1fr));
+    }
+  }
+{% endstyle %}
+
+{% comment %} SEO: Store data for JavaScript to update meta tags {% endcomment %}
+<div
+  id="collection-seo-data"
+  data-seo-title="{{ seo_page_title | escape }} | {{ shop.name }}"
+  data-seo-description="{{ seo_meta_description | escape }}"
+  data-filter-count="{{ seo_filter_count }}"
+  data-original-title="{{ collection.title | escape }} | {{ shop.name }}"
+  style="display: none;"
+></div>
+
+{% comment %} {% render 'breadcrumbs' %} {% endcomment %}
+
+{% paginate collection.products by paginate_by %}
+  <div class="productgrid--outer {{ collection_classes | strip_newlines }}" data-productgrid-outer>
+    {% comment %} <div class="productgrid--masthead">
+      {% render 'breadcrumbs' %}
+      {% if section.settings.show_collection_image and collection.image %}
+        <figure class="collection--image">
+          {%
+            render 'rimg',
+            img: collection.image,
+            size: '1350x',
+            lazy: false,
+            canvas: false,
+            attr: 'fetchpriority="high"'
+          %}
+        </figure>
+      {% endif %}
+
+      <h1 class="collection--title" data-collection-title data-original-title="{{ collection.title }}">
+        {{- seo_page_title -}}
+      </h1>
+    </div> {% endcomment %}
+    {% if show_sidebar %}
+      {%
+        render 'product-grid-sidebar',
+        menu_depth: section.settings.menu_depth_range,
+        context: collection
+      %}
+    {% endif %}
+
+    <div class="productgrid--wrapper">
+
+      <div class="productgrid--masthead">
+        {% render 'breadcrumbs' %}
+        {% if section.settings.show_collection_image and collection.image %}
+          <figure class="collection--image">
+            {%
+              render 'rimg',
+              img: collection.image,
+              size: '1350x',
+              lazy: false,
+              canvas: false,
+              attr: 'fetchpriority="high"'
+            %}
+          </figure>
+        {% endif %}
+  
+  
+        <h1 class="collection--title" data-collection-title data-original-title="{{ collection.title }}">
+          {{- seo_page_title -}}
+        </h1>
+      </div>
+
+
+      {% if show_filter_trigger or section.settings.sort_by or section.settings.grid_list %}
+        {% capture utility_class %}
+          productgrid--utils
+
+          {% if show_filter_trigger or section.settings.sort_by or section.settings.grid_list %}
+            productgrid--utils--visible-mobile
+          {% endif %}
+
+          {% unless section.settings.sort_by or section.settings.grid_list %}
+            productgrid--utils--hidden-desktop
+          {% endunless %}
+        {% endcapture %}
+        <div class="productgrid--utils-sticky-intersection" data-utils-intersection-target></div>
+        <nav
+          class="
+            {{ utility_class | strip_newlines }}
+            productgrid--utils-container
+            productgrid--utils-sticky
+          "
+          aria-label="{{ 'general.accessibility.nav_collection_utilities' | t }}"
+          data-sticky-utils
+        >
+          {% if show_filter_trigger %}
+            {% liquid
+              assign filter_count = 0
+              if filter_block.settings.filter_option == 'faceted'
+                for filter in collection.filters
+                  if filter.type == 'price_range' and filter.min_value.value or filter.max_value.value
+                    assign filter_count = filter_count | plus: 1
+                  elsif filter.type == 'list'
+                    assign filter_count = filter_count | plus: filter.active_values.size
+                  endif
+                endfor
+              else
+                if current_tags.size > 0
+                  assign filter_count = current_tags.size
+                endif
+              endif
+
+              capture button_label
+                if show_filters
+                  echo 'product_grid.filters.title_count' | t: count: filter_count
+                else
+                  echo 'product_grid.menus.title' | t
+                endif
+              endcapture
+            %}
+            <div class="productgrid--utils utils-filter">
+              <button
+                class="utils-filter-button"
+                type="button"
+                aria-label="{{ button_label }}"
+                data-productgrid-trigger-filters
+              >
+                <span class="utils-filter-icon">
+                  {% render 'icon-library', id: 'icon-filters' %}
+                </span>
+                <span class="utils-filter-text">
+                  {{- button_label -}}
+                </span>
+              </button>
+            </div>
+          {% endif %}
+
+          {%- if section.settings.sort_by -%}
+            {%-
+              render 'product-grid-sortby',
+              type: 'select',
+            -%}
+          {%- endif -%}
+
+          {% if section.settings.grid_list %}
+            <div
+              class="
+                productgrid--utils
+                utils-view
+              "
+            >
+              <div class="utils-view-container">
+                <div class="utils-viewtoggle">
+                  <span class="utils-viewtoggle-label">
+                    {{ 'product_grid.view_as.title' | t }}
+                  </span>
+
+                  <button
+                    class="utils-viewtoggle-button {% if section.settings.default_view == 'grid-view' %}active{% endif %}"
+                    data-collection-view="grid-view"
+                    aria-label="grid view"
+                  >
+                    {% render 'icon-library', id: 'icon-grid' %}
+                  </button>
+
+                  <button
+                    class="utils-viewtoggle-button {% if section.settings.default_view == 'list-view' %}active{% endif %}"
+                    data-collection-view="list-view"
+                    aria-label="list view"
+                  >
+                    {% render 'icon-library', id: 'icon-list' %}
+                  </button>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+        </nav>
+      {% endif %}
+
+      {% if filter_block.settings.filter_option == 'faceted' %}
+
+        {% assign active_filters = false %}
+        {% for filter in collection.filters %}
+          {% if filter.active_values.size > 0 or filter.min_value.value or filter.max_value.value %}
+            {% assign active_filters = true %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+
+        {% if active_filters == true %}
+          <div class="productgrid--filters">
+            {%-
+              render 'product-grid-filters-active',
+              context: collection,
+            %}
+          </div>
+        {% endif %}
+      {% else %}
+        {% if current_tags.size > 0 %}
+          <div class="productgrid--filters">
+            {%- render 'product-grid-tags-active' %}
+          </div>
+        {% endif %}
+      {% endif %}
+
+      {% if collection.products.size > 0 %}
+        <div
+          class="
+            productgrid--items
+            products-per-row-{{- products_per_row -}}
+          "
+          data-html="productgrid-items"
+          data-productgrid-items
+        >
+          {% for product in collection.products %}
+            {%
+              render 'product-grid-item',
+              product: product,
+              context: 'collection',
+              index: forloop.index,
+              products_per_row: products_per_row,
+            %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="productgrid--no-results">
+          <h2 class="productgrid--no-results-title">
+            {%- if collection.all_products_count == 0 -%}
+              {{ 'product_grid.no_results.empty' | t }}
+            {%- else -%}
+              {{ 'product_grid.no_results.tags_empty' | t }}
+            {%- endif -%}
+          </h2>
+
+          <a class="productgrid--no-results-button" href="{{ routes.all_products_collection_url }}">
+            {{ 'search.general.view_all_products' | t }}
+          </a>
+        </div>
+      {% endif %}
+
+      {%
+        render 'pagination', paginate: paginate,
+        grid_list: true
+      %}
+      <div class="productgrid--masthead">
+        {% if collection.description != blank %}
+          <div class="collection--description rte" data-collection-description>
+            {{ collection.description }}
+          </div>
+        {% endif %}
+  
+        {% if section.settings.enable_subcollection and linklists[collection.handle].links.size > 0 %}
+          {%
+            render 'subcollections-collection',
+            type: 'block',
+            block: section,
+            layout_type: 'slideshow',
+          %}
+          <div class="subcollections-collection__border"></div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endpaginate %}
+
+{%- if section.settings.sort_by -%}
+  {%-
+    render 'product-grid-sortby',
+    type: 'modal',
+  -%}
+{%- endif -%}
+
+{% render 'quick-shop' %}
+
+{% comment %} Related Searches Section for SEO - Filter-based Pills (Material & Thread Type) {% endcomment %}
+{% if section.settings.show_related_searches %}
+  {%- liquid
+    assign rs_mat_tags = ''
+    assign rs_thread_tags = ''
+
+    for tag in collection.all_tags
+      assign tag_lower = tag | downcase
+      if tag_lower contains 'material_'
+        if rs_mat_tags == ''
+          assign rs_mat_tags = tag
+        else
+          assign rs_mat_tags = rs_mat_tags | append: '|||' | append: tag
+        endif
+      elsif tag_lower contains 'thread type_'
+        if rs_thread_tags == ''
+          assign rs_thread_tags = tag
+        else
+          assign rs_thread_tags = rs_thread_tags | append: '|||' | append: tag
+        endif
+      endif
+    endfor
+
+    assign rs_mat_arr = rs_mat_tags | split: '|||'
+    assign rs_thr_arr = rs_thread_tags | split: '|||'
+    assign rs_pills = ''
+    assign rs_count = 0
+    assign rs_max = section.settings.rs_max_tags | default: 20
+
+    comment
+      Generate Material-only pills: {Material} Title
+    endcomment
+    for mat_tag in rs_mat_arr
+      if rs_count >= rs_max
+        break
+      endif
+      assign mat_clean = mat_tag | remove_first: 'Material_' | strip
+      assign mat_handle = mat_tag | handle
+      assign pill_title = mat_clean | append: ' ' | append: collection.title
+      assign pill_url = collection.url | append: '/' | append: mat_handle
+      assign pill = pill_title | append: '::' | append: pill_url
+      if rs_pills == ''
+        assign rs_pills = pill
+      else
+        assign rs_pills = rs_pills | append: '|||' | append: pill
+      endif
+      assign rs_count = rs_count | plus: 1
+    endfor
+
+    comment
+      Generate Thread Type-only pills: Title {ThreadType}
+    endcomment
+    for thr_tag in rs_thr_arr
+      if rs_count >= rs_max
+        break
+      endif
+      assign thr_clean = thr_tag | remove_first: 'Thread Type_' | strip
+      assign thr_handle = thr_tag | handle
+      assign pill_title = collection.title | append: ' ' | append: thr_clean
+      assign pill_url = collection.url | append: '/' | append: thr_handle
+      assign pill = pill_title | append: '::' | append: pill_url
+      if rs_pills == ''
+        assign rs_pills = pill
+      else
+        assign rs_pills = rs_pills | append: '|||' | append: pill
+      endif
+      assign rs_count = rs_count | plus: 1
+    endfor
+
+    comment
+      Generate combined pills: {Material} Title {ThreadType}
+    endcomment
+    for mat_tag in rs_mat_arr
+      if rs_count >= rs_max
+        break
+      endif
+      for thr_tag in rs_thr_arr
+        if rs_count >= rs_max
+          break
+        endif
+        assign mat_clean = mat_tag | remove_first: 'Material_' | strip
+        assign thr_clean = thr_tag | remove_first: 'Thread Type_' | strip
+        assign mat_handle = mat_tag | handle
+        assign thr_handle = thr_tag | handle
+        assign pill_title = mat_clean | append: ' ' | append: collection.title | append: ' ' | append: thr_clean
+        assign pill_url = collection.url | append: '/' | append: mat_handle | append: '+' | append: thr_handle
+        assign pill = pill_title | append: '::' | append: pill_url
+        if rs_pills == ''
+          assign rs_pills = pill
+        else
+          assign rs_pills = rs_pills | append: '|||' | append: pill
+        endif
+        assign rs_count = rs_count | plus: 1
+      endfor
+    endfor
+
+    assign rs_pill_arr = rs_pills | split: '|||'
+  -%}
+
+  {%
+    render 'related-searches-pills',
+    filter_pills: rs_pill_arr,
+    heading: section.settings.rs_heading,
+    section_bg_color: section.settings.rs_section_bg_color,
+    padding_top: section.settings.rs_padding_top,
+    padding_bottom: section.settings.rs_padding_bottom,
+    title_color: section.settings.rs_title_color,
+    title_font_size: section.settings.rs_title_font_size,
+    tag_bg_color: section.settings.rs_tag_bg_color,
+    tag_text_color: section.settings.rs_tag_text_color,
+    tag_hover_bg_color: section.settings.rs_tag_hover_bg_color,
+    tag_hover_text_color: section.settings.rs_tag_hover_text_color,
+    tag_font_size: section.settings.rs_tag_font_size,
+    tag_border_radius: section.settings.rs_tag_border_radius,
+    tag_padding_vertical: section.settings.rs_tag_padding_vertical,
+    tag_padding_horizontal: section.settings.rs_tag_padding_horizontal,
+    tag_gap: section.settings.rs_tag_gap
+  %}
+{% endif %}
+{% comment %} <script>
+  (function() {
+    const titleElement = document.querySelector('[data-collection-title]');
+    const seoData = document.getElementById('collection-seo-data');
+    if (!titleElement || !seoData) return;
+
+    const originalH1Title = titleElement.dataset.originalTitle;
+    const originalDocTitle = seoData.dataset.originalTitle;
+    const shopName = originalDocTitle.split(' | ').pop();
+
+    // Material keywords to identify material filters (for tag-based filtering)
+    const materialKeywords = ['gold', 'silver', 'steel', 'titanium', 'platinum', 'brass', 'copper', '9k', '14k', '18k', '24k'];
+
+    // Initialize meta tags on page load
+    function initSeoMeta() {
+      const filterCount = parseInt(seoData.dataset.filterCount) || 0;
+      if (filterCount > 0) {
+        document.title = seoData.dataset.seoTitle;
+        updateMetaTag('description', seoData.dataset.seoDescription);
+        updateMetaTag('robots', seoData.dataset.seoRobots);
+      }
+    }
+
+    function updateMetaTag(name, content) {
+      let meta = document.querySelector(`meta[name="${name}"]`);
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.name = name;
+        document.head.appendChild(meta);
+      }
+      meta.content = content;
+    }
+
+    function cleanFilterValue(value, filterType, filterLabel) {
+      // Remove ANY filter label prefix from the value
+      let cleaned = value;
+
+      // Remove common filter label prefixes (Material, Type, Stone, Thread)
+      cleaned = cleaned
+        .replace(/^Material_/i, '')
+        .replace(/^Type_/i, '')
+        .replace(/^Stone_/i, '')
+        .replace(/^Thread_/i, '')
+        .replace(/^Material - /i, '')
+        .replace(/^Type - /i, '')
+        .replace(/^Stone - /i, '')
+        .replace(/^Thread - /i, '')
+        .replace(/^Material /i, '')
+        .replace(/^Type /i, '')
+        .replace(/^Stone /i, '')
+        .replace(/^Thread /i, '')
+        .replace(/_/g, ' ')
+        .trim();
+
+      // Apply Title Case for both material and type values
+      cleaned = cleaned.split(' ').map(word =>
+        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+      ).join(' ');
+      return cleaned;
+    }
+
+    function getFilterLabelFromKey(key) {
+      // Extract filter label from key like "filter.p.m.custom.type" -> "type"
+      const parts = key.split('.');
+      return parts[parts.length - 1] || '';
+    }
+
+    function isExactMaterialFilter(key) {
+      // Extract filter name from key like "filter.p.m.custom.material"
+      const keyLower = key.toLowerCase();
+      // Check if it ends with ".material" (exact match, not "thread_material" etc.)
+      return keyLower.endsWith('.material');
+    }
+
+    function isExactTypeFilter(key) {
+      // Extract filter name from key like "filter.p.m.custom.type"
+      const keyLower = key.toLowerCase();
+      // Check if it ends with ".type" only (exact match, not "thread_type", "stone", etc.)
+      return keyLower.endsWith('.type');
+    }
+
+    function updateCollectionSEO() {
+      const url = new URL(window.location.href);
+      let materialFilters = [];
+      let typeFilters = [];
+      let totalFilterCount = 0;
+
+      // Get faceted filter values - only exact "Material" and "Type" filters
+      url.searchParams.forEach((value, key) => {
+        if (key.startsWith('filter.')) {
+          totalFilterCount++;
+          const decodedValue = decodeURIComponent(value);
+          const filterLabel = getFilterLabelFromKey(key);
+
+          if (isExactMaterialFilter(key)) {
+            const cleanedValue = cleanFilterValue(decodedValue, 'material', filterLabel);
+            materialFilters.push(cleanedValue);
+          } else if (isExactTypeFilter(key)) {
+            const cleanedValue = cleanFilterValue(decodedValue, 'type', filterLabel);
+            typeFilters.push(cleanedValue);
+          }
+        }
+      });
+
+      // Get tag-based filters from URL path
+      const pathParts = window.location.pathname.split('/');
+      const collectionIndex = pathParts.indexOf('collections');
+      if (collectionIndex !== -1 && pathParts.length > collectionIndex + 2) {
+        for (let i = collectionIndex + 2; i < pathParts.length; i++) {
+          if (pathParts[i]) {
+            totalFilterCount++;
+            const tag = decodeURIComponent(pathParts[i]);
+            const tagLower = tag.toLowerCase();
+
+            if (materialKeywords.some(m => tagLower.includes(m))) {
+              const cleanTag = cleanFilterValue(tag, 'material', null);
+              materialFilters.push(cleanTag);
+            } else {
+              const cleanTag = cleanFilterValue(tag, 'type', null);
+              typeFilters.push(cleanTag);
+            }
+          }
+        }
+      }
+
+      const hasSeoFilters = materialFilters.length > 0 || typeFilters.length > 0;
+
+      if (hasSeoFilters) {
+        // Build title: [Material] [Collection Title] [Type]
+        let newTitle = '';
+        if (materialFilters.length > 0) {
+          newTitle = materialFilters.join(', ') + ' ';
+        }
+        newTitle += originalH1Title;
+        if (typeFilters.length > 0) {
+          newTitle += ' ' + typeFilters.join(', ');
+        }
+
+        // Update H1
+        titleElement.textContent = newTitle;
+
+        // Update document title
+        document.title = newTitle + ' | ' + shopName;
+
+        // Update meta description
+        let filterText = materialFilters.concat(typeFilters).join(' ');
+        const newDescription = 'Shop ' + filterText + ' ' + originalH1Title + ' at ' + shopName + '. Free shipping available.';
+        updateMetaTag('description', newDescription);
+
+        // Update robots (noindex if 3+ total filters)
+        const robotsContent = totalFilterCount >= 3 ? 'noindex, follow' : 'index, follow';
+        updateMetaTag('robots', robotsContent);
+      } else {
+        // Reset to original
+        titleElement.textContent = originalH1Title;
+        document.title = originalDocTitle;
+        updateMetaTag('robots', 'index, follow');
+      }
+    }
+
+    // Initialize on page load
+    initSeoMeta();
+
+    // Listen for URL changes (AJAX filtering)
+    const originalPushState = history.pushState;
+    const originalReplaceState = history.replaceState;
+
+    history.pushState = function() {
+      originalPushState.apply(this, arguments);
+      setTimeout(updateCollectionSEO, 100);
+    };
+
+    history.replaceState = function() {
+      originalReplaceState.apply(this, arguments);
+      setTimeout(updateCollectionSEO, 100);
+    };
+
+    window.addEventListener('popstate', function() {
+      setTimeout(updateCollectionSEO, 100);
+    });
+
+    document.addEventListener('collection:filters:changed', updateCollectionSEO);
+  })();
+</script> {% endcomment %}
+
+<style>
+  body.template-collection .collection--section .productgrid--outer .productgrid--items {
+    background-color: transparent;
+    background: transparent;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "t:sections.collection_pages.name",
+  "class": "collection--section section--canonical",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_collection_image",
+      "label": "t:sections.collection_pages.show_collection_image.label",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "products_per_page_range",
+      "label": "t:sections.collection_pages.products_per_page_range.label",
+      "min": 24,
+      "max": 48,
+      "step": 12,
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "products_per_row",
+      "label": "t:sections.collection_pages.products_per_row.label",
+      "options": [
+        {
+          "label": "t:sections.collection_pages.products_per_row.option_1",
+          "value": "3"
+        },
+        {
+          "label": "t:sections.collection_pages.products_per_row.option_2",
+          "value": "4"
+        },
+        {
+          "label": "5 per row",
+          "value": "5"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.collection_pages.header_1.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "sort_by",
+      "label": "t:sections.collection_pages.sort_by.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "grid_list",
+      "label": "t:sections.collection_pages.grid_list.label",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "default_view",
+      "label": "t:sections.collection_pages.default_view.label",
+      "options": [
+        {
+          "label": "t:sections.collection_pages.default_view.option_1",
+          "value": "grid-view"
+        },
+        {
+          "label": "t:sections.collection_pages.default_view.option_2",
+          "value": "list-view"
+        }
+      ],
+      "default": "grid-view"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.collection_pages.header_2.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_subcollection",
+      "label": "t:sections.collection_pages.enable_subcollection.label",
+      "default": false,
+      "info": "t:sections.collection_pages.enable_subcollection.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_count",
+      "label": "t:sections.collection_pages.show_product_count.label",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "thumbnail_image",
+      "label": "t:sections.collection_pages.thumbnail_image.label",
+      "options": [
+        {
+          "value": "product-image",
+          "label": "t:sections.collection_pages.thumbnail_image.option_1"
+        },
+        {
+          "value": "collection-image",
+          "label": "t:sections.collection_pages.thumbnail_image.option_2"
+        }
+      ],
+      "default": "product-image"
+    },
+    {
+      "type": "select",
+      "id": "image_crop",
+      "label": "t:sections.collection_pages.image_crop.label",
+      "options": [
+        {
+          "label": "t:sections.collection_pages.image_crop.option_1",
+          "value": "original"
+        },
+        {
+          "label": "t:sections.collection_pages.image_crop.option_2",
+          "value": "square"
+        },
+        {
+          "label": "t:sections.collection_pages.image_crop.option_3",
+          "value": "circle"
+        },
+        {
+          "label": "t:sections.collection_pages.image_crop.option_4",
+          "value": "round"
+        }
+      ],
+      "default": "original"
+    },
+    {
+      "type": "header",
+      "content": "Related Searches (SEO)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_related_searches",
+      "label": "Show related searches",
+      "info": "Display related search terms at the bottom of the collection page for SEO",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "rs_heading",
+      "label": "Related searches heading",
+      "default": "People Also Searched For"
+    },
+    {
+      "type": "range",
+      "id": "rs_max_tags",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "label": "Maximum tags to show",
+      "default": 9
+    },
+    {
+      "type": "color",
+      "id": "rs_section_bg_color",
+      "label": "Section background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "rs_padding_top",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Section padding top",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "rs_padding_bottom",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Section padding bottom",
+      "default": 30
+    },
+    {
+      "type": "color",
+      "id": "rs_title_color",
+      "label": "Title color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "rs_title_font_size",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Title font size",
+      "default": 22
+    },
+    {
+      "type": "color",
+      "id": "rs_tag_bg_color",
+      "label": "Tag background color",
+      "default": "#EFEFEF"
+    },
+    {
+      "type": "color",
+      "id": "rs_tag_text_color",
+      "label": "Tag text color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "rs_tag_hover_bg_color",
+      "label": "Tag hover background",
+      "default": "#DDDDDD"
+    },
+    {
+      "type": "color",
+      "id": "rs_tag_hover_text_color",
+      "label": "Tag hover text color",
+      "default": "#DB1E37"
+    },
+    {
+      "type": "range",
+      "id": "rs_tag_font_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Tag font size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "rs_tag_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Tag border radius",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "rs_tag_padding_vertical",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Tag vertical padding",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "rs_tag_padding_horizontal",
+      "min": 8,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Tag horizontal padding",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "rs_tag_gap",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Gap between tags",
+      "default": 10
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "t:sections.collection_pages.blocks.menu.name",
+      "settings": [
+        {
+          "id": "menu",
+          "type": "link_list",
+          "label": "t:sections.collection_pages.blocks.menu.menu.label",
+          "info": "t:sections.collection_pages.blocks.menu.menu.info"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_prod_count",
+          "label": "t:sections.collection_pages.blocks.menu.show_prod_count.label",
+          "info": "t:sections.collection_pages.blocks.menu.show_prod_count.info",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "menu_depth_range",
+          "label": "t:sections.collection_pages.blocks.menu.menu_depth_range.label",
+          "info": "t:sections.collection_pages.blocks.menu.menu_depth_range.info",
+          "min": 1,
+          "max": 3,
+          "step": 1,
+          "default": 1
+        }
+      ],
+      "limit": 10
+    },
+    {
+      "type": "filter",
+      "name": "t:sections.collection_pages.blocks.filters.name",
+      "settings": [
+        {
+          "type": "select",
+          "id": "filter_option",
+          "label": "t:sections.collection_pages.blocks.filters.filter_option.label",
+          "options": [
+            {
+              "value": "faceted",
+              "label": "t:sections.collection_pages.blocks.filters.filter_option.option_1"
+            },
+            {
+              "value": "tag",
+              "label": "t:sections.collection_pages.blocks.filters.filter_option.option_2"
+            }
+          ],
+          "default": "faceted"
+        },
+        {
+          "type": "select",
+          "id": "filter_groups",
+          "label": "t:sections.collection_pages.blocks.filters.filter_groups.label",
+          "options": [
+            {
+              "value": "expand_all",
+              "label": "t:sections.collection_pages.blocks.filters.filter_groups.option_1"
+            },
+            {
+              "value": "expand_first",
+              "label": "t:sections.collection_pages.blocks.filters.filter_groups.option_2"
+            },
+            {
+              "value": "collapse_all",
+              "label": "t:sections.collection_pages.blocks.filters.filter_groups.option_3"
+            }
+          ],
+          "default": "expand_first"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_filter_product_count",
+          "label": "t:sections.collection_pages.blocks.filters.show_filter_product_count.label",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "t:sections.collection_pages.blocks.filters.header_1.content",
+          "info": "t:sections.collection_pages.blocks.filters.header_1.info"
+        },
+        {
+          "type": "select",
+          "id": "filter_style",
+          "label": "t:sections.collection_pages.blocks.filters.filter_style.label",
+          "options": [
+            {
+              "value": "tags",
+              "label": "t:sections.collection_pages.blocks.filters.filter_style.option_1"
+            },
+            {
+              "value": "groups",
+              "label": "t:sections.collection_pages.blocks.filters.filter_style.option_2"
+            }
+          ],
+          "default": "tags"
+        },
+        {
+          "id": "filter_limit",
+          "type": "select",
+          "label": "t:sections.collection_pages.blocks.filters.filter_limit.label",
+          "options": [
+            {
+              "value": "5",
+              "label": "t:sections.collection_pages.blocks.filters.filter_limit.option_1"
+            },
+            {
+              "value": "6",
+              "label": "t:sections.collection_pages.blocks.filters.filter_limit.option_2"
+            },
+            {
+              "value": "8",
+              "label": "t:sections.collection_pages.blocks.filters.filter_limit.option_3"
+            },
+            {
+              "value": "10",
+              "label": "t:sections.collection_pages.blocks.filters.filter_limit.option_4"
+            },
+            {
+              "value": "15",
+              "label": "t:sections.collection_pages.blocks.filters.filter_limit.option_5"
+            },
+            {
+              "value": "20",
+              "label": "t:sections.collection_pages.blocks.filters.filter_limit.option_6"
+            },
+            {
+              "value": "999",
+              "label": "t:sections.collection_pages.blocks.filters.filter_limit.option_7"
+            }
+          ],
+          "default": "999"
+        },
+        {
+          "type": "text",
+          "id": "grid_categories",
+          "label": "t:sections.collection_pages.blocks.filters.grid_categories.label",
+          "info": "t:sections.collection_pages.blocks.filters.grid_categories.info"
+        },
+        {
+          "type": "liquid",
+          "id": "custom_ordered_categories",
+          "label": "t:sections.collection_pages.blocks.filters.custom_ordered_categories.label",
+          "info": "t:sections.collection_pages.blocks.filters.custom_ordered_categories.info"
+        },
+        {
+          "type": "liquid",
+          "id": "custom_ordered_tags",
+          "label": "t:sections.collection_pages.blocks.filters.custom_ordered_tags.label",
+          "info": "t:sections.collection_pages.blocks.filters.custom_ordered_tags.info"
+        },
+        {
+          "type": "liquid",
+          "id": "excluded_tags",
+          "label": "t:sections.collection_pages.blocks.filters.excluded_tags.label",
+          "info": "t:sections.collection_pages.blocks.filters.excluded_tags.info"
+        },
+        {
+          "type": "liquid",
+          "id": "excluded_groups",
+          "label": "t:sections.collection_pages.blocks.filters.excluded_groups.label",
+          "info": "t:sections.collection_pages.blocks.filters.excluded_groups.info"
+        }
+      ],
+      "limit": 1
+    }
+  ]
+}
+{% endschema %}

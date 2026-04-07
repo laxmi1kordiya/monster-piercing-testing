@@ -1,0 +1,1760 @@
+{% doc %}
+  @prompt
+    create a section in which we need three section flex style in which first will be going to be image of the size 1000*800 it will be on the 45% of the banner and then on 35 percent will be the text in which a title and description and one button  and one the next part we want one more images which will cover the banner 30 percent of the next image and we want a arrow for moving from teh left and right and it should also move automatically and teh arrow background should be squarish  and provide setting to adjust the arrow and the text and the three subsection we have in this and in the thired subsection we want the image it should be from the next image and in the last banner we want the first section frist subsection image and provide all teh setting to align the text subsection and to adjust the backgound of the arrow size of the test and button and other setting , in the last subsection the third one use the photo provide only the one third part column wise in the first slide and then  in the next slide in which that image is used as the first subsection image so it full and same for all slides , in the last subsection the third one use the photo provide only the one third part column wise in the first slide and then  in the next slide in which that image is used as the first subsection image so it full and same for all slides , in the last subsection the third one use the photo provide only the one third part column wise in the first slide and then  in the next slide in which that image is used as the first subsection image so it full and same for all slides , keep the length and breath of the all the subsection images same the size should which we have used in the first image and teh third subsection images should last itll the end of the banner , keep the first and second size of images same in a single banner , can we do the images the last subsection margin and padding 0 from the right side only 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-flex-slider-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    display: block;
+  }
+
+  .ai-flex-slider__container-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+  }
+
+  .ai-flex-slider__slides-{{ ai_gen_id }} {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .ai-flex-slider__slide-{{ ai_gen_id }} {
+    min-width: 100%;
+    width: 100%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: {{ block.settings.vertical_alignment }};
+    gap: 0;
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.section_padding }}px;
+    padding-right: 0;
+  }
+
+  .ai-flex-slider__image-section-{{ ai_gen_id }} {
+    width: {{ block.settings.image_width }}%;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .ai-flex-slider__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    aspect-ratio: 1000 / 800;
+  }
+
+  .ai-flex-slider__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1000 / 800;
+  }
+
+  .ai-flex-slider__image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    max-height: 400px;
+  }
+
+  .ai-flex-slider__text-section-{{ ai_gen_id }} {
+    width: {{ block.settings.text_width }}%;
+    padding: {{ block.settings.text_padding }}px;
+    display: flex;
+    flex-direction: column;
+    justify-content: {{ block.settings.text_vertical_alignment }};
+    align-items: {{ block.settings.text_horizontal_alignment }};
+    text-align: {{ block.settings.text_alignment }};
+    background-color: {{ block.settings.text_section_background }};
+  }
+
+  .ai-flex-slider__title-{{ ai_gen_id }} {
+    font-family: Karla, sans-serif;
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 {{ block.settings.title_spacing }}px 0;
+    font-weight: {{ block.settings.title_font_weight }};
+    font-style: normal;
+  }
+
+  .ai-flex-slider__description-{{ ai_gen_id }} {
+    font-family: Karla, sans-serif;
+    font-size: {{ block.settings.description_size }}px;
+    color: {{ block.settings.description_color }};
+    margin: 0 0 {{ block.settings.description_spacing }}px 0;
+    line-height: 1.6;
+    font-weight: {{ block.settings.description_font_weight }};
+    font-style: normal;
+  }
+
+  .ai-flex-slider__button-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: {{ block.settings.button_padding_vertical }}px {{ block.settings.button_padding_horizontal }}px;
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_font_size }}px;
+    transition: background-color 0.3s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .ai-flex-slider__button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_background }};
+  }
+
+  .ai-flex-slider__third-image-section-{{ ai_gen_id }} {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    height: auto;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ai-flex-slider__third-image-wrapper-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ai-flex-slider__image-cropped-{{ ai_gen_id }} {
+    width: 300%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    margin: 0;
+    padding: 0;
+    {% if block.settings.crop_position == 'left' %}
+      object-position: left center;
+    {% elsif block.settings.crop_position == 'center' %}
+      object-position: center center;
+    {% elsif block.settings.crop_position == 'right' %}
+      object-position: right center;
+    {% endif %}
+  }
+
+  .ai-flex-slider__arrows-{{ ai_gen_id }} {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    padding: 0 {{ block.settings.arrow_position }}px;
+    z-index: 100;
+  }
+
+  .ai-flex-slider__arrow-{{ ai_gen_id }} {
+    width: {{ block.settings.arrow_size }}px;
+    height: {{ block.settings.arrow_size }}px;
+    background-color: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    border-radius: {{ block.settings.arrow_border_radius }}px;
+  }
+
+  .ai-flex-slider__arrow-{{ ai_gen_id }}:hover {
+    background-color: #000000;
+    border-color: #000000;
+  }
+
+  .ai-flex-slider__arrow-{{ ai_gen_id }} svg {
+    width: {{ block.settings.arrow_icon_size }}px;
+    height: {{ block.settings.arrow_icon_size }}px;
+    fill: #000000;
+    transition: fill 0.3s ease;
+  }
+
+  .ai-flex-slider__arrow-{{ ai_gen_id }}:hover svg {
+    fill: #ffffff;
+  }
+
+  /* ============================================
+     Dots Navigation
+     ============================================ */
+  .ai-flex-slider__dots-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: {{ block.settings.dots_position }}px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    gap: {{ block.settings.dots_gap }}px;
+  }
+
+  .ai-flex-slider__dot-{{ ai_gen_id }} {
+    width: {{ block.settings.dots_size }}px;
+    height: {{ block.settings.dots_size }}px;
+    border-radius: 50%;
+    background-color: {{ block.settings.dots_color }};
+    border: {{ block.settings.dots_border_width }}px solid {{ block.settings.dots_border_color }};
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s ease;
+  }
+
+  .ai-flex-slider__dot-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.dots_active_color }};
+    transform: scale(1.1);
+  }
+
+  .ai-flex-slider__dot-{{ ai_gen_id }}.is-active {
+    background-color: {{ block.settings.dots_active_color }};
+    transform: scale(1.2);
+  }
+
+  /* ============================================
+     Mobile Styles - Simple Single Slider
+     ============================================ */
+  @media screen and (max-width: 749px) {
+    /* Hide desktop-only elements */
+    .ai-flex-slider__slide-{{ ai_gen_id }} {
+      flex-direction: column;
+      padding: 0;
+      background-color: {{ block.settings.mobile_background_color }};
+      {% if block.settings.mobile_content_position == 'overlay' %}
+        position: relative;
+      {% endif %}
+    }
+
+    /* Hide third image section on mobile */
+    .ai-flex-slider__third-image-section-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    /* Hide desktop image, show mobile image */
+    .ai-flex-slider__image-section-{{ ai_gen_id }} .ai-flex-slider__image-desktop-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-flex-slider__image-section-{{ ai_gen_id }} .ai-flex-slider__image-mobile-{{ ai_gen_id }} {
+      display: block;
+    }
+
+    .ai-flex-slider__image-section-{{ ai_gen_id }} {
+      width: 100%;
+      {% if block.settings.mobile_content_position == 'overlay' %}
+        position: relative;
+      {% endif %}
+    }
+
+    .ai-flex-slider__image-{{ ai_gen_id }} {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+    }
+
+    /* Mobile text section styling */
+    .ai-flex-slider__text-section-{{ ai_gen_id }} {
+      width: 100%;
+      padding: {{ block.settings.mobile_text_padding }}px;
+      text-align: {{ block.settings.mobile_text_alignment }};
+      align-items: {{ block.settings.mobile_text_alignment }};
+      background-color: {{ block.settings.mobile_text_section_background }};
+      {% if block.settings.mobile_content_position == 'overlay' %}
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0,0,0,0.7));
+      {% endif %}
+    }
+
+    .ai-flex-slider__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.mobile_title_size }}px;
+      {% if block.settings.mobile_content_position == 'overlay' %}
+        color: #ffffff;
+      {% else %}
+        color: {{ block.settings.mobile_title_color }};
+      {% endif %}
+    }
+
+    .ai-flex-slider__description-{{ ai_gen_id }} {
+      font-size: {{ block.settings.mobile_description_size }}px;
+      {% if block.settings.mobile_content_position == 'overlay' %}
+        color: rgba(255,255,255,0.9);
+      {% else %}
+        color: {{ block.settings.mobile_description_color }};
+      {% endif %}
+    }
+
+    .ai-flex-slider__button-{{ ai_gen_id }} {
+      font-size: {{ block.settings.mobile_button_font_size }}px;
+    }
+
+    /* Mobile arrows */
+    .ai-flex-slider__arrows-{{ ai_gen_id }} {
+      padding: 0 10px;
+    }
+
+    .ai-flex-slider__arrow-{{ ai_gen_id }} {
+      width: 36px;
+      height: 36px;
+      background-color: transparent;
+      border: 1px solid rgba(0, 0, 0, 0.3);
+    }
+
+    .ai-flex-slider__arrow-{{ ai_gen_id }} svg {
+      width: 18px;
+      height: 18px;
+      fill: #000000;
+      transition: fill 0.3s ease;
+    }
+
+    .ai-flex-slider__arrow-{{ ai_gen_id }}:hover {
+      background-color: #000000;
+      border-color: #000000;
+    }
+
+    .ai-flex-slider__arrow-{{ ai_gen_id }}:hover svg {
+      fill: #ffffff;
+    }
+
+    /* Mobile dots */
+    .ai-flex-slider__dots-{{ ai_gen_id }} {
+      bottom: 10px;
+      gap: 8px;
+    }
+
+    .ai-flex-slider__dot-{{ ai_gen_id }} {
+      width: 10px;
+      height: 10px;
+    }
+  }
+
+  /* Desktop: Hide mobile image, show desktop image */
+  @media screen and (min-width: 750px) {
+    .ai-flex-slider__image-mobile-{{ ai_gen_id }} {
+      display: none !important;
+    }
+
+    .ai-flex-slider__image-desktop-{{ ai_gen_id }} {
+      display: block;
+    }
+  }
+{% endstyle %}
+
+{% comment %} Calculate total active slides based on which images are set {% endcomment %}
+{% assign total_slides = 0 %}
+{% assign slide_images = "" %}
+{% if block.settings.image_1 %}
+  {% assign total_slides = total_slides | plus: 1 %}
+  {% assign slide_images = slide_images | append: "1," %}
+{% endif %}
+{% if block.settings.image_2 %}
+  {% assign total_slides = total_slides | plus: 1 %}
+  {% assign slide_images = slide_images | append: "2," %}
+{% endif %}
+{% if block.settings.image_3 %}
+  {% assign total_slides = total_slides | plus: 1 %}
+  {% assign slide_images = slide_images | append: "3," %}
+{% endif %}
+{% if block.settings.image_4 %}
+  {% assign total_slides = total_slides | plus: 1 %}
+  {% assign slide_images = slide_images | append: "4," %}
+{% endif %}
+{% if block.settings.image_5 %}
+  {% assign total_slides = total_slides | plus: 1 %}
+  {% assign slide_images = slide_images | append: "5," %}
+{% endif %}
+
+{% comment %} Ensure at least 2 slides for slider to work {% endcomment %}
+{% if total_slides < 2 %}
+  {% assign total_slides = 3 %}
+{% endif %}
+
+<flex-slider-{{ ai_gen_id }} class="ai-flex-slider-{{ ai_gen_id }}" data-total-slides="{{ total_slides }}" {{ block.shopify_attributes }}>
+  <div class="ai-flex-slider__container-{{ ai_gen_id }}">
+    <div class="ai-flex-slider__slides-{{ ai_gen_id }}">
+      {% for i in (1..5) %}
+        {% assign image_key = 'image_' | append: i %}
+        {% assign title_key = 'title_' | append: i %}
+        {% assign desc_key = 'description_' | append: i %}
+        {% assign btn_text_key = 'button_text_' | append: i %}
+        {% assign btn_link_key = 'button_link_' | append: i %}
+
+        {% assign mobile_image_key = 'mobile_image_' | append: i %}
+
+        {% assign current_image = block.settings[image_key] %}
+        {% assign current_mobile_image = block.settings[mobile_image_key] %}
+        {% assign current_title = block.settings[title_key] %}
+        {% assign current_desc = block.settings[desc_key] %}
+        {% assign current_btn_text = block.settings[btn_text_key] %}
+        {% assign current_btn_link = block.settings[btn_link_key] %}
+
+        {% comment %} Use desktop image for mobile if no mobile image set {% endcomment %}
+        {% unless current_mobile_image %}
+          {% assign current_mobile_image = current_image %}
+        {% endunless %}
+
+        {% comment %} Calculate next slide index for third section preview {% endcomment %}
+        {% assign next_index = i | plus: 1 %}
+        {% if next_index > 5 %}
+          {% assign next_index = 1 %}
+        {% endif %}
+
+        {% comment %} Find the actual next image (skip empty ones) {% endcomment %}
+        {% assign next_image_key = 'image_' | append: next_index %}
+        {% assign next_image = block.settings[next_image_key] %}
+
+        {% comment %} If next image is empty, find the next available one {% endcomment %}
+        {% unless next_image %}
+          {% for j in (1..5) %}
+            {% assign check_index = next_index | plus: j %}
+            {% if check_index > 5 %}
+              {% assign check_index = check_index | minus: 5 %}
+            {% endif %}
+            {% assign check_key = 'image_' | append: check_index %}
+            {% assign check_image = block.settings[check_key] %}
+            {% if check_image %}
+              {% assign next_image = check_image %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        {% endunless %}
+
+        {% comment %} If still no next image, use image_1 as fallback {% endcomment %}
+        {% unless next_image %}
+          {% assign next_image = block.settings.image_1 %}
+        {% endunless %}
+
+        {% if current_image %}
+      <div class="ai-flex-slider__slide-{{ ai_gen_id }}">
+        <div class="ai-flex-slider__image-section-{{ ai_gen_id }}">
+          {% comment %} Desktop Image {% endcomment %}
+          <img
+            src="{{ current_image | image_url: width: 1000 }}"
+            alt="{{ current_image.alt | escape }}"
+            class="ai-flex-slider__image-{{ ai_gen_id }} ai-flex-slider__image-desktop-{{ ai_gen_id }}"
+            loading="{% if i == 1 %}eager{% else %}lazy{% endif %}"
+            width="1000"
+            height="800"
+          >
+          {% comment %} Mobile Image {% endcomment %}
+          <img
+            src="{{ current_mobile_image | image_url: width: 800 }}"
+            alt="{{ current_mobile_image.alt | escape }}"
+            class="ai-flex-slider__image-{{ ai_gen_id }} ai-flex-slider__image-mobile-{{ ai_gen_id }}"
+            loading="{% if i == 1 %}eager{% else %}lazy{% endif %}"
+            width="800"
+            height="450"
+          >
+        </div>
+
+        <div class="ai-flex-slider__text-section-{{ ai_gen_id }}">
+          {% if current_title != blank %}
+            <h2 class="ai-flex-slider__title-{{ ai_gen_id }}">{{ current_title }}</h2>
+          {% endif %}
+          {% if current_desc != blank %}
+            <div class="ai-flex-slider__description-{{ ai_gen_id }}">{{ current_desc }}</div>
+          {% endif %}
+          {% if current_btn_text != blank %}
+            <a href="{{ current_btn_link }}" class="ai-flex-slider__button-{{ ai_gen_id }}">
+              {{ current_btn_text }}
+            </a>
+          {% endif %}
+        </div>
+
+        <div class="ai-flex-slider__third-image-section-{{ ai_gen_id }}">
+          <div class="ai-flex-slider__third-image-wrapper-{{ ai_gen_id }}">
+            {% if next_image %}
+              <img
+                src="{{ next_image | image_url: width: 1000 }}"
+                alt="{{ next_image.alt | escape }}"
+                class="ai-flex-slider__image-cropped-{{ ai_gen_id }}"
+                loading="lazy"
+                width="1000"
+                height="800"
+              >
+            {% else %}
+              <div class="ai-flex-slider__image-placeholder-{{ ai_gen_id }}">
+                {{ 'image' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="ai-flex-slider__arrows-{{ ai_gen_id }}">
+      <button class="ai-flex-slider__arrow-{{ ai_gen_id }} ai-flex-slider__arrow-prev-{{ ai_gen_id }}" aria-label="Previous slide">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+        </svg>
+      </button>
+      <button class="ai-flex-slider__arrow-{{ ai_gen_id }} ai-flex-slider__arrow-next-{{ ai_gen_id }}" aria-label="Next slide">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+        </svg>
+      </button>
+    </div>
+
+    {% if block.settings.show_dots %}
+    <div class="ai-flex-slider__dots-{{ ai_gen_id }}" data-dots>
+      {% for i in (1..5) %}
+        {% assign image_key = 'image_' | append: i %}
+        {% assign current_image = block.settings[image_key] %}
+        {% if current_image %}
+          <button
+            class="ai-flex-slider__dot-{{ ai_gen_id }} {% if forloop.first %}is-active{% endif %}"
+            aria-label="Go to slide {{ forloop.index }}"
+            data-dot-index="{{ forloop.index0 }}"
+          ></button>
+        {% endif %}
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</flex-slider-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class FlexSlider{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentSlide = 0;
+        this.autoplayInterval = null;
+        this.isAnimating = false;
+      }
+
+      connectedCallback() {
+        this.slidesContainer = this.querySelector('.ai-flex-slider__slides-{{ ai_gen_id }}');
+        this.slides = Array.from(this.querySelectorAll('.ai-flex-slider__slide-{{ ai_gen_id }}'));
+        this.totalSlides = this.slides.length;
+        this.prevButton = this.querySelector('.ai-flex-slider__arrow-prev-{{ ai_gen_id }}');
+        this.nextButton = this.querySelector('.ai-flex-slider__arrow-next-{{ ai_gen_id }}');
+        this.dots = Array.from(this.querySelectorAll('.ai-flex-slider__dot-{{ ai_gen_id }}'));
+
+        // Don't initialize if less than 2 slides
+        if (this.totalSlides < 2) return;
+
+        // Check if mobile
+        this.checkMobile();
+        window.addEventListener('resize', () => this.checkMobile());
+
+        this.prevButton.addEventListener('click', () => this.previousSlide());
+        this.nextButton.addEventListener('click', () => this.nextSlide());
+
+        // Dots click events
+        this.dots.forEach((dot, index) => {
+          dot.addEventListener('click', () => this.goToSlide(index));
+        });
+
+        // Touch swipe support for mobile
+        this.setupTouchEvents();
+
+        this.matchThirdSectionHeight();
+
+        {% if block.settings.autoplay %}
+          this.startAutoplay();
+          this.addEventListener('mouseenter', () => this.stopAutoplay());
+          this.addEventListener('mouseleave', () => this.startAutoplay());
+        {% endif %}
+      }
+
+      checkMobile() {
+        this.isMobile = window.innerWidth < 750;
+      }
+
+      setupTouchEvents() {
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        this.addEventListener('touchstart', (e) => {
+          touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        this.addEventListener('touchend', (e) => {
+          touchEndX = e.changedTouches[0].screenX;
+          const diff = touchStartX - touchEndX;
+
+          // Minimum swipe distance of 50px
+          if (Math.abs(diff) > 50) {
+            if (diff > 0) {
+              // Swiped left - go to next slide
+              this.nextSlide();
+            } else {
+              // Swiped right - go to previous slide
+              this.previousSlide();
+            }
+          }
+        }, { passive: true });
+      }
+
+      matchThirdSectionHeight() {
+        this.slides.forEach(slide => {
+          const firstImage = slide.querySelector('.ai-flex-slider__image-section-{{ ai_gen_id }}');
+          const thirdSection = slide.querySelector('.ai-flex-slider__third-image-section-{{ ai_gen_id }}');
+
+          if (firstImage && thirdSection) {
+            const observer = new ResizeObserver(() => {
+              const height = firstImage.offsetHeight;
+              thirdSection.style.height = height + 'px';
+            });
+            observer.observe(firstImage);
+          }
+        });
+      }
+
+      cleanupOverlays() {
+        // Clean up previous overlay if exists
+        if (this.currentOverlay) {
+          this.currentOverlay.remove();
+          this.currentOverlay = null;
+        }
+        if (this.currentHiddenImage) {
+          this.currentHiddenImage.style.visibility = '';
+          this.currentHiddenImage = null;
+        }
+        if (this.currentHiddenThirdSection) {
+          this.currentHiddenThirdSection.style.visibility = '';
+          this.currentHiddenThirdSection = null;
+        }
+      }
+
+      nextSlide() {
+        if (this.isAnimating || this.totalSlides < 2) return;
+        this.isAnimating = true;
+
+        this.cleanupOverlays();
+
+        const nextIndex = (this.currentSlide + 1) % this.totalSlides;
+
+        // Mobile: Use simple slide animation
+        if (this.isMobile) {
+          this.currentSlide = nextIndex;
+          this.slidesContainer.style.transition = 'transform 0.4s ease-in-out';
+          this.updateSlidePosition();
+          this.updateDots();
+          setTimeout(() => {
+            this.isAnimating = false;
+          }, 450);
+          return;
+        }
+
+        // Desktop: Use complex 1/3 image expansion animation
+        const currentSlideEl = this.slides[this.currentSlide];
+        const nextSlideEl = this.slides[nextIndex];
+
+        // Get elements from current slide
+        const thirdSection = currentSlideEl.querySelector('.ai-flex-slider__third-image-section-{{ ai_gen_id }}');
+        const thirdImage = thirdSection ? thirdSection.querySelector('img') : null;
+        const firstSection = currentSlideEl.querySelector('.ai-flex-slider__image-section-{{ ai_gen_id }}');
+        const textSection = currentSlideEl.querySelector('.ai-flex-slider__text-section-{{ ai_gen_id }}');
+
+        // Get elements from next slide
+        const nextFirstSection = nextSlideEl.querySelector('.ai-flex-slider__image-section-{{ ai_gen_id }}');
+        const nextFirstImage = nextFirstSection ? nextFirstSection.querySelector('img') : null;
+
+        if (thirdImage && firstSection && nextFirstSection && nextFirstImage) {
+          const containerRect = this.getBoundingClientRect();
+          const thirdRect = thirdSection.getBoundingClientRect();
+          const firstRect = firstSection.getBoundingClientRect();
+          const textRect = textSection ? textSection.getBoundingClientRect() : null;
+
+          // Calculate positions
+          const thirdSectionLeft = thirdRect.left - containerRect.left;
+          const thirdSectionWidth = thirdRect.width;
+          const firstSectionWidth = firstRect.width;
+          const firstSectionLeft = firstRect.left - containerRect.left;
+          const firstSectionTop = firstRect.top - containerRect.top;
+          const textSectionWidth = textRect ? textRect.width : 0;
+
+          // Clone the cropped image for the expanding animation
+          const clone = thirdImage.cloneNode(true);
+
+          // Create overlay positioned exactly where the 1/3 section is
+          const overlay = document.createElement('div');
+          overlay.style.cssText = `
+            position: absolute;
+            top: ${firstSectionTop}px;
+            left: ${thirdSectionLeft}px;
+            width: ${thirdSectionWidth}px;
+            height: ${firstRect.height}px;
+            overflow: hidden;
+            z-index: 50;
+          `;
+
+          // Image starts at 300% width (showing left 1/3)
+          clone.style.cssText = `
+            width: 300%;
+            height: 100%;
+            object-fit: cover;
+            object-position: left center;
+            display: block;
+          `;
+
+          overlay.appendChild(clone);
+          this.appendChild(overlay);
+
+          // Hide the original third section during animation
+          thirdSection.style.visibility = 'hidden';
+
+          // Force reflow
+          overlay.offsetHeight;
+
+          const duration = 250;
+          const easing = 'cubic-bezier(0.4, 0, 0.2, 1)';
+
+          overlay.style.transition = `left ${duration}ms ${easing}, width ${duration}ms ${easing}`;
+          clone.style.transition = `width ${duration}ms ${easing}`;
+
+          firstSection.style.transition = `transform ${duration}ms ${easing}`;
+          if (textSection) {
+            textSection.style.transition = `transform ${duration}ms ${easing}`;
+          }
+
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              overlay.style.left = `${firstSectionLeft}px`;
+              overlay.style.width = `${firstSectionWidth}px`;
+              clone.style.width = '100%';
+
+              firstSection.style.transform = `translateX(-${firstSectionWidth + textSectionWidth + thirdSectionWidth}px)`;
+              if (textSection) {
+                textSection.style.transform = `translateX(-${firstSectionWidth + textSectionWidth + thirdSectionWidth}px)`;
+              }
+            });
+          });
+
+          setTimeout(() => {
+            // Hide next slide's first image - overlay replaces it
+            nextFirstImage.style.visibility = 'hidden';
+
+            // Switch slide
+            this.currentSlide = nextIndex;
+            const offset = -this.currentSlide * 100;
+            this.slidesContainer.style.transition = 'none';
+            this.slidesContainer.style.transform = `translateX(${offset}%)`;
+            this.slidesContainer.offsetHeight;
+
+            // Reset current slide
+            firstSection.style.transition = 'none';
+            firstSection.style.transform = '';
+            if (textSection) {
+              textSection.style.transition = 'none';
+              textSection.style.transform = '';
+            }
+            thirdSection.style.visibility = '';
+
+            // Store references for cleanup
+            this.currentOverlay = overlay;
+            this.currentHiddenImage = nextFirstImage;
+
+            firstSection.style.transition = '';
+            if (textSection) textSection.style.transition = '';
+            this.slidesContainer.style.transition = 'transform 0.4s ease-in-out';
+            this.updateDots();
+            this.isAnimating = false;
+          }, duration);
+        } else {
+          // Fallback for slides without proper images
+          this.currentSlide = nextIndex;
+          this.updateSlidePosition();
+          this.updateDots();
+          setTimeout(() => {
+            this.isAnimating = false;
+          }, 500);
+        }
+      }
+
+      previousSlide() {
+        if (this.isAnimating || this.totalSlides < 2) return;
+        this.isAnimating = true;
+
+        this.cleanupOverlays();
+
+        const prevIndex = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
+
+        // Mobile: Use simple slide animation
+        if (this.isMobile) {
+          this.currentSlide = prevIndex;
+          this.slidesContainer.style.transition = 'transform 0.4s ease-in-out';
+          this.updateSlidePosition();
+          this.updateDots();
+          setTimeout(() => {
+            this.isAnimating = false;
+          }, 450);
+          return;
+        }
+
+        // Desktop: Use complex shrinking animation
+        const currentSlideEl = this.slides[this.currentSlide];
+        const prevSlideEl = this.slides[prevIndex];
+
+        // Get elements from current slide
+        const currentFirstSection = currentSlideEl.querySelector('.ai-flex-slider__image-section-{{ ai_gen_id }}');
+        const currentFirstImage = currentFirstSection ? currentFirstSection.querySelector('img') : null;
+        const currentTextSection = currentSlideEl.querySelector('.ai-flex-slider__text-section-{{ ai_gen_id }}');
+        const currentThirdSection = currentSlideEl.querySelector('.ai-flex-slider__third-image-section-{{ ai_gen_id }}');
+
+        // Get elements from previous slide
+        const prevThirdSection = prevSlideEl.querySelector('.ai-flex-slider__third-image-section-{{ ai_gen_id }}');
+        const prevThirdImage = prevThirdSection ? prevThirdSection.querySelector('img') : null;
+
+        if (currentFirstImage && currentFirstSection && prevThirdSection && prevThirdImage) {
+          const containerRect = this.getBoundingClientRect();
+          const firstRect = currentFirstSection.getBoundingClientRect();
+          const textRect = currentTextSection ? currentTextSection.getBoundingClientRect() : null;
+          const thirdRect = currentThirdSection.getBoundingClientRect();
+
+          const firstSectionLeft = firstRect.left - containerRect.left;
+          const firstSectionWidth = firstRect.width;
+          const firstSectionTop = firstRect.top - containerRect.top;
+          const textSectionWidth = textRect ? textRect.width : 0;
+          const thirdSectionLeft = thirdRect.left - containerRect.left;
+          const thirdSectionWidth = thirdRect.width;
+
+          // Clone current first image for shrinking animation
+          const clone = currentFirstImage.cloneNode(true);
+
+          const overlay = document.createElement('div');
+          overlay.style.cssText = `
+            position: absolute;
+            top: ${firstSectionTop}px;
+            left: ${firstSectionLeft}px;
+            width: ${firstSectionWidth}px;
+            height: ${firstRect.height}px;
+            overflow: hidden;
+            z-index: 50;
+          `;
+
+          clone.style.cssText = `
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: left center;
+            display: block;
+          `;
+
+          overlay.appendChild(clone);
+          this.appendChild(overlay);
+
+          currentFirstSection.style.visibility = 'hidden';
+          overlay.offsetHeight;
+
+          const duration = 250;
+          const easing = 'cubic-bezier(0.4, 0, 0.2, 1)';
+
+          overlay.style.transition = `left ${duration}ms ${easing}, width ${duration}ms ${easing}`;
+          clone.style.transition = `width ${duration}ms ${easing}`;
+
+          // Switch to previous slide
+          this.currentSlide = prevIndex;
+          this.slidesContainer.style.transition = 'none';
+          this.slidesContainer.style.transform = `translateX(${-prevIndex * 100}%)`;
+          this.slidesContainer.offsetHeight;
+
+          const prevFirstSection = prevSlideEl.querySelector('.ai-flex-slider__image-section-{{ ai_gen_id }}');
+          const prevTextSection = prevSlideEl.querySelector('.ai-flex-slider__text-section-{{ ai_gen_id }}');
+
+          // Hide prev third section - overlay will replace it
+          prevThirdSection.style.visibility = 'hidden';
+
+          const prevFirstRect = prevFirstSection.getBoundingClientRect();
+          const prevTextRect = prevTextSection ? prevTextSection.getBoundingClientRect() : null;
+          const totalSlideWidth = prevFirstRect.width + (prevTextRect ? prevTextRect.width : 0) + thirdSectionWidth;
+
+          prevFirstSection.style.transform = `translateX(-${totalSlideWidth}px)`;
+          if (prevTextSection) {
+            prevTextSection.style.transform = `translateX(-${totalSlideWidth}px)`;
+          }
+
+          this.slidesContainer.offsetHeight;
+
+          prevFirstSection.style.transition = `transform ${duration}ms ${easing}`;
+          if (prevTextSection) {
+            prevTextSection.style.transition = `transform ${duration}ms ${easing}`;
+          }
+
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              overlay.style.left = `${thirdSectionLeft}px`;
+              overlay.style.width = `${thirdSectionWidth}px`;
+              clone.style.width = '300%';
+
+              prevFirstSection.style.transform = 'translateX(0)';
+              if (prevTextSection) {
+                prevTextSection.style.transform = 'translateX(0)';
+              }
+            });
+          });
+
+          setTimeout(() => {
+            this.currentOverlay = overlay;
+            this.currentHiddenThirdSection = prevThirdSection;
+
+            currentFirstSection.style.visibility = '';
+
+            prevFirstSection.style.transition = '';
+            prevFirstSection.style.transform = '';
+            if (prevTextSection) {
+              prevTextSection.style.transition = '';
+              prevTextSection.style.transform = '';
+            }
+
+            this.slidesContainer.style.transition = 'transform 0.4s ease-in-out';
+            this.updateDots();
+            this.isAnimating = false;
+          }, duration);
+        } else {
+          this.currentSlide = prevIndex;
+          this.updateSlidePosition();
+          this.updateDots();
+          setTimeout(() => {
+            this.isAnimating = false;
+          }, 500);
+        }
+      }
+
+      updateSlidePosition() {
+        const offset = -this.currentSlide * 100;
+        this.slidesContainer.style.transform = `translateX(${offset}%)`;
+        this.updateDots();
+      }
+
+      updateDots() {
+        this.dots.forEach((dot, index) => {
+          dot.classList.toggle('is-active', index === this.currentSlide);
+        });
+      }
+
+      goToSlide(index) {
+        if (this.isAnimating || index === this.currentSlide) return;
+        this.isAnimating = true;
+        this.cleanupOverlays();
+
+        this.currentSlide = index;
+        this.slidesContainer.style.transition = 'transform 0.4s ease-in-out';
+        this.updateSlidePosition();
+
+        setTimeout(() => {
+          this.isAnimating = false;
+        }, 450);
+      }
+
+      startAutoplay() {
+        if (this.totalSlides < 2) return;
+        this.autoplayInterval = setInterval(() => {
+          this.nextSlide();
+        }, {{ block.settings.autoplay_speed }} * 1000);
+      }
+
+      stopAutoplay() {
+        if (this.autoplayInterval) {
+          clearInterval(this.autoplayInterval);
+          this.autoplayInterval = null;
+        }
+      }
+
+      disconnectedCallback() {
+        this.stopAutoplay();
+      }
+    }
+
+    customElements.define('flex-slider-{{ ai_gen_id }}', FlexSlider{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Flex slider",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "%",
+      "label": "First section width",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "text_width",
+      "min": 20,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Second section width",
+      "default": 35
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "Vertical alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "crop_position",
+      "label": "Third section crop position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left third"
+        },
+        {
+          "value": "center",
+          "label": "Center third"
+        },
+        {
+          "value": "right",
+          "label": "Right third"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Slide 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image_1",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "title_1",
+      "label": "Title",
+      "default": "Slide 1 Title"
+    },
+    {
+      "type": "textarea",
+      "id": "description_1",
+      "label": "Description",
+      "default": "Add your description here for the first slide."
+    },
+    {
+      "type": "text",
+      "id": "button_text_1",
+      "label": "Button text",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link_1",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Slide 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image_2",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "title_2",
+      "label": "Title",
+      "default": "Slide 2 Title"
+    },
+    {
+      "type": "textarea",
+      "id": "description_2",
+      "label": "Description",
+      "default": "Add your description here for the second slide."
+    },
+    {
+      "type": "text",
+      "id": "button_text_2",
+      "label": "Button text",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "button_link_2",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Slide 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image_3",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "title_3",
+      "label": "Title",
+      "default": "Slide 3 Title"
+    },
+    {
+      "type": "textarea",
+      "id": "description_3",
+      "label": "Description",
+      "default": "Add your description here for the third slide."
+    },
+    {
+      "type": "text",
+      "id": "button_text_3",
+      "label": "Button text",
+      "default": "Discover"
+    },
+    {
+      "type": "url",
+      "id": "button_link_3",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Slide 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_4",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image_4",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "title_4",
+      "label": "Title",
+      "default": "Slide 4 Title"
+    },
+    {
+      "type": "textarea",
+      "id": "description_4",
+      "label": "Description",
+      "default": "Add your description here for the fourth slide."
+    },
+    {
+      "type": "text",
+      "id": "button_text_4",
+      "label": "Button text",
+      "default": "Explore"
+    },
+    {
+      "type": "url",
+      "id": "button_link_4",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Slide 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_5",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image_5",
+      "label": "Mobile image"
+    },
+    {
+      "type": "text",
+      "id": "title_5",
+      "label": "Title",
+      "default": "Slide 5 Title"
+    },
+    {
+      "type": "textarea",
+      "id": "description_5",
+      "label": "Description",
+      "default": "Add your description here for the fifth slide."
+    },
+    {
+      "type": "text",
+      "id": "button_text_5",
+      "label": "Button text",
+      "default": "View more"
+    },
+    {
+      "type": "url",
+      "id": "button_link_5",
+      "label": "Button link"
+    },
+    {
+      "type": "header",
+      "content": "Text section"
+    },
+    {
+      "type": "color",
+      "id": "text_section_background",
+      "label": "Text section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "text_padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Text padding",
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "text_vertical_alignment",
+      "label": "Text vertical alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "text_horizontal_alignment",
+      "label": "Text horizontal alignment",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "flex-start"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 16,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 36
+    },
+    {
+      "type": "select",
+      "id": "title_font_weight",
+      "label": "Title font weight",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "title_spacing",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Title spacing",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Description size",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "description_font_weight",
+      "label": "Description font weight",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description color",
+      "default": "#4d4d4d"
+    },
+    {
+      "type": "range",
+      "id": "description_spacing",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Description spacing",
+      "default": 25
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 4
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Hover background color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Arrows"
+    },
+    {
+      "type": "range",
+      "id": "arrow_size",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Arrow size",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "arrow_icon_size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Arrow icon size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "arrow_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Arrow border radius",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "arrow_position",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Arrow position from edge",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "arrow_background",
+      "label": "Arrow background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "arrow_hover_background",
+      "label": "Arrow hover background",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow icon color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Dots Navigation"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show dots navigation",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "dots_size",
+      "min": 8,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Dots size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "dots_gap",
+      "min": 5,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Dots gap",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "dots_position",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Dots position from bottom",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "dots_color",
+      "label": "Dots color",
+      "default": "rgba(255, 255, 255, 0.4)"
+    },
+    {
+      "type": "color",
+      "id": "dots_active_color",
+      "label": "Active dot color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "dots_border_width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "label": "Dots border width",
+      "default": 2
+    },
+    {
+      "type": "color",
+      "id": "dots_border_color",
+      "label": "Dots border color",
+      "default": "rgba(255, 255, 255, 0.8)"
+    },
+    {
+      "type": "header",
+      "content": "Autoplay"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Autoplay speed",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Mobile settings"
+    },
+    {
+      "type": "color",
+      "id": "mobile_background_color",
+      "label": "Mobile background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "mobile_text_section_background",
+      "label": "Mobile text section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "select",
+      "id": "mobile_text_alignment",
+      "label": "Mobile text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "mobile_title_size",
+      "min": 14,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile title size",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "mobile_title_color",
+      "label": "Mobile title color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "mobile_description_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile description size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "mobile_description_color",
+      "label": "Mobile description color",
+      "default": "#4d4d4d"
+    },
+    {
+      "type": "range",
+      "id": "mobile_button_font_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile button font size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "mobile_text_padding",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile text padding",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "mobile_content_position",
+      "label": "Mobile content position",
+      "options": [
+        {
+          "value": "below",
+          "label": "Below image"
+        },
+        {
+          "value": "overlay",
+          "label": "Overlay on image"
+        }
+      ],
+      "default": "below"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Flex slider"
+    }
+  ]
+}
+{% endschema %}

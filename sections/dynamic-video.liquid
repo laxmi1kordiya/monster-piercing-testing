@@ -1,0 +1,221 @@
+<script
+  type="application/json"
+  data-section-type="dynamic-video"
+  data-section-id="{{ section.id }}"
+  data-section-data>
+  {
+    "autoplay": {{ section.settings.autoplay | json }}
+  }
+</script>
+
+<div class="dynamic-video-wrapper">
+  {% if section.settings.title != blank %}
+    <h2 class="home-section--title">
+      {{ section.settings.title | escape }}
+    </h2>
+  {% endif %}
+
+  {% assign url = section.settings.url | default: 'https://www.youtube.com/watch?v=_9VUPq3SxOc' %}
+  {% assign shopify_video = section.settings.shopify_video %}
+
+  <div class="dynamic-video">
+    {% assign overlay = nil %}
+
+    {% if section.settings.show_overlay %}
+      {% assign opacity = section.settings.opacity | times: 0.01 %}
+      {% assign overlay = section.settings.background | color_modify: 'alpha', opacity %}
+    {% endif %}
+
+    {% if shopify_video != blank %}
+      <div class="shopify-video video video-aspect-ratio-{{ section.settings.aspect_ratio }}">
+        {% if section.settings.cover and section.settings.autoplay == false %}
+          <div class="video-cover" data-video-cover>
+            {%
+              render 'rimg',
+              img: section.settings.cover,
+              size: '1800x1000',
+              background: true,
+              lazy: true,
+              focal_point: section.settings.cover.presentation.focal_point,
+            %}
+            {%
+              render 'rimg',
+              img: section.settings.cover,
+              size: '1800x1000',
+              canvas: true,
+              lazy: true,
+              focal_point: section.settings.cover.presentation.focal_point,
+            %}
+            <div class="video-overlay"
+              {% if overlay %}style="background-color: {{ overlay }}"{% endif %}
+            >
+              <button class="video-play-button" aria-label="play" data-shopify-video-play>
+                {% render 'icon-library', id: 'icon-play' %}
+              </button>
+            </div>
+          </div>
+        {% endif %}
+
+        {{ shopify_video | video_tag:
+          image_size: '1800x',
+          autoplay: section.settings.autoplay,
+          loop: true,
+          muted: section.settings.autoplay,
+          controls: false,
+          class: 'shopify-hosted-video'
+        }}
+      </div>
+    {% else %}
+      {%
+        render 'video',
+        cover: section.settings.cover,
+        aspect_ratio: section.settings.aspect_ratio,
+        overlay: overlay,
+        url: url
+        %}
+    {% endif %}
+
+  {% if section.settings.show_caption %}
+    <div class="dynamic-video-caption rte">{{ section.settings.caption }}</div>
+  {% endif %}
+  </div>
+</div>
+
+{% if shopify_video != blank %}
+<style>
+  .shopify-hosted-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .video .video-cover + .shopify-hosted-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .video .video-cover.is-hidden {
+    display: none;
+  }
+</style>
+<script>
+  (function() {
+    var playBtn = document.querySelector('[data-shopify-video-play]');
+    if (!playBtn) return;
+    playBtn.addEventListener('click', function() {
+      var cover = this.closest('.video-cover');
+      var video = cover.parentElement.querySelector('video');
+      if (video) {
+        cover.classList.add('is-hidden');
+        video.play();
+      }
+    });
+  })();
+</script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:sections.video.name",
+  "class": "section-video",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.video.title.label",
+      "default": "Video"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.video.header_1.content"
+    },
+    {
+      "type": "video",
+      "id": "shopify_video",
+      "label": "Upload video",
+      "info": "Upload a custom video file. This takes priority over the YouTube/Vimeo link below."
+    },
+    {
+      "type": "video_url",
+      "id": "url",
+      "label": "t:sections.video.url.label",
+      "accept": [
+        "youtube",
+        "vimeo"
+      ],
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+      "info": "Used only if no uploaded video is provided above."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_caption",
+      "label": "t:sections.video.show_caption.label"
+    },
+    {
+      "type": "richtext",
+      "id": "caption",
+      "label": "t:sections.video.caption.label",
+      "default": "<p>A short description of the video.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "t:sections.video.autoplay.label"
+    },
+    {
+      "type": "select",
+      "id": "aspect_ratio",
+      "label": "t:sections.video.aspect_ratio.label",
+      "options": [
+        {
+          "label": "t:sections.video.aspect_ratio.option_1",
+          "value": "16-9"
+        },
+        {
+          "label": "t:sections.video.aspect_ratio.option_2",
+          "value": "21-9"
+        }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "cover",
+      "label": "t:sections.video.cover.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.video.header_2.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overlay",
+      "label": "t:sections.video.show_overlay.label"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "t:sections.video.background.label",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "opacity",
+      "label": "t:sections.video.opacity.label",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    }
+  ],
+  "presets": [
+    {
+      "category": "t:sections.video.presets.video.category",
+      "name": "t:sections.video.presets.video.name"
+    }
+  ],
+  "disabled_on": {
+    "groups": ["*"]
+  }
+}
+{% endschema %}

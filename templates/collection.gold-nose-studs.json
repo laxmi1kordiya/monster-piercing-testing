@@ -1,0 +1,302 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "blocks_yQncrE": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_f1f6909_zWVdfz": {
+          "type": "ai_gen_block_f1f6909",
+          "settings": {
+            "text_1": "FLAT 25% OFF",
+            "text_2": "No Exclusions",
+            "text_3": "FLAT 25% OFF",
+            "text_4": "Limited Time",
+            "text_5": "",
+            "initial_direction": "right",
+            "animation_speed": 10,
+            "background_color": "#fec0c7",
+            "text_color": "#810000",
+            "font_size": 17,
+            "bar_padding": 10,
+            "text_spacing": 40,
+            "show_toggle_button": false,
+            "button_background": "#ffffff",
+            "button_color": "#000000",
+            "button_padding": 8,
+            "button_border_radius": 4,
+            "button_icon_size": 20,
+            "button_position": 20
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_f1f6909_zWVdfz"
+      ],
+      "name": "Sliding announcement bar",
+      "settings": {}
+    },
+    "blocks_UGqjxK": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_e2abd90_gjeYFM": {
+          "type": "ai_gen_block_e2abd90",
+          "settings": {
+            "background_color": "#ffffff",
+            "padding_top": 15,
+            "padding_bottom": 10,
+            "desktop_width_percent": 60,
+            "desktop_circle_size": 80,
+            "desktop_item_spacing": 50,
+            "desktop_border_width": 1,
+            "desktop_border_color": "#8c0013",
+            "desktop_overlay_height": 50,
+            "desktop_overlay_angle": 0,
+            "desktop_overlay_color": "#000000",
+            "desktop_text_color": "#ffffff",
+            "desktop_text_size": 11,
+            "desktop_text_weight": "700",
+            "mobile_width_percent": 65,
+            "mobile_circle_size": 60,
+            "mobile_item_spacing": 30,
+            "mobile_text_spacing": 10,
+            "mobile_border_width": 1,
+            "mobile_border_color": "#db1e37",
+            "mobile_text_color": "#000000",
+            "mobile_text_size": 12,
+            "mobile_text_weight": "700",
+            "auto_slide": true,
+            "slide_direction": "left",
+            "slide_speed": 0.5,
+            "collection_1": "nose-jewellery",
+            "image_1": "shopify://shop_images/nose_bc5ae189-ee67-4f88-9668-04c2d4748e40.png",
+            "text_1": "Nose",
+            "collection_2": "tongue-barbells",
+            "image_2": "shopify://shop_images/tongue_5dd1d57d-7106-4583-a074-ea77709522c9.png",
+            "text_2": "Tongue",
+            "collection_3": "labrets",
+            "image_3": "shopify://shop_images/lip_bba8e2e8-ce52-4abf-a69e-3a29abb9c64f.png",
+            "text_3": "Lips",
+            "collection_4": "ear-jewellery",
+            "image_4": "shopify://shop_images/EAR_8d82411f-dba1-4361-ac70-e54df25c8cde.png",
+            "text_4": "Ear",
+            "collection_5": "curved-barbells",
+            "image_5": "shopify://shop_images/eyebrow_36308969-f00a-4946-a60c-4169ae033573.png",
+            "text_5": "Eye",
+            "collection_6": "belly-rings",
+            "image_6": "shopify://shop_images/belly_fe8fd30c-580d-4858-9e75-feeca8a51ab0.png",
+            "text_6": "Belly",
+            "collection_7": "fake-plugs",
+            "image_7": "shopify://shop_images/stretched.png",
+            "text_7": "Stretched",
+            "collection_8": "dermal-anchors",
+            "image_8": "shopify://shop_images/surface.png",
+            "text_8": "Surface",
+            "collection_9": "",
+            "text_9": "",
+            "collection_10": "",
+            "text_10": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_e2abd90_gjeYFM"
+      ],
+      "settings": {}
+    },
+    "dynamic_slideshow_Uf9qBR": {
+      "type": "dynamic-slideshow",
+      "blocks": {
+        "slide_RpyC8r": {
+          "type": "slide",
+          "settings": {
+            "background_image": "shopify://shop_images/nose_gold_nose_d64573f8-7528-4e4d-b446-f5ab21d32b70.png",
+            "mobile_background_image": "shopify://shop_images/nose_gold_nose_5b09fa9f-dba7-4be7-84f2-1f4caf26f91b.png",
+            "title": "Gold Nose Studs",
+            "text": "A Curated Selection of 14K, 9K, and 18K Gold Nose Studs, Ball End, L-Bend, and Screw Types for Every Style",
+            "color": "#000000",
+            "link": "",
+            "text_alignment": "left",
+            "content_position": "center",
+            "vertical_position": "center",
+            "content_max_width": 700,
+            "content_padding": 40,
+            "heading_size": 40,
+            "heading_line_height": 120,
+            "heading_max_width": 600,
+            "heading_margin_bottom": 10,
+            "subheading_size": 16,
+            "subheading_line_height": 150,
+            "subheading_margin_bottom": 16,
+            "desktop_heading_margin_bottom": 10,
+            "desktop_subheading_margin_bottom": 16,
+            "button_margin_top": 0,
+            "desktop_button_margin_top": 0,
+            "button_size": 14,
+            "button_background_color": "#000000",
+            "button_text_color": "#ffffff",
+            "button_layout_desktop": "side-by-side",
+            "button_alignment": "center",
+            "button_gap": 10,
+            "mobile_content_position": "center",
+            "mobile_vertical_position": "center",
+            "mobile_text_alignment": "center",
+            "mobile_content_padding": 15,
+            "mobile_heading_size": 24,
+            "mobile_heading_line_height": 120,
+            "mobile_heading_max_width": 300,
+            "mobile_subheading_size": 14,
+            "mobile_subheading_line_height": 150,
+            "mobile_button_size": 12,
+            "button_layout_mobile": "stacked",
+            "button_one_label": "",
+            "button_one_link": "",
+            "button_two_label": "",
+            "button_two_link": "",
+            "button_three_label": "",
+            "button_three_link": "",
+            "button_four_label": "",
+            "button_four_link": "",
+            "show_overlay": false,
+            "overlay_color": "#000000",
+            "overlay_opacity": 50
+          }
+        }
+      },
+      "block_order": [
+        "slide_RpyC8r"
+      ],
+      "disabled": true,
+      "name": "t:sections.slideshow.presets.slideshow.name",
+      "settings": {
+        "enable_autoplay": true,
+        "autoplay_duration": 8,
+        "slideshow_width": "full",
+        "slideshow_height": "medium",
+        "slideshow_height_mobile": "x-large",
+        "slideshow_text_below_image": true,
+        "heading_font_weight": "700",
+        "heading_text_transform": "none",
+        "subheading_font_weight": "400",
+        "subheading_text_transform": "none",
+        "button_font_weight": "600",
+        "button_text_transform": "none",
+        "button_border_radius": 0,
+        "button_padding_vertical": 12,
+        "button_padding_horizontal": 24,
+        "enable_text_shadow": false
+      }
+    },
+    "main": {
+      "type": "static-collection",
+      "blocks": {
+        "filter-1": {
+          "type": "filter",
+          "settings": {
+            "filter_option": "tag",
+            "filter_groups": "collapse_all",
+            "show_filter_product_count": true,
+            "filter_style": "groups",
+            "filter_limit": "6",
+            "grid_categories": "",
+            "custom_ordered_categories": "Type, Material, Thread Type, Stone, Colour",
+            "custom_ordered_tags": "",
+            "excluded_tags": "Colour_Black, Colour_Steel, Colour_Gold, Colour_Luminescent, Colour_Red, Colour_Yellow",
+            "excluded_groups": "Colour_Black, Colour_Steel, Colour_Gold, Colour_Luminescent, Colour_Red, Colour_Yellow"
+          }
+        }
+      },
+      "block_order": [
+        "filter-1"
+      ],
+      "settings": {
+        "show_collection_image": false,
+        "products_per_page_range": 24,
+        "products_per_row": "5",
+        "sort_by": true,
+        "grid_list": true,
+        "default_view": "grid-view",
+        "enable_subcollection": true,
+        "show_product_count": false,
+        "thumbnail_image": "collection-image",
+        "image_crop": "original",
+        "show_related_searches": true,
+        "rs_heading": "People Also Searched For",
+        "rs_max_tags": 9,
+        "rs_section_bg_color": "#ffffff",
+        "rs_padding_top": 30,
+        "rs_padding_bottom": 30,
+        "rs_title_color": "#333333",
+        "rs_title_font_size": 22,
+        "rs_tag_bg_color": "#efefef",
+        "rs_tag_text_color": "#333333",
+        "rs_tag_hover_bg_color": "#dddddd",
+        "rs_tag_hover_text_color": "#db1e37",
+        "rs_tag_font_size": 14,
+        "rs_tag_border_radius": 20,
+        "rs_tag_padding_vertical": 10,
+        "rs_tag_padding_horizontal": 18,
+        "rs_tag_gap": 10
+      }
+    },
+    "1774351304a0499287": {
+      "type": "apps",
+      "blocks": {
+        "webrex_ai_seo_optimizer_product_description_tabs_V9b4iR": {
+          "type": "shopify://apps/webrex-ai-seo-optimizer/blocks/productDescriptionTabs/b26797ad-bb4d-48f5-8ef3-7c561521049c",
+          "settings": {
+            "layout_view": "tabs",
+            "description_position": "hidden",
+            "description_tab_title": "Description",
+            "max_width": 1100,
+            "tab_design_style": "cards",
+            "tab_title_font_size": 16,
+            "tab_title_text_color": "#212529",
+            "active_tab_title_text_color": "#ffffff",
+            "tab_background_color": "#f8f9fa",
+            "tab_active_background_color": "#db1e37",
+            "tab_border_color": "#e9ecef",
+            "classic_underline_color": "#db1e37",
+            "classic_underline_thickness": 3,
+            "tab_content_background_color": "#ffffff",
+            "accordion_title_font_size": 16,
+            "accordion_title_text_color": "#212529",
+            "accordion_active_title_text_color": "#212529",
+            "accordion_title_bg_color": "#f5f5f5",
+            "accordion_active_title_bg_color": "#ffffff",
+            "accordion_content_background_color": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "webrex_ai_seo_optimizer_product_description_tabs_V9b4iR"
+      ],
+      "settings": {
+        "include_padding": true
+      }
+    },
+    "static-recently-viewed": {
+      "type": "static-recently-viewed",
+      "settings": {
+        "enable_recently_viewed_products": true
+      }
+    }
+  },
+  "order": [
+    "blocks_yQncrE",
+    "blocks_UGqjxK",
+    "dynamic_slideshow_Uf9qBR",
+    "main",
+    "1774351304a0499287",
+    "static-recently-viewed"
+  ]
+}

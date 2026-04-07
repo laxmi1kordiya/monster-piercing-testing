@@ -1,0 +1,1100 @@
+{% doc %}
+  @prompt
+    Create a custom Shopify section that displays a single main image at the top with adjustable image size controls (desktop and mobile).
+    
+    Below the image, detect that the image represents multiple featured products.
+    For each product shown in the image, display a separate small product grid.
+    
+    Each product grid must:
+    
+    Represent one product only
+    
+    Be visually compact and clean
+    
+    Appear stacked vertically (one grid per product)
+    
+    Include:
+    
+    Product image
+    
+    Product title
+    
+    Price
+    
+    Variant selector (if applicable)
+    
+    Add to Cart button (AJAX, no page reload)
+    
+    Section behavior & controls:
+    
+    Allow the merchant to select the main image
+    
+    Allow the merchant to assign multiple products manually (one product per grid)
+    
+    The number of grids should automatically match the number of selected products
+    
+    Enable reordering of product grids
+    
+    Responsive layout for mobile and desktop
+    
+    Design requirements:
+    
+    Minimal, modern, and conversion-focused
+    
+    Small grids should not overpower the main image
+    
+    Fast loading and Shopify best practices compliant
+    
+    Purpose:
+    This section is meant to showcase products worn or used inside the main image, allowing customers to add each item to cart directly without leaving the page., Allow me to add the products over the image it self. I shall be able to replace the place of product gards according to my wish anywhere on the image. Also, product cards should be slightly woggling on hover., product cards should be square and very small., add a line that connects a specific point in the image to product card. Also, add image product name in one line with .... and price with discounted price and add to cart option just by clicking it., add name in 1 line using dots at the end, price and allow to add to cart option., all me to drag and drop the position of the dots and product cards for locationg them at the proper position.
+    
+    Also, remove the additional padding below Add to Cart option in the product cards. Improve the design of product cards as well., decrease the height of product card.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-image-products-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    padding: 40px 20px;
+  }
+
+  .ai-image-products__container-{{ ai_gen_id }} {
+    position: relative;
+    width: {{ block.settings.desktop_image_width }}%;
+    margin: 0 auto;
+  }
+
+  .ai-image-products__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+  }
+
+  .ai-image-products__placeholder-{{ ai_gen_id }} {
+    background-color: #f4f4f4;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    position: relative;
+  }
+
+  .ai-image-products__placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    max-height: 500px;
+  }
+
+  .ai-image-products__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+  }
+
+  .ai-product-line-{{ ai_gen_id }} {
+    position: absolute;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .ai-product-line-{{ ai_gen_id }} line {
+    stroke: {{ block.settings.line_color }};
+    stroke-width: {{ block.settings.line_width }};
+    stroke-dasharray: {{ block.settings.line_style }};
+  }
+
+  .ai-product-dot-{{ ai_gen_id }} {
+    position: absolute;
+    width: {{ block.settings.dot_size }}px;
+    height: {{ block.settings.dot_size }}px;
+    background-color: {{ block.settings.dot_color }};
+    border: 2px solid {{ block.settings.dot_border_color }};
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+    cursor: move;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.2s ease;
+  }
+
+  .ai-product-dot-{{ ai_gen_id }}:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .ai-product-dot-{{ ai_gen_id }}.dragging {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    z-index: 100;
+  }
+
+  .ai-product-card-{{ ai_gen_id }} {
+    position: absolute;
+    width: {{ block.settings.card_size }}px;
+    background-color: {{ block.settings.card_background }};
+    border: 1px solid {{ block.settings.card_border_color }};
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: move;
+  }
+
+  @keyframes ai-wiggle-{{ ai_gen_id }} {
+    0%, 100% { transform: translate(-50%, -50%) rotate(0deg); }
+    25% { transform: translate(-50%, -50%) rotate(-1.5deg); }
+    75% { transform: translate(-50%, -50%) rotate(1.5deg); }
+  }
+
+  .ai-product-card-{{ ai_gen_id }}:hover {
+    animation: ai-wiggle-{{ ai_gen_id }} 0.5s ease-in-out infinite;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  }
+
+  .ai-product-card-{{ ai_gen_id }}.dragging {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+    z-index: 100;
+    animation: none;
+  }
+
+  .ai-product-card__image-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: #f9f9f9;
+  }
+
+  .ai-product-card__image-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-product-card-{{ ai_gen_id }}:hover .ai-product-card__image-{{ ai_gen_id }} img {
+    transform: scale(1.05);
+  }
+
+  .ai-product-card__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-product-card__image-placeholder-{{ ai_gen_id }} svg {
+    width: 50%;
+    height: 50%;
+  }
+
+  .ai-product-card__content-{{ ai_gen_id }} {
+    padding: 6px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .ai-product-card__title-{{ ai_gen_id }} {
+    font-size: 10px;
+    font-weight: 600;
+    margin: 0;
+    color: {{ block.settings.text_color }};
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ai-product-card__price-{{ ai_gen_id }} {
+    font-size: 11px;
+    margin: 0;
+    color: {{ block.settings.text_color }};
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+    line-height: 1.2;
+  }
+
+  .ai-product-card__price--sale-{{ ai_gen_id }} {
+    color: {{ block.settings.sale_color }};
+  }
+
+  .ai-product-card__price--compare-{{ ai_gen_id }} {
+    text-decoration: line-through;
+    opacity: 0.6;
+    font-size: 9px;
+    font-weight: 400;
+  }
+
+  .ai-product-card__cta-{{ ai_gen_id }} {
+    width: 100%;
+    padding: 6px 8px;
+    background-color: {{ block.settings.button_color }};
+    color: {{ block.settings.button_text_color }};
+    border: none;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+  }
+
+  .ai-product-card__cta-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_color }};
+    transform: translateY(-1px);
+  }
+
+  .ai-product-card__cta-{{ ai_gen_id }}:active {
+    transform: translateY(0);
+  }
+
+  .ai-product-card__cta-{{ ai_gen_id }}:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .ai-product-card__message-{{ ai_gen_id }} {
+    font-size: 8px;
+    text-align: center;
+    min-height: 10px;
+    line-height: 1.2;
+  }
+
+  .ai-product-card__message--success-{{ ai_gen_id }} {
+    color: #008060;
+  }
+
+  .ai-product-card__message--error-{{ ai_gen_id }} {
+    color: #D82C0D;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-image-products__container-{{ ai_gen_id }} {
+      width: {{ block.settings.mobile_image_width }}%;
+    }
+
+    .ai-product-card-{{ ai_gen_id }} {
+      width: {{ block.settings.card_size | times: 0.85 }}px;
+    }
+
+    .ai-product-dot-{{ ai_gen_id }} {
+      width: {{ block.settings.dot_size | times: 0.8 }}px;
+      height: {{ block.settings.dot_size | times: 0.8 }}px;
+    }
+  }
+{% endstyle %}
+
+<image-products-{{ ai_gen_id }}
+  class="ai-image-products-{{ ai_gen_id }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-image-products__container-{{ ai_gen_id }}">
+    {% if block.settings.main_image %}
+      <img
+        src="{{ block.settings.main_image | image_url: width: 2000 }}"
+        alt="{{ block.settings.main_image.alt | escape }}"
+        class="ai-image-products__image-{{ ai_gen_id }}"
+        loading="lazy"
+        width="{{ block.settings.main_image.width }}"
+        height="{{ block.settings.main_image.height }}"
+      >
+    {% else %}
+      <div class="ai-image-products__placeholder-{{ ai_gen_id }}">
+        {{ 'hero-apparel-1' | placeholder_svg_tag }}
+        <div class="ai-image-products__empty-state-{{ ai_gen_id }}">
+          Add a main image to showcase your products
+        </div>
+      </div>
+    {% endif %}
+
+    <svg
+      class="ai-product-line-{{ ai_gen_id }}"
+      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"
+    >
+      {% for i in (1..6) %}
+        {% liquid
+          assign product_key = 'product_' | append: i
+          assign dot_x_key = 'product_' | append: i | append: '_dot_x'
+          assign dot_y_key = 'product_' | append: i | append: '_dot_y'
+          assign card_x_key = 'product_' | append: i | append: '_x'
+          assign card_y_key = 'product_' | append: i | append: '_y'
+          
+          assign product = block.settings[product_key]
+          assign dot_x = block.settings[dot_x_key]
+          assign dot_y = block.settings[dot_y_key]
+          assign card_x = block.settings[card_x_key]
+          assign card_y = block.settings[card_y_key]
+        %}
+
+        {% if product != blank %}
+          <line
+            data-line="{{ i }}"
+            x1="{{ dot_x }}%"
+            y1="{{ dot_y }}%"
+            x2="{{ card_x }}%"
+            y2="{{ card_y }}%"
+          />
+        {% endif %}
+      {% endfor %}
+    </svg>
+
+    {% for i in (1..6) %}
+      {% liquid
+        assign product_key = 'product_' | append: i
+        assign dot_x_key = 'product_' | append: i | append: '_dot_x'
+        assign dot_y_key = 'product_' | append: i | append: '_dot_y'
+        assign card_x_key = 'product_' | append: i | append: '_x'
+        assign card_y_key = 'product_' | append: i | append: '_y'
+        
+        assign product = block.settings[product_key]
+        assign dot_x = block.settings[dot_x_key]
+        assign dot_y = block.settings[dot_y_key]
+        assign card_x = block.settings[card_x_key]
+        assign card_y = block.settings[card_y_key]
+      %}
+
+      {% if product != blank %}
+        <div
+          class="ai-product-dot-{{ ai_gen_id }}"
+          style="left: {{ dot_x }}%; top: {{ dot_y }}%;"
+          data-dot="{{ i }}"
+          data-draggable="dot"
+        ></div>
+
+        <div
+          class="ai-product-card-{{ ai_gen_id }}"
+          style="left: {{ card_x }}%; top: {{ card_y }}%; transform: translate(-50%, -50%);"
+          data-card="{{ i }}"
+          data-draggable="card"
+          data-product-id="{{ product.id }}"
+          data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+        >
+          <div class="ai-product-card__image-{{ ai_gen_id }}">
+            {% if product.featured_image %}
+              <img
+                src="{{ product.featured_image | image_url: width: 200 }}"
+                alt="{{ product.featured_image.alt | escape }}"
+                width="200"
+                height="200"
+                loading="lazy"
+              >
+            {% else %}
+              <div class="ai-product-card__image-placeholder-{{ ai_gen_id }}">
+                {{ 'product-1' | placeholder_svg_tag }}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="ai-product-card__content-{{ ai_gen_id }}">
+            <h3 class="ai-product-card__title-{{ ai_gen_id }}" title="{{ product.title }}">
+              {{ product.title }}
+            </h3>
+
+            <div class="ai-product-card__price-{{ ai_gen_id }}">
+              {% if product.compare_at_price > product.price %}
+                <span class="ai-product-card__price--sale-{{ ai_gen_id }}">
+                  <span class="money" data-price>{{ product.price | money }}</span>
+                </span>
+                <span class="ai-product-card__price--compare-{{ ai_gen_id }}">
+                  <span class="money" data-price>{{ product.compare_at_price | money }}</span>
+                </span>
+              {% else %}
+                <span class="money" data-price>{{ product.price | money }}</span>
+              {% endif %}
+            </div>
+
+            <button
+              class="ai-product-card__cta-{{ ai_gen_id }}"
+              data-add-to-cart
+              {% unless product.available %}disabled{% endunless %}
+            >
+              {% if product.available %}
+                Add to cart
+              {% else %}
+                Sold out
+              {% endif %}
+            </button>
+
+            <div class="ai-product-card__message-{{ ai_gen_id }}" data-message></div>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</image-products-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ImageProducts{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.container = this.querySelector('.ai-image-products__container-{{ ai_gen_id }}');
+        this.draggables = this.querySelectorAll('[data-draggable]');
+        this.isDragging = false;
+        this.currentDraggable = null;
+        this.startX = 0;
+        this.startY = 0;
+        this.startLeft = 0;
+        this.startTop = 0;
+      }
+
+      connectedCallback() {
+        this.setupDragAndDrop();
+        this.setupAddToCart();
+      }
+
+      setupDragAndDrop() {
+        this.draggables.forEach((element) => {
+          element.addEventListener('mousedown', (e) => this.startDrag(e, element));
+          element.addEventListener('touchstart', (e) => this.startDrag(e, element));
+        });
+
+        document.addEventListener('mousemove', (e) => this.drag(e));
+        document.addEventListener('touchmove', (e) => this.drag(e));
+        
+        document.addEventListener('mouseup', () => this.endDrag());
+        document.addEventListener('touchend', () => this.endDrag());
+      }
+
+      startDrag(e, element) {
+        if (e.target.closest('[data-add-to-cart]')) {
+          return;
+        }
+
+        e.preventDefault();
+        this.isDragging = true;
+        this.currentDraggable = element;
+        
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+        
+        this.startX = clientX;
+        this.startY = clientY;
+        
+        const rect = element.getBoundingClientRect();
+        const containerRect = this.container.getBoundingClientRect();
+        
+        this.startLeft = ((rect.left + rect.width / 2 - containerRect.left) / containerRect.width) * 100;
+        this.startTop = ((rect.top + rect.height / 2 - containerRect.top) / containerRect.height) * 100;
+        
+        element.classList.add('dragging');
+      }
+
+      drag(e) {
+        if (!this.isDragging || !this.currentDraggable) return;
+        
+        e.preventDefault();
+        
+        const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+        const clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+        
+        const containerRect = this.container.getBoundingClientRect();
+        const deltaX = ((clientX - this.startX) / containerRect.width) * 100;
+        const deltaY = ((clientY - this.startY) / containerRect.height) * 100;
+        
+        let newLeft = this.startLeft + deltaX;
+        let newTop = this.startTop + deltaY;
+        
+        newLeft = Math.max(0, Math.min(100, newLeft));
+        newTop = Math.max(0, Math.min(100, newTop));
+        
+        this.currentDraggable.style.left = newLeft + '%';
+        this.currentDraggable.style.top = newTop + '%';
+        
+        this.updateLine(this.currentDraggable, newLeft, newTop);
+      }
+
+      endDrag() {
+        if (this.currentDraggable) {
+          this.currentDraggable.classList.remove('dragging');
+        }
+        this.isDragging = false;
+        this.currentDraggable = null;
+      }
+
+      updateLine(element, x, y) {
+        const type = element.dataset.draggable;
+        const index = element.dataset.dot || element.dataset.card;
+        const line = this.querySelector(`[data-line="${index}"]`);
+        
+        if (line) {
+          if (type === 'dot') {
+            line.setAttribute('x1', x + '%');
+            line.setAttribute('y1', y + '%');
+          } else if (type === 'card') {
+            line.setAttribute('x2', x + '%');
+            line.setAttribute('y2', y + '%');
+          }
+        }
+      }
+
+      setupAddToCart() {
+        const addButtons = this.querySelectorAll('[data-add-to-cart]');
+        
+        addButtons.forEach((button) => {
+          if (!button.disabled) {
+            button.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const card = button.closest('.ai-product-card-{{ ai_gen_id }}');
+              this.addToCart(card, button);
+            });
+          }
+        });
+      }
+
+      async addToCart(card, button) {
+        const variantId = card.dataset.variantId;
+        const messageEl = card.querySelector('[data-message]');
+        const originalText = button.textContent;
+
+        if (!variantId) {
+          this.showMessage(messageEl, 'Error', 'error');
+          return;
+        }
+
+        button.textContent = 'Adding...';
+        button.disabled = true;
+        messageEl.textContent = '';
+
+        try {
+          const response = await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id: variantId,
+              quantity: 1,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to add to cart');
+          }
+
+          const data = await response.json();
+
+          this.showMessage(messageEl, 'Added!', 'success');
+          button.textContent = originalText;
+          button.disabled = false;
+
+          this.updateCartCount();
+
+          setTimeout(() => {
+            messageEl.textContent = '';
+          }, 2000);
+        } catch (error) {
+          this.showMessage(messageEl, 'Error', 'error');
+          button.textContent = originalText;
+          button.disabled = false;
+        }
+      }
+
+      showMessage(messageEl, text, type) {
+        messageEl.textContent = text;
+        messageEl.className = `ai-product-card__message-{{ ai_gen_id }} ai-product-card__message--${type}-{{ ai_gen_id }}`;
+      }
+
+      async updateCartCount() {
+        try {
+          const response = await fetch('/cart.js');
+          const cart = await response.json();
+
+          const cartCountElements = document.querySelectorAll('[data-cart-count], .cart-count, .cart__count');
+          cartCountElements.forEach((el) => {
+            el.textContent = cart.item_count;
+          });
+
+          document.documentElement.dispatchEvent(new CustomEvent('cart:refresh', {
+            bubbles: true
+          }));
+        } catch (error) {
+          console.error('Error updating cart count:', error);
+        }
+      }
+    }
+
+    customElements.define('image-products-{{ ai_gen_id }}', ImageProducts{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product showcase",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Main image"
+    },
+    {
+      "type": "image_picker",
+      "id": "main_image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "desktop_image_width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Desktop width",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_width",
+      "min": 80,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Mobile width",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Product 1"
+    },
+    {
+      "type": "product",
+      "id": "product_1",
+      "label": "Product"
+    },
+    {
+      "type": "range",
+      "id": "product_1_dot_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot horizontal position",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "product_1_dot_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot vertical position",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "product_1_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card horizontal position",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "product_1_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card vertical position",
+      "default": 25
+    },
+    {
+      "type": "header",
+      "content": "Product 2"
+    },
+    {
+      "type": "product",
+      "id": "product_2",
+      "label": "Product"
+    },
+    {
+      "type": "range",
+      "id": "product_2_dot_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot horizontal position",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "product_2_dot_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot vertical position",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "product_2_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card horizontal position",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "product_2_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card vertical position",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Product 3"
+    },
+    {
+      "type": "product",
+      "id": "product_3",
+      "label": "Product"
+    },
+    {
+      "type": "range",
+      "id": "product_3_dot_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot horizontal position",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "product_3_dot_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot vertical position",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "product_3_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card horizontal position",
+      "default": 75
+    },
+    {
+      "type": "range",
+      "id": "product_3_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card vertical position",
+      "default": 25
+    },
+    {
+      "type": "header",
+      "content": "Product 4"
+    },
+    {
+      "type": "product",
+      "id": "product_4",
+      "label": "Product"
+    },
+    {
+      "type": "range",
+      "id": "product_4_dot_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot horizontal position",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "product_4_dot_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot vertical position",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "product_4_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card horizontal position",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "product_4_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card vertical position",
+      "default": 75
+    },
+    {
+      "type": "header",
+      "content": "Product 5"
+    },
+    {
+      "type": "product",
+      "id": "product_5",
+      "label": "Product"
+    },
+    {
+      "type": "range",
+      "id": "product_5_dot_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot horizontal position",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "product_5_dot_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot vertical position",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "product_5_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card horizontal position",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "product_5_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card vertical position",
+      "default": 75
+    },
+    {
+      "type": "header",
+      "content": "Product 6"
+    },
+    {
+      "type": "product",
+      "id": "product_6",
+      "label": "Product"
+    },
+    {
+      "type": "range",
+      "id": "product_6_dot_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot horizontal position",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "product_6_dot_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Dot vertical position",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "product_6_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card horizontal position",
+      "default": 75
+    },
+    {
+      "type": "range",
+      "id": "product_6_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Card vertical position",
+      "default": 75
+    },
+    {
+      "type": "header",
+      "content": "Card style"
+    },
+    {
+      "type": "range",
+      "id": "card_size",
+      "min": 80,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Card size",
+      "default": 120
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Border",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "sale_color",
+      "label": "Sale price",
+      "default": "#db1e37"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Button hover",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Connection line"
+    },
+    {
+      "type": "color",
+      "id": "line_color",
+      "label": "Line color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "line_width",
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Line width",
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "line_style",
+      "label": "Line style",
+      "options": [
+        {
+          "value": "0",
+          "label": "Solid"
+        },
+        {
+          "value": "5,5",
+          "label": "Dashed"
+        },
+        {
+          "value": "2,2",
+          "label": "Dotted"
+        }
+      ],
+      "default": "5,5"
+    },
+    {
+      "type": "header",
+      "content": "Connection dot"
+    },
+    {
+      "type": "range",
+      "id": "dot_size",
+      "min": 6,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Dot size",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "dot_border_color",
+      "label": "Dot border",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product showcase"
+    }
+  ]
+}
+{% endschema %}

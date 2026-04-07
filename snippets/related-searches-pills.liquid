@@ -1,0 +1,155 @@
+{% comment %}
+  Related Searches - Pill/Tag Design Snippet
+  Usage:
+    {% render 'related-searches-pills',
+      related_handles: related_handles,
+      heading: 'Explore more related searches',
+      section_bg_color: '#f1f2f4',
+      padding_top: 30,
+      padding_bottom: 30,
+      title_color: '#333333',
+      title_font_size: 22,
+      tag_bg_color: '#dfe1e5',
+      tag_text_color: '#333333',
+      tag_hover_bg_color: '#c5c8cd',
+      tag_hover_text_color: '#111111',
+      tag_font_size: 14,
+      tag_border_radius: 20,
+      tag_padding_vertical: 10,
+      tag_padding_horizontal: 18,
+      tag_gap: 10
+    %}
+{% endcomment %}
+
+{%- liquid
+  assign rs_heading = heading | default: 'People Also Searched For'
+  assign rs_section_bg = section_bg_color | default: '#FFFFFF'
+  assign rs_pad_top = padding_top | default: 30
+  assign rs_pad_bottom = padding_bottom | default: 30
+  assign rs_title_clr = title_color | default: '#333333'
+  assign rs_title_fs = title_font_size | default: 22
+  assign rs_tag_bg = tag_bg_color | default: '#dfe1e5'
+  assign rs_tag_clr = tag_text_color | default: '#333333'
+  assign rs_tag_hover_bg = tag_hover_bg_color | default: '#DDDDDD'
+  assign rs_tag_hover_clr = tag_hover_text_color | default: '#DB1E37'
+  assign rs_tag_fs = tag_font_size | default: 14
+  assign rs_tag_br = tag_border_radius | default: 20
+  assign rs_tag_pv = tag_padding_vertical | default: 10
+  assign rs_tag_ph = tag_padding_horizontal | default: 18
+  assign rs_gap = tag_gap | default: 10
+  assign rs_title_fs_mobile = rs_title_fs | minus: 4
+  assign rs_tag_fs_mobile = rs_tag_fs | minus: 1
+  assign rs_tag_pv_mobile = rs_tag_pv | minus: 2
+  assign rs_tag_ph_mobile = rs_tag_ph | minus: 4
+  assign rs_gap_mobile = rs_gap | minus: 2
+-%}
+
+{% assign has_pills = false %}
+{% if filter_pills.size > 0 %}
+  {% assign has_pills = true %}
+{% elsif related_handles.size > 0 %}
+  {% assign has_pills = true %}
+{% endif %}
+
+{% if has_pills %}
+  <div class="related-searches-pills" style="
+    background-color: {{ rs_section_bg }};
+    padding-top: {{ rs_pad_top }}px;
+    padding-bottom: {{ rs_pad_bottom }}px;
+  ">
+    <div class="related-searches-pills__container">
+      <h3 class="related-searches-pills__title" style="
+        color: {{ rs_title_clr }};
+        font-size: {{ rs_title_fs }}px;
+      ">
+        {{ rs_heading }}
+      </h3>
+      <div class="related-searches-pills__tags">
+        {% if filter_pills.size > 0 %}
+          {% for pill in filter_pills %}
+            {% assign pill_parts = pill | split: '::' %}
+            {% assign pill_title = pill_parts[0] %}
+            {% assign pill_url = pill_parts[1] %}
+            {% if pill_title != blank and pill_url != blank %}
+              <a href="{{ pill_url }}" class="related-searches-pills__tag" style="
+                background-color: {{ rs_tag_bg }};
+                color: {{ rs_tag_clr }};
+                font-size: {{ rs_tag_fs }}px;
+                border-radius: {{ rs_tag_br }}px;
+              ">
+                {{ pill_title }}
+              </a>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          {% for handle in related_handles %}
+            {% assign rel_col = collections[handle] %}
+            {% if rel_col and rel_col.title != blank %}
+              <a href="{{ rel_col.url }}" class="related-searches-pills__tag" style="
+                background-color: {{ rs_tag_bg }};
+                color: {{ rs_tag_clr }};
+                font-size: {{ rs_tag_fs }}px;
+                border-radius: {{ rs_tag_br }}px;
+              ">
+                {{ rel_col.title }}
+              </a>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .related-searches-pills {
+      width: 100%;
+    }
+    .related-searches-pills__container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .related-searches-pills__title {
+      font-weight: 400;
+      margin: 0 0 20px 0;
+      text-transform: none;
+      letter-spacing: 0;
+      line-height: 1.3;
+    }
+    .related-searches-pills__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: {{ rs_gap }}px;
+    }
+    .related-searches-pills__tag {
+      display: inline-block;
+      padding: {{ rs_tag_pv }}px {{ rs_tag_ph }}px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      line-height: 1.4;
+    }
+    .related-searches-pills__tag:hover {
+      background-color: {{ rs_tag_hover_bg }} !important;
+      color: {{ rs_tag_hover_clr }} !important;
+      text-decoration: none;
+    }
+    @media (max-width: 768px) {
+      .related-searches-pills__container {
+        padding: 0 15px;
+      }
+      .related-searches-pills__title {
+        font-size: {{ rs_title_fs_mobile }}px !important;
+        margin-bottom: 15px;
+      }
+      .related-searches-pills__tags {
+        gap: {{ rs_gap_mobile }}px;
+      }
+      .related-searches-pills__tag {
+        font-size: {{ rs_tag_fs_mobile }}px !important;
+        padding: {{ rs_tag_pv_mobile }}px {{ rs_tag_ph_mobile }}px;
+      }
+    }
+  </style>
+{% endif %}

@@ -1,0 +1,283 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "blocks_yQncrE": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_f1f6909_zWVdfz": {
+          "type": "ai_gen_block_f1f6909",
+          "settings": {
+            "text_1": "FLAT 25% OFF",
+            "text_2": "No Exclusions",
+            "text_3": "FLAT 25% OFF",
+            "text_4": "Limited Time",
+            "text_5": "",
+            "initial_direction": "right",
+            "animation_speed": 10,
+            "background_color": "#fec0c7",
+            "text_color": "#810000",
+            "font_size": 17,
+            "bar_padding": 10,
+            "text_spacing": 40,
+            "show_toggle_button": false,
+            "button_background": "#ffffff",
+            "button_color": "#000000",
+            "button_padding": 8,
+            "button_border_radius": 4,
+            "button_icon_size": 20,
+            "button_position": 20
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_f1f6909_zWVdfz"
+      ],
+      "name": "Sliding announcement bar",
+      "settings": {}
+    },
+    "blocks_6hBt3p": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_e2abd90_kMtcFf": {
+          "type": "ai_gen_block_e2abd90",
+          "settings": {
+            "background_color": "#ffffff",
+            "padding_top": 15,
+            "padding_bottom": 10,
+            "desktop_width_percent": 60,
+            "desktop_circle_size": 80,
+            "desktop_item_spacing": 50,
+            "desktop_border_width": 1,
+            "desktop_border_color": "#8c0013",
+            "desktop_overlay_height": 50,
+            "desktop_overlay_angle": 0,
+            "desktop_overlay_color": "#000000",
+            "desktop_text_color": "#ffffff",
+            "desktop_text_size": 11,
+            "desktop_text_weight": "700",
+            "mobile_width_percent": 65,
+            "mobile_circle_size": 60,
+            "mobile_item_spacing": 30,
+            "mobile_text_spacing": 10,
+            "mobile_border_width": 1,
+            "mobile_border_color": "#db1e37",
+            "mobile_text_color": "#000000",
+            "mobile_text_size": 12,
+            "mobile_text_weight": "700",
+            "auto_slide": true,
+            "slide_direction": "left",
+            "slide_speed": 0.5,
+            "collection_1": "nose-jewellery",
+            "image_1": "shopify://shop_images/nose_bc5ae189-ee67-4f88-9668-04c2d4748e40.png",
+            "text_1": "Nose",
+            "collection_2": "tongue-barbells",
+            "image_2": "shopify://shop_images/tongue_5dd1d57d-7106-4583-a074-ea77709522c9.png",
+            "text_2": "Tongue",
+            "collection_3": "labrets",
+            "image_3": "shopify://shop_images/lip_bba8e2e8-ce52-4abf-a69e-3a29abb9c64f.png",
+            "text_3": "Lips",
+            "collection_4": "ear-jewellery",
+            "image_4": "shopify://shop_images/EAR_8d82411f-dba1-4361-ac70-e54df25c8cde.png",
+            "text_4": "Ear",
+            "collection_5": "curved-barbells",
+            "image_5": "shopify://shop_images/eyebrow_36308969-f00a-4946-a60c-4169ae033573.png",
+            "text_5": "Eye",
+            "collection_6": "belly-rings",
+            "image_6": "shopify://shop_images/belly_fe8fd30c-580d-4858-9e75-feeca8a51ab0.png",
+            "text_6": "Belly",
+            "collection_7": "fake-plugs",
+            "image_7": "shopify://shop_images/stretched.png",
+            "text_7": "Stretched",
+            "collection_8": "dermal-anchors",
+            "image_8": "shopify://shop_images/surface.png",
+            "text_8": "Surface",
+            "collection_9": "",
+            "text_9": "",
+            "collection_10": "",
+            "text_10": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_e2abd90_kMtcFf"
+      ],
+      "settings": {}
+    },
+    "main": {
+      "type": "static-collection",
+      "blocks": {
+        "filter-1": {
+          "type": "filter",
+          "settings": {
+            "filter_option": "faceted",
+            "filter_groups": "expand_first",
+            "show_filter_product_count": true,
+            "filter_style": "tags",
+            "filter_limit": "999",
+            "grid_categories": "",
+            "custom_ordered_categories": "",
+            "custom_ordered_tags": "",
+            "excluded_tags": "",
+            "excluded_groups": ""
+          }
+        }
+      },
+      "block_order": [
+        "filter-1"
+      ],
+      "disabled": true,
+      "settings": {
+        "show_collection_image": false,
+        "products_per_page_range": 24,
+        "products_per_row": "4",
+        "sort_by": true,
+        "grid_list": true,
+        "default_view": "grid-view",
+        "enable_subcollection": false,
+        "show_product_count": false,
+        "thumbnail_image": "product-image",
+        "image_crop": "original",
+        "show_related_searches": true,
+        "rs_heading": "People Also Searched For",
+        "rs_max_tags": 9,
+        "rs_section_bg_color": "#ffffff",
+        "rs_padding_top": 30,
+        "rs_padding_bottom": 30,
+        "rs_title_color": "#333333",
+        "rs_title_font_size": 22,
+        "rs_tag_bg_color": "#efefef",
+        "rs_tag_text_color": "#333333",
+        "rs_tag_hover_bg_color": "#dddddd",
+        "rs_tag_hover_text_color": "#db1e37",
+        "rs_tag_font_size": 14,
+        "rs_tag_border_radius": 20,
+        "rs_tag_padding_vertical": 10,
+        "rs_tag_padding_horizontal": 18,
+        "rs_tag_gap": 10
+      }
+    },
+    "static-recently-viewed": {
+      "type": "static-recently-viewed",
+      "disabled": true,
+      "settings": {
+        "enable_recently_viewed_products": true
+      }
+    },
+    "dynamic_collection_list_cnPU8L": {
+      "type": "dynamic-collection-list",
+      "blocks": {
+        "collection_3jGpBU": {
+          "type": "collection",
+          "settings": {
+            "collection": "flat-backs",
+            "image": "shopify://shop_images/Frame_5.png",
+            "title": "Flat-Back Studs"
+          }
+        },
+        "collection_fyBXtT": {
+          "type": "collection",
+          "settings": {
+            "collection": "ball-end-studs",
+            "image": "shopify://shop_images/Untitled_design_2b084d7c-e1e7-49b0-b83b-9402c5e9db4c.png",
+            "title": "Ball-End Studs"
+          }
+        },
+        "collection_ADHUha": {
+          "type": "collection",
+          "settings": {
+            "collection": "hoop-rings",
+            "image": "shopify://shop_images/Frame_31.png",
+            "title": "Hoop Rings"
+          }
+        },
+        "collection_d7rEWW": {
+          "type": "collection",
+          "settings": {
+            "collection": "circular-barbells",
+            "image": "shopify://shop_images/Frame_22.png",
+            "title": "Circular Barbells"
+          }
+        },
+        "collection_VVCC4e": {
+          "type": "collection",
+          "settings": {
+            "collection": "uv-flat-backs",
+            "image": "shopify://shop_images/Frame_13.png",
+            "title": "UV Flat-Backs"
+          }
+        }
+      },
+      "block_order": [
+        "collection_3jGpBU",
+        "collection_fyBXtT",
+        "collection_ADHUha",
+        "collection_d7rEWW",
+        "collection_VVCC4e"
+      ],
+      "name": "t:sections.collection_list.presets.collection_list.name",
+      "settings": {
+        "title": "Labret Studs & Lip Rings - Premium Body Piercing Jewellery",
+        "thumbnail_columns_desktop": 5,
+        "thumbnail_columns_mobile": 2,
+        "image-crop": "original",
+        "cta_label": "",
+        "cta_link": "",
+        "cta_button_style": "primary"
+      }
+    },
+    "177434280878ef1774": {
+      "type": "apps",
+      "blocks": {
+        "webrex_ai_seo_optimizer_product_description_tabs_f3gVNh": {
+          "type": "shopify://apps/webrex-ai-seo-optimizer/blocks/productDescriptionTabs/b26797ad-bb4d-48f5-8ef3-7c561521049c",
+          "settings": {
+            "layout_view": "tabs",
+            "description_position": "above",
+            "description_tab_title": "Description",
+            "max_width": 1100,
+            "tab_design_style": "cards",
+            "tab_title_font_size": 16,
+            "tab_title_text_color": "#212529",
+            "active_tab_title_text_color": "#ffffff",
+            "tab_background_color": "#f8f9fa",
+            "tab_active_background_color": "#db1e37",
+            "tab_border_color": "#e9ecef",
+            "classic_underline_color": "#db1e37",
+            "classic_underline_thickness": 3,
+            "tab_content_background_color": "#ffffff",
+            "accordion_title_font_size": 16,
+            "accordion_title_text_color": "#212529",
+            "accordion_active_title_text_color": "#212529",
+            "accordion_title_bg_color": "#f5f5f5",
+            "accordion_active_title_bg_color": "#ffffff",
+            "accordion_content_background_color": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "webrex_ai_seo_optimizer_product_description_tabs_f3gVNh"
+      ],
+      "settings": {
+        "include_padding": true
+      }
+    }
+  },
+  "order": [
+    "blocks_yQncrE",
+    "blocks_6hBt3p",
+    "main",
+    "static-recently-viewed",
+    "dynamic_collection_list_cnPU8L",
+    "177434280878ef1774"
+  ]
+}

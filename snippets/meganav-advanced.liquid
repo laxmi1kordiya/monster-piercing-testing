@@ -1,0 +1,121 @@
+{% comment %}
+  Advanced Mega Menu - Similar to Favorite Theme "Support/Explore" style
+  Features:
+  - Multi-column layout with headings
+  - Optional button
+  - Optional promotional images
+
+  @param menu LinkList - List of menu items
+  @param block Block - The block with the meganav properties
+{% endcomment %}
+
+{%- capture meganav_classes -%}
+  navmenu-submenu
+  navmenu-meganav
+  navmenu-meganav--desktop
+  navmenu-meganav-advanced
+  navmenu-meganav-advanced--{{ block.settings.mega_menu_width | default: 'medium' }}
+{%- endcapture -%}
+
+{% assign column_count = menu.links.size %}
+{% if block.settings.promo_image_1 != blank %}
+  {% assign column_count = column_count | plus: 1 %}
+{% endif %}
+{% if block.settings.promo_image_2 != blank %}
+  {% assign column_count = column_count | plus: 1 %}
+{% endif %}
+
+<div
+  class="{{ meganav_classes | strip_newlines }}"
+  data-navmenu-submenu
+  data-meganav-menu
+  data-meganav-id="{{ block.id }}"
+>
+  <div class="navmenu-meganav-wrapper meganav-advanced__wrapper">
+    <!-- Menu Columns -->
+    <div class="meganav-advanced__columns" style="--column-count: {{ menu.links.size }}">
+      {% for menu_item in menu.links %}
+        <div class="meganav-advanced__column">
+          <h3 class="meganav-advanced__column-title">
+            {% if menu_item.url != blank and menu_item.url != '#' %}
+              <a href="{{ menu_item.url }}">{{ menu_item.title }}</a>
+            {% else %}
+              {{ menu_item.title }}
+            {% endif %}
+          </h3>
+
+          {% if menu_item.links.size > 0 %}
+            <ul class="meganav-advanced__links">
+              {% for sub_item in menu_item.links %}
+                <li class="meganav-advanced__link-item">
+                  <a href="{{ sub_item.url }}" class="meganav-advanced__link">
+                    {{ sub_item.title }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% elsif linklists[menu_item.handle] %}
+            <ul class="meganav-advanced__links">
+              {% for sub_item in linklists[menu_item.handle].links %}
+                <li class="meganav-advanced__link-item">
+                  <a href="{{ sub_item.url }}" class="meganav-advanced__link">
+                    {{ sub_item.title }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Promotional Images Section -->
+    {% if block.settings.show_promo_images %}
+      {% if block.settings.promo_image_1 != blank or block.settings.promo_image_2 != blank %}
+        <div class="meganav-advanced__promos">
+          {% if block.settings.promo_image_1 != blank %}
+            <a href="{{ block.settings.promo_link_1 | default: '#' }}" class="meganav-advanced__promo">
+              <div class="meganav-advanced__promo-image">
+                <img
+                  src="{{ block.settings.promo_image_1 | image_url: width: 300 }}"
+                  alt="{{ block.settings.promo_title_1 | escape }}"
+                  loading="lazy"
+                >
+              </div>
+              {% if block.settings.promo_title_1 != blank %}
+                <span class="meganav-advanced__promo-title">{{ block.settings.promo_title_1 }}</span>
+              {% endif %}
+            </a>
+          {% endif %}
+
+          {% if block.settings.promo_image_2 != blank %}
+            <a href="{{ block.settings.promo_link_2 | default: '#' }}" class="meganav-advanced__promo">
+              <div class="meganav-advanced__promo-image">
+                <img
+                  src="{{ block.settings.promo_image_2 | image_url: width: 300 }}"
+                  alt="{{ block.settings.promo_title_2 | escape }}"
+                  loading="lazy"
+                >
+              </div>
+              {% if block.settings.promo_title_2 != blank %}
+                <span class="meganav-advanced__promo-title">{{ block.settings.promo_title_2 }}</span>
+              {% endif %}
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+
+  <!-- Bottom Button -->
+  {% if block.settings.button_label != blank %}
+    <div class="meganav-advanced__footer">
+      <a href="{{ block.settings.button_link | default: '#' }}" class="meganav-advanced__button">
+        {{ block.settings.button_label }}
+        <span class="meganav-advanced__button-arrow">
+          {% render 'icon-chevron-right' %}
+        </span>
+      </a>
+    </div>
+  {% endif %}
+</div>

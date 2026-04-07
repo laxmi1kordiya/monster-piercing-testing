@@ -1,0 +1,1025 @@
+<!doctype html>
+<html class="no-js no-touch" lang="{{ request.locale.iso_code }}">
+  
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+
+    <link rel="preconnect" href="https://cdn.shopify.com">
+    <link rel="preconnect" href="https://fonts.shopifycdn.com">
+    <link rel="preconnect" href="https://v.shopify.com">
+    <link rel="preconnect" href="https://cdn.shopifycloud.com">
+
+    {%- render 'hs-critical-css' -%}
+
+    <title>
+      {{- page_title -}}
+
+      {%- if current_tags -%}
+        {% capture cat_array %}{%- render 'advanced-tag-loop' -%}{% endcapture %}
+        {% assign cat_array = cat_array | split: '|' %}
+        {% assign title_tags = '' %}
+        {% assign meta_tags = current_tags | join: ', ' %}
+        {%- for tag in current_tags -%}
+          {% assign is_advanced_tag = false %}
+          {% assign cat = tag | split: '_' | first %}
+
+          {%- unless cat == tag -%}
+            {%- if cat_array contains cat -%}
+              {% assign is_advanced_tag = true %}
+              {% assign title_tags = title_tags | append: ', ' | append: tag | replace_first: '_', ': ' %}
+            {%- endif -%}
+          {%- endunless -%}
+
+          {%- unless is_advanced_tag -%}
+            {% assign title_tags = title_tags | append: ', ' | append: tag %}
+          {%- endunless -%}
+        {%- endfor -%}
+        {{ 'general.title.tags' | t: tags: title_tags | remove_first: ', ' }}
+      {%- endif -%}
+
+      {%- if current_page != 1 -%}
+        {{- 'general.title.page' | t: page: current_page -}}
+      {%- endif -%}
+
+      {%- unless page_title contains shop.name -%}
+        {{- 'general.title.shop' | t: shop: shop.name -}}
+      {%- endunless -%}
+    </title>
+
+    {% if page_description != blank %}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- else -%}
+      <meta name="description" content="{{ shop.name | escape }}">
+    {% endif %}
+
+    {% if settings.favicon != blank %}
+      <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+    {% endif %}
+
+    {%- assign has_query_filters = false -%}
+    {%- if template contains 'collection' -%}
+      {%- assign page_url = content_for_header | split: '"pageurl":"' | last | split: '"' | first | url_decode -%}
+      {%- if page_url contains 'filter.' or page_url contains 'sort_by=' -%}
+        {%- assign has_query_filters = true -%}
+      {%- endif -%}
+    {%- endif -%}
+
+    {% if template contains 'collection' and has_query_filters %}
+      <meta name="robots" content="noindex,nofollow" />
+      <link rel="canonical" href="{{ shop.url }}{{ collection.url }}" />
+    {% elsif template contains 'collection' and current_tags and collection.products_count > 5 %}
+      <meta name="robots" content="index,follow">
+      <link rel="canonical" href="{{ canonical_url }}" />
+    {% elsif template contains 'collection' and collection.products_count < 5 %}
+      <link rel="canonical" href="{{ shop.url }}{{ collection.url }}" />
+    {% elsif template contains 'collection' %}
+      <meta name="robots" content="index,follow" />
+      <link rel="canonical" href="{{ canonical_url }}" /> 
+    {% else %}
+      <link rel="canonical" href="{{ canonical_url }}" />
+    {% endif %}
+
+    {% assign x_handle = settings.social_x | split: 'x.com/' | last | split: 'twitter.com/' | last %}
+    {%
+      render 'social-meta-tags',
+      twitter_handle: x_handle,
+    %}
+
+
+    <link href="{{ 'theme.css' | asset_url }}" rel="stylesheet" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ 'custom.css' | asset_url }}" media="print" onload="this.media='all'; this.onload = null">
+    {{ content_for_header }}
+
+    {% comment %} Defer non-critical CSS to avoid render blocking {% endcomment %}
+    {% unless settings.reduce_animations %}
+      <link rel="stylesheet" href="{{ 'ripple.css' | asset_url }}" media="print" onload="this.media='all'; this.onload = null">
+    {% endunless %}
+     <link rel="stylesheet" href="{{ 'cart-drawer.css' | asset_url }}" media="print" onload="this.media='all'; this.onload = null">
+    <style>
+      .cart-drawer { position: fixed; transform: translateX(100%); visibility: hidden; }
+      .cart-drawer--open { transform: translateX(0); visibility: visible; }
+      .cart-drawer__overlay { position: fixed; opacity: 0; pointer-events: none; }
+    </style>
+    {% comment %}Inject theme-object begin{% endcomment %}
+    <script>
+      window.Theme = window.Theme || {};
+      window.Theme.version = '12.0.0';
+      window.Theme.name = 'Empire';
+      window.Theme.routes = {
+        "root_url": "{{ routes.root_url }}",
+        "account_url": "{{ routes.account_url }}",
+        "account_login_url": "{{ routes.account_login_url }}",
+        "account_logout_url": "{{ routes.account_logout_url }}",
+        "account_register_url": "{{ routes.account_register_url }}",
+        "account_addresses_url": "{{ routes.account_addresses_url }}",
+        "collections_url": "{{ routes.collections_url }}",
+        "all_products_collection_url": "{{ routes.all_products_collection_url }}",
+        "search_url": "{{ routes.search_url }}",
+        "predictive_search_url": "{{ routes.predictive_search_url }}",
+        "cart_url": "{{ routes.cart_url }}",
+        "cart_add_url": "{{ routes.cart_add_url }}",
+        "cart_change_url": "{{ routes.cart_change_url }}",
+        "cart_clear_url": "{{ routes.cart_clear_url }}",
+        "product_recommendations_url": "{{ routes.product_recommendations_url }}",
+      };
+    </script>
+    {% comment %}Inject theme-object end{% endcomment %}
+
+  </head>
+
+  <body class="template-{{ template.name }}" data-instant-allow-query-string {% if settings.reduce_animations %}data-reduce-animations{% endif %}>
+    <script>
+      document.documentElement.className=document.documentElement.className.replace(/\bno-js\b/,'js');
+      if(window.Shopify&&window.Shopify.designMode)document.documentElement.className+=' in-theme-editor';
+      if(('ontouchstart' in window)||window.DocumentTouch&&document instanceof DocumentTouch)document.documentElement.className=document.documentElement.className.replace(/\bno-touch\b/,'has-touch');
+    </script>
+
+    {% comment %}Inject icon-star-symbol begin{% endcomment %}
+    <svg
+      class="icon-star-reference"
+      aria-hidden="true"
+      focusable="false"
+      role="presentation"
+      xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="3 3 17 17" fill="none"
+    >
+      <symbol id="icon-star">
+        <rect class="icon-star-background" width="20" height="20" fill="currentColor"/>
+        <path d="M10 3L12.163 7.60778L17 8.35121L13.5 11.9359L14.326 17L10 14.6078L5.674 17L6.5 11.9359L3 8.35121L7.837 7.60778L10 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </symbol>
+      <clipPath id="icon-star-clip">
+        <path d="M10 3L12.163 7.60778L17 8.35121L13.5 11.9359L14.326 17L10 14.6078L5.674 17L6.5 11.9359L3 8.35121L7.837 7.60778L10 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </clipPath>
+    </svg>
+    {% comment %}Inject icon-star-symbol end{% endcomment %}
+
+
+    <a class="skip-to-main" href="#site-main">{{ 'general.accessibility.skip_to_content' | t }}</a>
+
+    {% sections 'header-group' %}
+
+    <div style="--background-color: {{ settings.color_background }}">
+      {%
+        render 'age-gate',
+        id: 'page',
+        sections: content_for_layout,
+      %}
+    </div>
+
+    <div class="intersection-target" data-header-intersection-target></div>
+    <div class="site-main-dimmer" data-site-main-dimmer></div>
+    <main id="site-main" class="site-main" aria-label="Main content" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {%- if settings.enable_back_to_top_button -%}
+      {%- render 'back-to-top-button' -%}
+    {%- endif -%}
+
+    {% sections 'footer-group' %}
+
+    {% comment %}
+      Below are various templates used in JavaScript
+    {% endcomment %}
+    <div style="display: none;" aria-hidden="true" data-templates>
+      {% comment %}Inject message-banner begin{% endcomment %}
+      <div
+        class="message-banner--container"
+        role="alert"
+        data-message-banner
+      >
+        <div class="message-banner--outer">
+          <div class="message-banner--inner" data-message-banner-content></div>
+      
+          <button
+            class="message-banner--close"
+            type="button"
+            aria-label="{{ 'general.accessibility.close' | t }}"
+            data-message-banner-close
+          >
+            {%- render 'icon-menu-close' -%}
+          </button>
+        </div>
+      </div>
+      {% comment %}Inject message-banner end{% endcomment %}
+
+      {% comment %}Inject atc-banner begin{% endcomment %}
+      <section class="atc-banner--container" role="log" data-atc-banner>
+        <div class="atc-banner--outer">
+          <div class="atc-banner--inner">
+            <div class="atc-banner--product">
+              <h2 class="atc-banner--product-title">
+                <span class="atc-banner--product-title--icon">
+                  {%
+                    render 'icon-library',
+                    id: 'icon-checkmark',
+                  %}
+                </span>
+                {{ 'add_to_cart_banner.general.product_added' | t }}
+              </h2>
+      
+              <div class="atc--product">
+                <div class="atc--product-image" data-atc-banner-product-image>
+                  {{ 'image' | placeholder_svg_tag: 'placeholder--image' }}
+                </div>
+                <div class="atc--product-details">
+                  <h2 class="atc--product-details--title" data-atc-banner-product-title></h2>
+                  <span class="atc--product-details--options" data-atc-banner-product-options></span>
+                  <span class="atc--product-details--price">
+                    <span class="atc--product-details--price-quantity" data-atc-banner-product-price-quantity></span>
+                    <span class="atc--product-details--price-value money" data-atc-banner-product-price-value></span>
+                    <span class="atc--product-details--price-discounted money" data-atc-banner-product-price-discounted></span>
+                    <span class="atc--product-details--unit-price hidden" data-atc-banner-unit-price>
+                      {{ 'product.general.price_per_unit_html' | t: total_quantity: '** total_quantity **', unit_price: '** unit_price **', unit_measure: '** unit_measure **' }}
+                    </span>
+                  </span>
+                  <ul class="discount-list" data-atc-banner-product-discounts>
+                    <li class="discount-list-item">
+                      {% render 'icon-library', id: 'icon-sale-tag' %}
+                      <span class="discount-title"></span>
+                      (-<span class="money discount-amount"></span>)
+                    </li>
+                  </ul>
+                  <span class="atc--line-item-subscriptions" data-atc-banner-product-subscription-title></span>
+                </div>
+              </div>
+            </div>
+      
+            <div class="atc-banner--cart">
+              <div class="atc-banner--cart-subtotal">
+                <span class="atc-subtotal--label">
+                  {{ 'add_to_cart_banner.general.sub_total' | t }}
+                </span>
+                <span class="atc-subtotal--price money" data-atc-banner-cart-subtotal></span>
+              </div>
+      
+              {%-
+                render 'free-shipping-bar',
+                context: 'atc-banner',
+              -%}
+      
+              <footer class="atc-banner--cart-footer">
+              <a 
+  class="button-secondary atc-button--viewcart" 
+  href="#" 
+  data-atc-banner-cart-button
+  data-cart-open
+>
+  {{ 'add_to_cart_banner.general.view_cart_html' | t: count: '<span></span>' }}
+</a>
+            <form
+  class="atc-banner__form"
+  action="{{ routes.cart_url }}"
+  method="post"
+  aria-label="cart checkout"
+>
+                  <button class="button-primary atc-button--checkout" type="submit" name="checkout">
+                    {% if settings.enable_checkout_lock_icon %}
+                      {% render 'icon-checkout-lock' %}
+                    {% endif %}
+                    <span>{{ 'add_to_cart_banner.general.checkout' | t }}</span>
+                  </button>
+                </form>
+              </footer>
+            </div>
+          </div>
+      
+          <button
+            class="atc-banner--close"
+            type="button"
+            aria-label="{{ 'general.accessibility.close' | t }}"
+            data-atc-banner-close
+          >
+            {%- render 'icon-menu-close' -%}
+          </button>
+        </div>
+      </section>
+      {% comment %}Inject atc-banner end{% endcomment %}
+
+    </div>
+
+    {% comment %}
+      Modal container, used on Collections, Password, and QuickShop
+    {% endcomment %}
+    {% comment %}Inject modal begin{% endcomment %}
+    <div class="modal" data-modal-container aria-label="modal window" data-trap-focus>
+      <div class="modal-inner" data-modal-inner>
+        <button
+          class="modal-close"
+          type="button"
+          aria-label="{{ 'general.accessibility.close' | t }}"
+          data-modal-close
+        >
+          {% render 'icon-menu-close' %}
+        </button>
+        <div class="modal-content" data-modal-content></div>
+      </div>
+    </div>
+    
+    <div class="modal-1" data-modal-container-1 aria-label="modal window">
+      <div class="modal-inner" data-modal-inner>
+        <button
+          class="modal-close"
+          type="button"
+          aria-label="{{ 'general.accessibility.close' | t }}"
+          data-modal-1-close
+        >
+          {% render 'icon-menu-close' %}
+        </button>
+        <div class="modal-content" data-modal-content></div>
+      </div>
+    </div>
+    {% comment %}Inject modal end{% endcomment %}
+
+
+    {% comment %}
+      This is the PhotoSwipe dialog which needs to be in the base page
+    {% endcomment %}
+    {% comment %}Inject product-gallery-zoom begin{% endcomment %}
+    {% comment %} Root element of PhotoSwipe. Must have class pswp. {% endcomment %}
+    <div
+      class="pswp"
+      tabindex="-1"
+      role="dialog"
+      aria-hidden="true"
+      aria-label="{{ 'general.accessibility.product_zoom_dialog' | t }}"
+      data-photoswipe
+    >
+    
+      {% comment %} Background of PhotoSwipe.
+            It's a separate element as animating opacity is faster than rgba(). {% endcomment %}
+      <div class="pswp__bg"></div>
+    
+      {% comment %} Slides wrapper with overflow:hidden. {% endcomment %}
+      <div class="pswp__scroll-wrap">
+          {% comment %} Container that holds slides.
+              PhotoSwipe keeps only 3 of them in the DOM to save memory.
+              Don't modify these 3 pswp__item elements, data is added later on. {% endcomment %}
+          <div class="pswp__container" aria-hidden="true">
+              <div class="pswp__item"></div>
+              <div class="pswp__item"></div>
+              <div class="pswp__item"></div>
+          </div>
+    
+          {% comment %} Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. {% endcomment %}
+          <div class="pswp__ui pswp__ui--hidden">
+              <div class="pswp__top-bar">
+                  {% comment %}  Controls are self-explanatory. Order can be changed. {% endcomment %}
+                  <div class="pswp__counter"></div>
+                  <button class="pswp__button pswp__button--close" title="{{ 'general.accessibility.close' | t }}">
+                    <span tabindex="-1">
+                      {% render 'icon-library', id: 'icon-close' %}
+                    </span>
+                  </button>
+                  <button class="pswp__button pswp__button--share" title="Share"></button>
+                  <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                  <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+    
+                  {% comment %} Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR {% endcomment %}
+                  {% comment %} element will get class pswp__preloader--active when preloader is running {% endcomment %}
+                  <div class="pswp__preloader">
+                      <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                          <div class="pswp__preloader__donut"></div>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+    
+              <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                  <div class="pswp__share-tooltip"></div>
+              </div>
+    
+              <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+              </button>
+              <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+              </button>
+    
+              <div class="pswp__caption">
+                  <div class="pswp__caption__center"></div>
+              </div>
+          </div>
+      </div>
+      <div class="product-zoom--thumbnails" data-photoswipe-thumbs>
+        <button
+          class="gallery-navigation--scroll-button scroll-left"
+          aria-label="Scroll thumbnails left"
+          data-gallery-scroll-button
+        >
+          {% render 'icon-chevron-down' %}
+        </button>
+        <button
+          class="gallery-navigation--scroll-button scroll-right"
+          aria-label="Scroll thumbnails right"
+          data-gallery-scroll-button
+        >
+          {% render 'icon-chevron-down' %}
+        </button>
+        <div class="product-zoom--thumb-scroller" data-photoswipe-thumb-scroller></div>
+      </div>
+    </div>
+    {% comment %}Inject product-gallery-zoom end{% endcomment %}
+
+
+    {% comment %}
+      Product compare drawer, shown when products are compared
+    {% endcomment %}
+    {% comment %}Inject template-allows-compare begin{% endcomment %}
+    {% assign template_allows_compare = settings.enable_product_compare %}
+    {% if template.name == 'cart' %}
+      {% assign template_allows_compare = false %}
+    {% elsif template.name == 'product' and template.suffix contains 'compare' %}
+      {% assign template_allows_compare = false %}
+    {% endif %}
+    {% comment %}Inject template-allows-compare end{% endcomment %}
+
+    {% if template_allows_compare %}
+      {% comment %}Inject product-compare-drawer begin{% endcomment %}
+      <div class="product-compare-drawer" data-product-compare-drawer>
+        <div class="product-compare-drawer__header" data-product-compare-drawer-header>
+          <h2 class="product-compare-drawer__title" data-product-compare-drawer-title>
+            {{ 'product_compare.drawer_title' | t }}
+          </h2>
+      
+          <p
+            class="product-compare-drawer__notification"
+            data-product-count-one="{{ 'product_compare.drawer_notification.one' | t }}"
+            data-product-count-other="{{ 'product_compare.drawer_notification.other' | t: count: '** count **' }}"
+            data-product-compare-drawer-notification
+          >
+            {{ 'product_compare.drawer_notification' | t: count }}
+          </p>
+      
+          <span class="product-compare-drawer__trigger">
+            {% render 'icon-chevron-down' %}
+          </span>
+        </div>
+      
+        <div class="product-compare-drawer__container">
+          <div class="product-compare-drawer__items" data-compare-drawer-items-container>
+            <template data-product-compare-drawer-item-template>
+              <div
+                class="
+                  product-compare-drawer__item
+                  imagestyle--{% if settings.product_grid_image_crop and settings.product_grid_image_style != 'natural' %}cropped-{% endif %}{{ settings.product_grid_image_style }}
+                "
+              >
+                <div class="product-compare-drawer__image">
+                  <figure class="productitem--image" data-product-compare-drawer-image></figure>
+                </div>
+                <a class="product-compare-drawer__item-title" data-product-compare-drawer-title></a>
+                <button class="product-compare-drawer__remove" data-product-compare-drawer-remove>
+                  {%
+                    render 'icon-library',
+                    id: 'icon-remove',
+                    icon_class: 'product-compare-drawer__remove-icon',
+                  %}
+                </button>
+              </div>
+            </template>
+      
+            {% for i in (1..3) %}
+              <div class="product-compare-drawer__item-placeholder" data-product-compare-drawer-item-placeholder>
+                <p class="product-compare-drawer__item-placeholder-text">
+                  {% if forloop.index == 1 %}
+                    {{ 'product_compare.drawer_notification_placeholder.first' | t }}
+                  {% elsif forloop.index == 2 %}
+                    {{ 'product_compare.drawer_notification_placeholder.second' | t }}
+                  {% elsif forloop.index == 3 %}
+                    {{ 'product_compare.drawer_notification_placeholder.third' | t }}
+                  {% endif %}
+                </p>
+              </div>
+            {% endfor %}
+          </div>
+      
+          <div class="product-compare-drawer__actions">
+            <a
+              class="
+                product-compare-drawer__link
+                button-primary
+                disabled
+              "
+              href="{{ routes.root_url }}"
+              data-product-compare-drawer-link
+              data-product-compare-drawer-link-text="{{ 'product_compare.compare' | t }}"
+            >
+              {{ 'product_compare.compare' | t }}
+            </a>
+      
+            <button class="product-compare-drawer__clear-all" data-product-compare-clear-all>
+              {{ 'product_compare.drawer_clear_all' | t }}
+            </button>
+          </div>
+        </div>
+      </div>
+      {% comment %}Inject product-compare-drawer end{% endcomment %}
+
+    {% endif %}
+
+    {% if settings.enable_product_compare %}
+      {% comment %}Inject product-compare-breadcrumb-data begin{% endcomment %}
+      {% assign compare_breadcrumb_title = nil %}
+      
+      {% case request.page_type %}
+        {% when 'product' %}
+          {% assign compare_breadcrumb_title = product.title %}
+        {% when 'collection' %}
+          {% assign compare_breadcrumb_title = collection.title %}
+        {% when 'index' %}
+          {% assign compare_breadcrumb_title = 'general.breadcrumbs.home' | t %}
+        {% when 'search' %}
+          {% assign compare_breadcrumb_title = 'general.accessibility.search' | t %}
+      {% endcase %}
+      
+      {% assign compare_breadcrumb_update = true %}
+      
+      {% if template.name == 'product' and template.suffix contains 'compare' %}
+        {% assign compare_breadcrumb_update = false %}
+      {% endif %}
+      
+      <script type="application/json" data-product-compare-breadcrumb-data>
+        {
+          "title": {{ compare_breadcrumb_title | json }},
+          "update": {{ compare_breadcrumb_update }}
+        }
+      </script>
+      {% comment %}Inject product-compare-breadcrumb-data end{% endcomment %}
+
+    {% endif %}
+{%- render 'wishlisthero-styles' -%}
+    {%- if template contains 'customer' -%}
+      {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+      {{ 'customer_area.js' | shopify_asset_url | script_tag }}
+    {%- endif -%}
+
+    {% unless settings.reduce_animations %}
+      <script>
+        (
+          function () {
+            var classes = {
+              block: 'pxu-lia-block',
+              element: 'pxu-lia-element',
+            };
+
+            document
+              .querySelectorAll('[type="application/pxs-animation-mapping+json"]')
+              .forEach(function (mappingEl) {
+                const section = mappingEl.parentNode;
+                try {
+                  const mapping = JSON.parse(mappingEl.innerHTML);
+                  mapping.elements.forEach(function (elementSelector) {
+                    section
+                      .querySelectorAll(elementSelector)
+                      .forEach(function (element) { element.classList.add(classes.element); });
+                  });
+
+                  mapping.blocks.forEach(function (blockSelector) {
+                    section
+                      .querySelectorAll(blockSelector)
+                      .forEach(function (block) { block.classList.add(classes.block); });
+                  });
+                } catch (error) {
+                  console.warn('Unable to parse animation mapping', mappingEl, error);
+                }
+            });
+          }
+        )()
+      </script>
+    {% endunless %}
+
+    {%- if settings.minify_scripts -%}
+      <script
+        src="{{ 'empire.min.js' | asset_url }}"
+        data-scripts
+        data-shopify-api-url="{{ 'api.jquery.js' | shopify_asset_url }}"
+        data-shopify-countries="/services/javascripts/countries.js"
+        data-shopify-common="{{ 'shopify_common.js' | shopify_asset_url }}"
+        data-pxu-polyfills="{{ 'polyfills.min.js' | asset_url }}"
+        defer
+      ></script>
+    {%- else -%}
+      <script
+        src="{{ 'empire.js' | asset_url }}"
+        data-scripts
+        data-shopify-api-url="{{ 'api.jquery.js' | shopify_asset_url }}"
+        data-shopify-countries="/services/javascripts/countries.js"
+        data-shopify-common="{{ 'shopify_common.js' | shopify_asset_url }}"
+        data-pxu-polyfills="{{ 'polyfills.min.js' | asset_url }}"
+        defer
+      ></script>
+      
+    {%- endif -%}
+    
+
+    {% render 'structured-data' %}
+
+    <script>
+    (function () {
+      function handleFirstTab(e) {
+        if (e.keyCode === 9) { // the "I am a keyboard user" key
+          document.body.classList.add('user-is-tabbing');
+          window.removeEventListener('keydown', handleFirstTab);
+        }
+      }
+      window.addEventListener('keydown', handleFirstTab);
+    })();
+    </script>
+
+    <script
+      src="{{ 'instantPage.min.js' | asset_url }}"
+      type="module"
+      defer
+    >
+    </script>
+    <script>(function(n, v) {/* eslint-disable-next-line max-len */if (window.Shopify && window.Shopify.theme && navigator && navigator.sendBeacon && window.Shopify.designMode) {if (sessionStorage.getItem('oots_beacon')) return;navigator.sendBeacon('https://app.outofthesandbox.com/beacon', new URLSearchParams({shop_domain: window.Shopify.shop.toLowerCase(),shop_id: '{{ shop.id }}',shop_email: '{{ shop.email }}',theme_name: n.toLowerCase(),theme_version: v.toLowerCase(),theme_store_id: window.Shopify.theme.theme_store_id,theme_id: window.Shopify.theme.id,theme_role: window.Shopify.theme.role,}));sessionStorage.setItem('oots_beacon', '');}}('empire','12.0.0'))</script>
+   <script defer src="{{ 'custom-theme.js' | asset_url }}"></script>
+   <script>
+document.addEventListener('DOMContentLoaded', function () {
+  const header = document.querySelector('.site-header-main') || document.querySelector('.site-header');
+  const panel = document.querySelector('.live-search-form__wrapper');
+  const toggles = Array.from(document.querySelectorAll('[data-asset="search-button"]'));
+const closeBtn = document.querySelector('[data-asset="search-modal-close"]');
+
+  if (!header || !panel || toggles.length === 0) return;
+
+  // If panel is currently not placed directly after header, move it there.
+  // This keeps all existing event handlers attached to the same DOM node.
+  const headerParent = header.parentNode;
+  if (panel.parentNode !== headerParent || panel.previousElementSibling !== header) {
+    // Insert panel immediately after header in the DOM
+    if (header.nextSibling) headerParent.insertBefore(panel, header.nextSibling);
+    else headerParent.appendChild(panel);
+  }
+
+  // Ensure the panel looks/behaves as part of page flow (CSS handles collapse)
+  panel.style.position = panel.style.position || 'relative';
+
+  function openPanel() {
+    panel.classList.add('open');
+    panel.setAttribute('aria-hidden', 'false');
+    // focus input after animation starts
+    const input = panel.querySelector('[data-live-search-input], input[type="search"], input[type="text"]');
+    setTimeout(()=> input && input.focus(), 120);
+  }
+
+  function closePanel() {
+    panel.classList.remove('open');
+    panel.setAttribute('aria-hidden', 'true');
+    const input = panel.querySelector('[data-live-search-input], input[type="search"], input[type="text"]');
+    input && input.blur();
+  }
+
+
+
+  
+  // Toggle search via header search buttons
+  toggles.forEach(btn => {
+    btn.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      if (panel.classList.contains('open')) closePanel();
+      else openPanel();
+    });
+  });
+
+  // Close via modal-close button (if present)
+  if (closeBtn) closeBtn.addEventListener('click', closePanel);
+
+  // Close on Escape
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && panel.classList.contains('open')) closePanel();
+  });
+
+  // Click outside to close (but clicking inside header does NOT close)
+  document.addEventListener('click', function (e) {
+    if (!panel.classList.contains('open')) return;
+    const insidePanel = panel.contains(e.target);
+    const clickedToggle = toggles.some(t => t.contains(e.target));
+    const insideHeader = header.contains(e.target);
+    if (!insidePanel && !clickedToggle && !insideHeader) closePanel();
+  });
+
+  // If the theme updates panel position via JS, re-run the move on resize
+  window.addEventListener('resize', function () {
+    if (panel.parentNode !== header.parentNode || panel.previousElementSibling !== header) {
+      const headerParent = header.parentNode;
+      if (header.nextSibling) headerParent.insertBefore(panel, header.nextSibling);
+      else headerParent.appendChild(panel);
+    }
+  });
+});
+</script>
+<script>
+  (function(){
+    // run early, and again after page load
+    function restoreScrolling(){
+      try{
+        document.querySelectorAll('.modal-1, .modal-backdrop, .search-overlay, [data-search-modal-inner]').forEach(el=>{
+          el.style.display='none';
+          el.style.visibility='hidden';
+          el.style.pointerEvents='none';
+        });
+        ['modal-open','no-scroll','search-active']
+.forEach(c => document.body.classList.remove(c));
+
+        
+      }catch(e){}
+    }
+    // run on DOM ready, and again with a short delay (some themes add overlay after load)
+    if (document.readyState === 'complete' || document.readyState === 'interactive') restoreScrolling();
+    document.addEventListener('DOMContentLoaded', restoreScrolling);
+    setTimeout(restoreScrolling, 1500);
+  })();
+</script>
+
+{% section 'cart-drawer' %}
+<script src="{{ 'cart-drawer.js' | asset_url }}" defer ></script>
+
+<script>
+(function () {
+  'use strict';
+
+  // --- Utilities ---
+  function qs(sel, ctx) { return (ctx || document).querySelector(sel); }
+  function qsa(sel, ctx) { return Array.from((ctx || document).querySelectorAll(sel || '')); }
+
+  // Stop SVG <animateTransform> nodes (prevents rotation)
+  function stopSvgAnimations(root) {
+    try {
+      const svgs = (root || document).querySelectorAll('svg');
+      svgs.forEach(svg => {
+        const anims = svg.querySelectorAll('animateTransform');
+        if (anims.length) {
+          anims.forEach(a => a.parentNode && a.parentNode.removeChild(a));
+        }
+        // Also try to stop CSS animations on the SVG or its parents
+        svg.style.animation = 'none';
+        svg.style.webkitAnimation = 'none';
+      });
+    } catch (e) { /* ignore */ }
+  }
+
+  // Force-stop CSS spinner animations for matched nodes
+  function stopCssSpinner(node) {
+    try {
+      if (!node) return;
+      node.style.animation = 'none';
+      node.style.webkitAnimation = 'none';
+      node.style.transition = 'none';
+    } catch (e) {}
+  }
+
+  // Central cleanup function
+  function cleanLoadingStates() {
+    try {
+      // Re-enable submit buttons inside add-to-cart forms
+      qsa('form[action^="/cart/add"] button[type="submit"], form[action^="/cart/add"] [type="submit"]').forEach(btn => {
+        try { btn.disabled = false; } catch(e){}
+        try { btn.removeAttribute('aria-disabled'); } catch(e){}
+        try { btn.classList.remove('is-loading','loading','btn-loading','loading-spinner'); } catch(e){}
+      });
+
+      // Re-enable any disabled inputs/buttons that look related to cart drawer/add
+      qsa('button[disabled], input[disabled]').forEach(el => {
+        if (!el.closest) return;
+        if (el.closest('form[action^="/cart/add"]') || el.closest('.cart-drawer') || el.matches('[data-drawer-add], [data-cart-open], .atc-button--checkout, .atc-button--viewcart, .shopify-payment-button')) {
+          try { el.disabled = false; } catch(e){}
+          try { el.removeAttribute('aria-disabled'); } catch(e){}
+          try { el.classList.remove('is-loading','loading','btn-loading'); } catch(e){}
+        }
+      });
+
+      // Known spinner selectors to remove
+      const spinnerSelectors = [
+        '.spinner',
+        '.loading-spinner',
+        '.shopify-payment-button__spinner',
+        '.global-spinner',
+        '.form-spinner',
+        '.ajax-loading',
+        '.cart-loading',
+        '.btn-spinner',
+        '.atc-spinner',
+        '.__injected_spinner',      // our injected spinner
+        '.__detected_spinner'       // marker for detected theme spinner
+      ];
+
+      spinnerSelectors.forEach(sel => {
+        qsa(sel).forEach(n => {
+          try {
+            // Stop any animations inside node first
+            stopCssSpinner(n);
+            stopSvgAnimations(n);
+            n.parentNode && n.parentNode.removeChild(n);
+          } catch(e){}
+        });
+      });
+
+      // Also remove any stray inline SVG animateTransform elements anywhere inside buttons
+      qsa('button svg animateTransform, button svg animate').forEach(a => {
+        try { a.parentNode && a.parentNode.removeChild(a); } catch(e){}
+      });
+
+      // Also clear any spinner-like svg nodes inside buttons (fallback)
+      qsa('button svg').forEach(svg => {
+        // if the svg contains stroke-dasharray or animateTransform, remove it
+        try {
+          if (svg.querySelector('animateTransform') || svg.querySelector('animate')) {
+            svg.parentNode && svg.parentNode.removeChild(svg);
+          } else {
+            // stop CSS animation as backup
+            svg.style.animation = 'none';
+            svg.style.webkitAnimation = 'none';
+          }
+        } catch(e){}
+      });
+
+      // Remove common body classes added by loading states
+      ['is-loading','ajax-loading','loading','cart-loading','no-scroll','no-scroll--active'].forEach(c => {
+        try { document.body.classList.remove(c); } catch(e) {}
+      });
+
+      // Also ensure any 'is-loading' class on buttons is removed
+      qsa('button.is-loading, button.loading').forEach(btn => {
+        try { btn.classList.remove('is-loading','loading'); } catch(e) {}
+        try { btn.disabled = false; btn.removeAttribute('aria-disabled'); } catch(e) {}
+        // remove injected spinner if present
+        const inj = btn.querySelector('.__injected_spinner');
+        if (inj) try { inj.remove(); } catch(e) {}
+      });
+
+      // Finally: stop any remaining svg animations across page just in case
+      stopSvgAnimations(document);
+    } catch (err) {
+      console.warn('cleanLoadingStates error', err);
+    }
+  }
+
+  // Add a small visible spinner only when needed — but DON'T add if any existing spinner detected.
+  function setButtonLoading(btn) {
+    if (!btn) return;
+    try { btn.disabled = true; } catch(e){}
+    try { btn.setAttribute('aria-disabled','true'); } catch(e){}
+    try { btn.classList.add('is-loading'); } catch(e){}
+
+    // If there is any existing spinner inside the button, mark it and do not inject ours.
+    const existingSpinner = btn.querySelector('.spinner, .loading-spinner, .shopify-payment-button__spinner, .global-spinner, .form-spinner, .ajax-loading, .btn-spinner, .atc-spinner, svg animateTransform, svg animate');
+    if (existingSpinner) {
+      try { existingSpinner.classList && existingSpinner.classList.add('__detected_spinner'); } catch(e){}
+      // Also stop its animation briefly so user doesn't see infinite rotate if stuck
+      try { stopCssSpinner(existingSpinner); stopSvgAnimations(existingSpinner); } catch(e){}
+      return;
+    }
+
+    // inject our lightweight spinner if nothing else exists
+    if (!btn.querySelector('.__injected_spinner')) {
+      const s = document.createElement('span');
+      s.className = '__injected_spinner';
+      s.style.display = 'inline-block';
+      s.style.width = '18px';
+      s.style.height = '18px';
+      s.style.marginLeft = '8px';
+      s.style.verticalAlign = 'middle';
+      s.innerHTML = '<svg viewBox="0 0 50 50" style="width:18px;height:18px;"><circle cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-dasharray="31.4 31.4" stroke-dashoffset="0"><animateTransform attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.9s" repeatCount="indefinite"/></circle></svg>';
+      try { btn.appendChild(s); } catch(e){}
+    }
+  }
+
+  // --- Patch fetch to call clean after cart fetches ---
+  if (typeof window.fetch === 'function' && !window.__cart_fetch_patched) {
+    const origFetch = window.fetch.bind(window);
+    window.fetch = function (input, init) {
+      const url = (typeof input === 'string') ? input : (input && input.url ? input.url : '');
+      const isCartEndpoint = url && (url.indexOf('/cart/add') !== -1 || url.indexOf('/cart/change') !== -1 || url.indexOf('/cart.js') !== -1 || url.indexOf('/cart.json') !== -1 || url.indexOf('cart/add.js') !== -1);
+      const p = origFetch(input, init);
+      if (isCartEndpoint) {
+        p.then(() => setTimeout(cleanLoadingStates, 80)).catch(() => setTimeout(cleanLoadingStates, 80));
+      } else {
+        // non-cart fetch: still remove stuck spinners occasionally
+        p.then(() => setTimeout(cleanLoadingStates, 250)).catch(() => {});
+      }
+      return p;
+    };
+    window.__cart_fetch_patched = true;
+  }
+
+  // Wrap jQuery.ajax to always cleanup
+  try {
+    const $ = window.jQuery || window.$;
+    if ($ && $.ajax && !$.ajax.__cart_wrapped) {
+      const orig = $.ajax;
+      $.ajax = function (...args) {
+        const jq = orig.apply(this, args);
+        try {
+          if (jq && typeof jq.always === 'function') jq.always(() => setTimeout(cleanLoadingStates, 60));
+        } catch(e){}
+        return jq;
+      };
+      $.ajax.__cart_wrapped = true;
+      $(document).off('.cart-clean').on('ajaxComplete.cart-clean', function () { setTimeout(cleanLoadingStates, 60); });
+    }
+  } catch(e){}
+
+  // On form submit, visually show loading on the clicked/submit button
+  document.addEventListener('submit', function (ev) {
+    try {
+      const form = ev.target;
+      if (!form || !form.matches) return;
+      if (!form.matches('form[action^="/cart/add"], form[action*="/cart/add"]')) return;
+      // find button user clicked, or fallback
+      let submitBtn = ev.submitter;
+      if (!submitBtn) submitBtn = form.querySelector('[type="submit"], button');
+      if (submitBtn) setButtonLoading(submitBtn);
+      // in case scripts never finish, force cleanup after some time
+      setTimeout(cleanLoadingStates, 1500);
+      setTimeout(cleanLoadingStates, 4000);
+    } catch(e){}
+  }, true);
+
+  // Delegated click for upsell / quick-add buttons
+  document.addEventListener('click', function (e) {
+    try {
+      const btn = e.target.closest ? e.target.closest('[data-drawer-add], [data-drawer-add-variant], [data-variant-add], [data-add-to-cart], .upsell-add, .product-upsell__add, .add-to-cart, button.add-to-cart') : null;
+      if (!btn) return;
+      setButtonLoading(btn);
+      setTimeout(cleanLoadingStates, 1500);
+      setTimeout(cleanLoadingStates, 4000);
+    } catch(e){}
+  }, true);
+
+  // MutationObserver: watch for spinners being added and clean shortly after
+  if (!window.__cart_clean_observer) {
+    try {
+      const mo = new MutationObserver(muts => {
+        let found = false;
+        for (const m of muts) {
+          if (m.addedNodes && m.addedNodes.length) {
+            for (const n of m.addedNodes) {
+              if (n.nodeType !== 1) continue;
+              if (n.matches && (n.matches('.spinner') || n.matches('.loading-spinner') || n.querySelector && (n.querySelector('.spinner') || n.querySelector('.loading-spinner') || n.querySelector('animateTransform')))) {
+                found = true; break;
+              }
+            }
+          }
+          if (found) break;
+        }
+        if (found) setTimeout(cleanLoadingStates, 120);
+      });
+      mo.observe(document.documentElement || document.body, { childList: true, subtree: true });
+      window.__cart_clean_observer = mo;
+    } catch(e){}
+  }
+
+  // run once on load
+  setTimeout(cleanLoadingStates, 60);
+  // expose for debugging
+  try { window.cleanLoadingStates = cleanLoadingStates; } catch(e){}
+
+})();
+
+</script>
+
+
+<script>
+(function () {
+  let lastVariantId = null;
+
+  function tryInitPaymentButton() {
+    const variantInput = document.querySelector('input[name="id"]');
+    if (!variantInput || !variantInput.value) return;
+
+    const variantId = variantInput.value;
+    if (variantId === lastVariantId) return;
+
+    lastVariantId = variantId;
+
+    // Give Empire ONE frame to finish UI updates
+    requestAnimationFrame(() => {
+      if (window.Shopify && Shopify.PaymentButton) {
+        Shopify.PaymentButton.init();
+      }
+    });
+  }
+
+  // 1️⃣ Empire fires this
+  document.addEventListener('variant:change', tryInitPaymentButton);
+
+  // 2️⃣ Fallback for themes that don’t emit consistently
+  document.addEventListener('change', function (e) {
+    if (e.target.closest('[name^="option"], .product-options, .variant-input')) {
+      tryInitPaymentButton();
+    }
+  });
+})();
+</script>
+
+<script>
+document.documentElement.style.setProperty(
+  '--header-height',
+  document.querySelector('.site-header')?.offsetHeight + 'px'
+);
+</script>
+
+        </body>
+</html>

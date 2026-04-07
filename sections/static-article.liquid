@@ -1,0 +1,1105 @@
+<script
+  type="application/json"
+  data-section-type="static-article"
+  data-section-id="{{ section.id }}">
+</script>
+
+<style>
+  .article-products-inline {
+    margin: 40px 0;
+    padding: 30px 0;
+  }
+  .article-products-inline__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .article-products-inline__title {
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 700;
+    margin: 0;
+    color: {{ section.settings.heading_color }};
+  }
+  .article-products-inline__shop-btn {
+    display: inline-block;
+    padding: 10px 28px;
+    background: {{ section.settings.shop_btn_bg }};
+    color: {{ section.settings.shop_btn_color }};
+    text-decoration: none;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: opacity 0.3s;
+  }
+  .article-products-inline__shop-btn:hover { opacity: 0.85; }
+  .article-products-inline__slider-wrap {
+    position: relative;
+  }
+  .article-products-inline__track {
+    display: flex;
+    gap: {{ section.settings.product_gap }}px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .article-products-inline__track::-webkit-scrollbar { display: none; }
+  .article-products-inline__nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    background: {{ section.settings.nav_btn_bg }};
+    color: {{ section.settings.nav_btn_color }};
+    border: 1px solid {{ section.settings.nav_btn_border }};
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s;
+    z-index: 2;
+  }
+  .article-products-inline__nav-btn:hover { opacity: 0.8; }
+  .article-products-inline__nav-btn--prev { left: -24px; }
+  .article-products-inline__nav-btn--next { right: -24px; }
+  {% unless section.settings.show_nav_desktop %}
+    .article-products-inline__nav-btn { display: none; }
+  {% endunless %}
+  @media (max-width: 768px) {
+    {% if section.settings.show_nav_mobile %}
+      .article-products-inline__nav-btn { display: flex; width: 40px; height: 40px; font-size: 16px; }
+    {% else %}
+      .article-products-inline__nav-btn { display: none; }
+    {% endif %}
+  }
+  .article-products-inline__card {
+    flex: 0 0 {{ section.settings.card_width }}px;
+    max-width: {{ section.settings.card_width }}px;
+    display: flex;
+    flex-direction: column;
+  }
+  .article-products-inline__image-wrap {
+    width: 100%;
+    aspect-ratio: {{ section.settings.card_ratio }};
+    overflow: hidden;
+    border-radius: {{ section.settings.card_radius }}px;
+    background: {{ section.settings.card_bg_color }};
+    display: block;
+  }
+  .article-products-inline__image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+  .article-products-inline__card:hover .article-products-inline__image-wrap img {
+    transform: scale(1.03);
+  }
+  .article-products-inline__info {
+    padding: 12px 0 0;
+    text-align: center;
+  }
+  .article-products-inline__product-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 4px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .article-products-inline__product-title a {
+    text-decoration: none;
+    color: inherit;
+  }
+  .article-products-inline__price {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+  }
+  .article-products-inline__price--compare {
+    text-decoration: line-through;
+    color: #999;
+    margin-right: 6px;
+    font-weight: 400;
+  }
+  .article-products-inline__add-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 20px;
+    background: {{ section.settings.add_to_cart_bg }};
+    color: {{ section.settings.add_to_cart_color }};
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: opacity 0.3s;
+    text-align: center;
+    width: 100%;
+  }
+  .article-products-inline__add-btn:hover { opacity: 0.85; }
+  @media (max-width: 768px) {
+    .article-products-inline__card { flex: 0 0 180px; max-width: 180px; }
+    .article-products-inline__title { font-size: 20px; }
+    .article-products-inline__nav-btn--prev { left: -10px; }
+    .article-products-inline__nav-btn--next { right: -10px; }
+    .article-products-inline__shop-btn { padding: 8px 20px; font-size: 12px; }
+  }
+
+  /* Related products sidebar */
+  .article--layout-with-sidebar {
+    display: flex;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .article--layout-with-sidebar .article--inner {
+    flex: 1;
+    min-width: 0;
+  }
+  .article--related-sidebar {
+    flex: 0 0 300px;
+    max-width: 300px;
+  }
+  .article--related-sidebar .sidebar__contents {
+    position: sticky;
+    top: 130px;
+  }
+  .article--share-buttons--top {
+    margin-bottom: 16px;
+  }
+  .article--related-widget__title {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  .article--related-product {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding: 12px;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .article--related-product:hover {
+    border-color: #ccc;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .article--related-product__image {
+    flex: 0 0 100px;
+    width: 100px;
+    height: 100px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #f5f0eb;
+  }
+  .article--related-product__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .article--related-product__info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+  }
+  .article--related-product__name {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 2px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .article--related-product__info .jdgm-preview-badge {
+    margin: 2px 0;
+    min-height: auto !important;
+  }
+  .article--related-product__info .product__rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 2px 0;
+    flex-wrap: wrap;
+  }
+  .article--related-product__info .product__rating .rating__text,
+  .article--related-product__info .product__rating .rating__count {
+    margin: 0;
+    font-size: 11px;
+    color: #666;
+  }
+  .article--related-product__price {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin: 4px 0 0;
+  }
+  .article--related-product__price--compare {
+    text-decoration: line-through;
+    color: #999;
+    margin-right: 6px;
+    font-weight: 400;
+  }
+  .article--related-product__btn {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 6px 16px;
+    background: #000;
+    color: #FFF;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-align: center;
+    cursor: pointer;
+    transition: opacity 0.3s;
+  }
+  .article--related-product__btn:hover {
+    opacity: 0.8;
+  }
+  @media (max-width: 768px) {
+    .article--layout-with-sidebar {
+      flex-direction: column;
+    }
+    .article--related-sidebar {
+      flex: 1;
+      max-width: 100%;
+    }
+    /* Mobile slider */
+    .article--related-products-wrap {
+      position: relative;
+    }
+    .article--related-products {
+      display: flex;
+      flex-direction: row;
+      gap: 0;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding-bottom: 8px;
+    }
+    .article--related-products::-webkit-scrollbar { display: none; }
+    .article--related-product {
+      flex: 0 0 100%;
+      width: 100%;
+      scroll-snap-align: start;
+      margin-bottom: 0;
+    }
+    .article--sidebar-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      width: 36px;
+      height: 36px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .article--sidebar-arrow--prev { left: -8px; }
+    .article--sidebar-arrow--next { right: -8px; }
+  }
+  @media (min-width: 769px) {
+    .article--sidebar-arrow { display: none; }
+  }
+</style>
+
+{% assign has_share = false %}
+{% if section.settings.use_share_buttons %}
+  {% assign has_share = true %}
+{% endif %}
+
+{%- capture share_buttons -%}
+  {% assign social_image = false %}
+  {% if article.image %}
+    {% assign social_image = article.image | img_url: '1024x' %}
+  {% endif %}
+  {% assign social_url = shop.url | append: article.url %}
+  {%-
+    render 'share-buttons',
+    snippet_title: 'general.share_buttons.title_short',
+    social_image: social_image,
+    social_title: article.title,
+    social_url: social_url
+  -%}
+{%- endcapture  -%}
+
+<section class="article--outer">
+  {% if article.image %}
+    <figure
+      class="article-image article-image--{{- section.settings.featured_image_width }}"
+      {%
+        render 'rimg',
+        img: article.image,
+        size: '1800x',
+        lazy: true,
+        crop: 'center',
+        background: true
+      %}
+    >
+      {%
+        render 'rimg',
+        img: article.image,
+        size: '1800x',
+        crop: 'center',
+        lazy: true,
+        canvas: true
+      %}
+    </figure>
+  {% endif %}
+  {% assign show_related_sidebar = false %}
+  {% assign related_block = nil %}
+  {% assign related_metafield_products = article.metafields.custom.releted_product_list.value %}
+  {% assign has_metafield_products = false %}
+  {% if related_metafield_products != blank and related_metafield_products.size > 0 %}
+    {% assign has_metafield_products = true %}
+    {% assign show_related_sidebar = true %}
+  {% endif %}
+
+  {% for block in section.blocks %}
+    {% if block.type == 'related_products' %}
+      {% assign related_block = block %}
+      {% unless has_metafield_products %}
+        {% if block.settings.product_list.count > 0 %}
+          {% assign show_related_sidebar = true %}
+        {% endif %}
+      {% endunless %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+
+  <div class="article--container">
+
+    <div class="{% if show_related_sidebar %}article--layout-with-sidebar{% endif %}">
+    <div class="article--inner">
+      {% if has_share %}
+        <div class="article--share-buttons article--share-buttons--top">
+          {{- share_buttons -}}
+        </div>
+      {% endif %}
+      {% if section.settings.show_date or section.settings.show_author %}
+        <div class="article--meta">
+          {% if section.settings.show_date %}
+            <span class="article--meta-item">
+              {{ article.published_at | date: format: 'month_day_year' }}
+            </span>
+          {% endif %}
+
+          {% if section.settings.show_author %}
+            <span class="article--meta-item">
+              {{ article.author }}
+            </span>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <h1 class="article--title">
+        {{ article.title }}
+      </h1>
+
+      {% assign remaining_content = article.content %}
+      {% assign has_blocks = false %}
+      {% assign metafield_products = article.metafields.custom.products.value %}
+      {% assign metafield_collection = article.metafields.custom.collection.value %}
+
+      {% comment %} Process blocks if any exist {% endcomment %}
+      {% for block in section.blocks %}
+        {% if block.type == 'product_block' %}
+          {% assign raw_marker = block.settings.marker_text | strip %}
+          {% assign marker = '<!-- ' | append: raw_marker | append: ' -->' %}
+          {% if raw_marker != blank and remaining_content contains marker %}
+            {% assign has_blocks = true %}
+            {% assign parts = remaining_content | split: marker %}
+
+            <div class="article--content rte">
+              {{ parts[0] }}
+            </div>
+
+            {% assign block_metafield_key = block.settings.metafield_key | strip %}
+            {% assign block_products = null %}
+            {% assign block_collection = null %}
+
+            {% if block_metafield_key == 'custom.products' %}
+              {% if metafield_products != blank and metafield_products.size > 0 %}
+                {% assign block_products = metafield_products %}
+              {% endif %}
+            {% elsif block_metafield_key == 'custom.collection' %}
+              {% if metafield_collection != blank and metafield_collection.products.size > 0 %}
+                {% assign block_products = metafield_collection.products %}
+                {% assign block_collection = metafield_collection %}
+              {% endif %}
+            {% endif %}
+
+            {% if block_products != blank %}
+              {% render 'article-inline-products',
+                products: block_products,
+                section: section,
+                block: block,
+                block_collection: block_collection
+              %}
+            {% endif %}
+
+            {% assign remaining_content = '' %}
+            {% for i in (1..parts.size) %}
+              {% if i > 0 and parts[i] != blank %}
+                {% if remaining_content != '' %}
+                  {% assign remaining_content = remaining_content | append: marker %}
+                {% endif %}
+                {% assign remaining_content = remaining_content | append: parts[i] %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+
+      {% comment %} Fallback: if no blocks matched, just show the content {% endcomment %}
+      {% if has_blocks == false %}
+        <div class="article--content rte">
+          {{ remaining_content }}
+        </div>
+      {% else %}
+        <div class="article--content rte">
+          {{ remaining_content }}
+        </div>
+      {% endif %}
+
+      {% if article.tags != blank %}
+        <div class="article--tags">
+          <span class="article--tags-title">{{- 'blog.article.filed_in' | t -}}</span>
+          {% for tag in article.tags %}
+            {{ tag | link_to_tag: tag }}{% unless forloop.last %},{% endunless %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_author_box %}
+        {% assign author = article.metafields.custom.author.value %}
+        {% if author != blank %}
+          <div class="article-author-box">
+            <p class="article-author-box__label">ARTICLE BY</p>
+            <div class="article-author-box__card">
+              {% if author.image != blank %}
+                <div class="article-author-box__image">
+                  <img
+                    src="{{ author.image | image_url: width: 300 }}"
+                    alt="{{ author.name | default: article.author }}"
+                    width="150"
+                    height="150"
+                    loading="lazy"
+                  >
+                </div>
+              {% endif %}
+              <div class="article-author-box__info">
+                <h3 class="article-author-box__name">
+                  {{ author.name | default: article.author }}
+                </h3>
+                {% if author.role != blank %}
+                  <p class="article-author-box__role">{{ author.role }}</p>
+                {% endif %}
+                {% if author.bio != blank %}
+                  <p class="article-author-box__bio">{{ author.bio }}</p>
+                {% endif %}
+                <div class="article-author-box__links">
+                  {% if author.linkedin != blank %}
+                    <a href="{{ author.linkedin }}" target="_blank" rel="noopener" class="article-author-box__social" aria-label="LinkedIn">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    </a>
+                  {% endif %}
+                  {% if author.twitter != blank %}
+                    <a href="{{ author.twitter }}" target="_blank" rel="noopener" class="article-author-box__social" aria-label="X / Twitter">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                  {% endif %}
+                  {% if author.github != blank %}
+                    <a href="{{ author.github }}" target="_blank" rel="noopener" class="article-author-box__social" aria-label="GitHub">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                    </a>
+                  {% endif %}
+                  {% if author.profile_url != blank %}
+                    <a href="{{ author.profile_url }}" class="article-author-box__profile-btn">
+                      View Profile
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+
+      {% if blog.next_article or blog.previous_article %}
+        <div class="article--pagination">
+          {% assign current_found = false %}
+          {% assign done = false %}
+          {% for a in blog.articles %}
+            {% if current_found and done == false %}
+              {% assign next_article = a %}
+              {% assign done = true %}
+            {% endif %}
+
+            {% unless done %}
+              {% if a.id == article.id %}
+                {% assign current_found = true %}
+              {% else %}
+                {% assign prev_article = a %}
+              {% endif %}
+            {% endunless %}
+          {% endfor %}
+
+          {% if prev_article %}
+            <div class="article--pagination-item-left">
+              <a href="{{ prev_article.url }}">
+                <span class="article--pagination-chevron-left" aria-hidden="true">
+                  {% render 'icon-chevron-down-small' %}
+                </span>
+                <span class="article--pagination-text">
+                  {{ 'blog.article.previous_article' | t }}
+                  <span class="article--pagination-title">
+                    {{ prev_article.title | escape }}
+                  </span>
+                </span>
+              </a>
+            </div>
+          {% endif %}
+
+          {% if next_article %}
+            <div class="article--pagination-item-right">
+              <a href="{{ next_article.url }}">
+                <span class="article--pagination-text">
+                  {{ 'blog.article.next_article' | t }}
+                  <span class="article--pagination-title">
+                    {{ next_article.title | escape }}
+                  </span>
+                </span>
+                <span class="article--pagination-chevron-right" aria-hidden="true">
+                  {% render 'icon-chevron-down-small' %}
+                </span>
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% render 'article-comments', comment: comment %}
+    </div>
+
+    {% if show_related_sidebar %}
+      <aside class="article--related-sidebar"{% if related_block %} {{ related_block.shopify_attributes }}{% endif %}>
+        <div class="sidebar__contents">
+          {% if related_block != nil and related_block.settings.title != blank %}
+            <h3 class="article--related-widget__title">{{ related_block.settings.title }}</h3>
+          {% elsif has_metafield_products %}
+            <h3 class="article--related-widget__title">Buy Product Here:</h3>
+          {% endif %}
+
+          {% comment %}
+            Priority: 1) Metafield products 2) Block product_list 3) Extract from article content
+          {% endcomment %}
+
+          {% unless has_metafield_products or related_block != nil and related_block.settings.product_list.count > 0 %}
+            {% assign article_content_parts = article.content | split: '/products/' %}
+            {% assign extracted_handles = '' %}
+            {% for item in article_content_parts %}
+              {% unless forloop.index0 == 0 %}
+                {% assign handle_parts = item | url_encode | split: '%' %}
+                {% assign clean_handle = handle_parts[0] | split: '"' | first | split: "'" | first %}
+                {% if clean_handle != blank %}
+                  {% assign extracted_handles = extracted_handles | append: clean_handle | append: ',' %}
+                {% endif %}
+              {% endunless %}
+            {% endfor %}
+            {% assign handles_arr = extracted_handles | split: ',' | compact | uniq %}
+          {% endunless %}
+
+          {% if has_metafield_products %}
+            {% assign sidebar_count = related_metafield_products.size %}
+          {% elsif related_block != nil and related_block.settings.product_list.count > 0 %}
+            {% assign sidebar_count = related_block.settings.product_list.count %}
+          {% else %}
+            {% assign sidebar_count = handles_arr.size %}
+          {% endif %}
+          <div class="article--related-products-wrap">
+            {% if sidebar_count > 1 %}
+              <button class="article--sidebar-arrow article--sidebar-arrow--prev" aria-label="Previous" onclick="var t=this.closest('.article--related-products-wrap').querySelector('.article--related-products');t.scrollBy({left:-t.clientWidth,behavior:'smooth'})">&#8249;</button>
+              <button class="article--sidebar-arrow article--sidebar-arrow--next" aria-label="Next" onclick="var t=this.closest('.article--related-products-wrap').querySelector('.article--related-products');t.scrollBy({left:t.clientWidth,behavior:'smooth'})">&#8250;</button>
+            {% endif %}
+          <div class="article--related-products">
+            {% if has_metafield_products %}
+              {% for product in related_metafield_products %}
+                <a href="{{ product.url }}" class="article--related-product">
+                  {% if product.featured_image %}
+                    <div class="article--related-product__image">
+                      <img
+                        src="{{ product.featured_image | image_url: width: 300 }}"
+                        alt="{{ product.title | escape }}"
+                        width="120"
+                        height="140"
+                        loading="lazy"
+                      >
+                    </div>
+                  {% endif %}
+                  <div class="article--related-product__info">
+                    <p class="article--related-product__name">{{ product.title }}</p>
+                    <div class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}" style="min-height: 20px;"></div>
+                    {% if settings.product_ratings_star_display and product.metafields.reviews.rating.value != blank %}
+                      <div class="product__rating rating">
+                        {%
+                          render 'rating-stars',
+                          value: product.metafields.reviews.rating.value.rating,
+                          scale_max: product.metafields.reviews.rating.value.scale_max,
+                        %}
+                        <p class="rating__text">
+                          <span aria-hidden="true">
+                            {{ product.metafields.reviews.rating.value }} / {{ product.metafields.reviews.rating.value.scale_max }}
+                          </span>
+                        </p>
+                        <p class="rating__count">
+                          <span aria-hidden="true">
+                            {{ product.metafields.reviews.rating_count }}
+                            {% if product.metafields.reviews.rating_count > 1 %}
+                              {{ "general.accessibility.star_reviews_text" | t }}
+                            {% else %}
+                              {{ "general.accessibility.star_review_text" | t }}
+                            {% endif %}
+                          </span>
+                        </p>
+                      </div>
+                    {% endif %}
+                    <p class="article--related-product__price">
+                      {% if product.compare_at_price > product.price %}
+                        <span class="article--related-product__price--compare">{{ product.compare_at_price | money }}</span>
+                      {% endif %}
+                      {% if product.available %}
+                        {{ product.price | money }}
+                      {% else %}
+                        Sold Out
+                      {% endif %}
+                    </p>
+                    <span class="article--related-product__btn">VIEW</span>
+                  </div>
+                </a>
+              {% endfor %}
+            {% elsif related_block != nil and related_block.settings.product_list.count > 0 %}
+              {% for product in related_block.settings.product_list %}
+                <a href="{{ product.url }}" class="article--related-product">
+                  {% if product.featured_image %}
+                    <div class="article--related-product__image">
+                      <img
+                        src="{{ product.featured_image | image_url: width: 300 }}"
+                        alt="{{ product.title | escape }}"
+                        width="120"
+                        height="140"
+                        loading="lazy"
+                      >
+                    </div>
+                  {% endif %}
+                  <div class="article--related-product__info">
+                    <p class="article--related-product__name">{{ product.title }}</p>
+                    <div class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}" style="min-height: 20px;"></div>
+                    {% if settings.product_ratings_star_display and product.metafields.reviews.rating.value != blank %}
+                      <div class="product__rating rating">
+                        {%
+                          render 'rating-stars',
+                          value: product.metafields.reviews.rating.value.rating,
+                          scale_max: product.metafields.reviews.rating.value.scale_max,
+                        %}
+                        <p class="rating__text">
+                          <span aria-hidden="true">
+                            {{ product.metafields.reviews.rating.value }} / {{ product.metafields.reviews.rating.value.scale_max }}
+                          </span>
+                        </p>
+                        <p class="rating__count">
+                          <span aria-hidden="true">
+                            {{ product.metafields.reviews.rating_count }}
+                            {% if product.metafields.reviews.rating_count > 1 %}
+                              {{ "general.accessibility.star_reviews_text" | t }}
+                            {% else %}
+                              {{ "general.accessibility.star_review_text" | t }}
+                            {% endif %}
+                          </span>
+                        </p>
+                      </div>
+                    {% endif %}
+                    <p class="article--related-product__price">
+                      {% if product.compare_at_price > product.price %}
+                        <span class="article--related-product__price--compare">{{ product.compare_at_price | money }}</span>
+                      {% endif %}
+                      {% if product.available %}
+                        {{ product.price | money }}
+                      {% else %}
+                        Sold Out
+                      {% endif %}
+                    </p>
+                    <span class="article--related-product__btn">VIEW</span>
+                  </div>
+                </a>
+              {% endfor %}
+            {% elsif handles_arr.size > 0 %}
+              {% for handle in handles_arr limit: 5 %}
+                {% assign product = all_products[handle] %}
+                {% if product.id != blank %}
+                  <a href="{{ product.url }}" class="article--related-product">
+                    {% if product.featured_image %}
+                      <div class="article--related-product__image">
+                        <img
+                          src="{{ product.featured_image | image_url: width: 300 }}"
+                          alt="{{ product.title | escape }}"
+                          width="120"
+                          height="140"
+                          loading="lazy"
+                        >
+                      </div>
+                    {% endif %}
+                    <div class="article--related-product__info">
+                      <p class="article--related-product__name">{{ product.title }}</p>
+                      <div class="jdgm-widget jdgm-preview-badge" data-id="{{ product.id }}" style="min-height: 20px;"></div>
+                      {% if settings.product_ratings_star_display and product.metafields.reviews.rating.value != blank %}
+                        <div class="product__rating rating">
+                          {%
+                            render 'rating-stars',
+                            value: product.metafields.reviews.rating.value.rating,
+                            scale_max: product.metafields.reviews.rating.value.scale_max,
+                          %}
+                          <p class="rating__text">
+                            <span aria-hidden="true">
+                              {{ product.metafields.reviews.rating.value }} / {{ product.metafields.reviews.rating.value.scale_max }}
+                            </span>
+                          </p>
+                          <p class="rating__count">
+                            <span aria-hidden="true">
+                              {{ product.metafields.reviews.rating_count }}
+                              {% if product.metafields.reviews.rating_count > 1 %}
+                                {{ "general.accessibility.star_reviews_text" | t }}
+                              {% else %}
+                                {{ "general.accessibility.star_review_text" | t }}
+                              {% endif %}
+                            </span>
+                          </p>
+                        </div>
+                      {% endif %}
+                      <p class="article--related-product__price">
+                        {% if product.compare_at_price > product.price %}
+                          <span class="article--related-product__price--compare">{{ product.compare_at_price | money }}</span>
+                        {% endif %}
+                        {% if product.available %}
+                          {{ product.price | money }}
+                        {% else %}
+                          Sold Out
+                        {% endif %}
+                      </p>
+                      <span class="article--related-product__btn">VIEW</span>
+                    </div>
+                  </a>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          </div>
+          </div>
+        </div>
+      </aside>
+    {% endif %}
+    </div>
+  </div>
+</section>
+
+<script>
+  if (window.jdgm) {
+    jdgm.customizeBadges();
+  } else {
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.jdgm) jdgm.customizeBadges();
+    });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.article_pages.name",
+  "class": "article--section section--canonical",
+  "settings": [
+    {
+      "id": "featured_image_width",
+      "type": "select",
+      "label": "t:sections.article_pages.featured_image_width.label",
+      "options": [
+        {
+          "value": "content-width",
+          "label": "t:sections.article_pages.featured_image_width.option_1"
+        },
+        {
+          "value": "full-width",
+          "label": "t:sections.article_pages.featured_image_width.option_2"
+        }
+      ],
+      "default": "full-width"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "t:sections.article_pages.show_date.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "t:sections.article_pages.show_author.label",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "use_share_buttons",
+      "label": "t:sections.article_pages.use_share_buttons.label",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Author box"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author_box",
+      "label": "Show author box",
+      "default": true,
+      "info": "Uses article metafield 'custom.author' (Metaobject reference). Metaobject fields: image, name, role, bio, linkedin, twitter, github, profile_url"
+    },
+    {
+      "type": "header",
+      "content": "Product slider heading"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading font size",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "default": 26,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Shop button"
+    },
+    {
+      "type": "text",
+      "id": "shop_btn_label",
+      "label": "Button label",
+      "default": "SHOP"
+    },
+    {
+      "type": "color",
+      "id": "shop_btn_bg",
+      "label": "Button background",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "shop_btn_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Product cards"
+    },
+    {
+      "type": "range",
+      "id": "card_width",
+      "label": "Card width",
+      "min": 150,
+      "max": 300,
+      "step": 10,
+      "default": 220,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "card_ratio",
+      "label": "Card image ratio",
+      "options": [
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "3 / 4", "label": "Portrait (3:4)" },
+        { "value": "4 / 5", "label": "Portrait (4:5)" },
+        { "value": "4 / 3", "label": "Landscape (4:3)" }
+      ],
+      "default": "3 / 4"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card background",
+      "default": "#f5f0eb"
+    },
+    {
+      "type": "range",
+      "id": "product_gap",
+      "label": "Gap between cards",
+      "min": 5,
+      "max": 40,
+      "step": 5,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Navigation arrows"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_nav_desktop",
+      "label": "Show arrows on desktop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_nav_mobile",
+      "label": "Show arrows on mobile",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "nav_btn_bg",
+      "label": "Arrow background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "nav_btn_color",
+      "label": "Arrow color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "nav_btn_border",
+      "label": "Arrow border color",
+      "default": "#dddddd"
+    },
+    {
+      "type": "header",
+      "content": "Add to Cart"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_add_to_cart",
+      "label": "Show Add to Cart button",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_text",
+      "label": "Add to Cart text",
+      "default": "Add to cart"
+    },
+    {
+      "type": "color",
+      "id": "add_to_cart_bg",
+      "label": "Add to Cart background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "add_to_cart_color",
+      "label": "Add to Cart text color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "related_products",
+      "name": "Related products",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Buy Product Here:"
+        },
+        {
+          "type": "product_list",
+          "id": "product_list",
+          "label": "Products",
+          "limit": 5,
+          "info": "Manually select products. If empty, products linked in the article body will be shown automatically."
+        }
+      ]
+    },
+    {
+      "type": "product_block",
+      "name": "Product block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "marker_text",
+          "label": "Marker text",
+          "info": "Enter a keyword like [products-1]. In your blog post HTML, add <!-- [products-1] -->",
+          "default": "[products-1]"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Recommended Products",
+          "info": "Heading displayed above the product slider"
+        },
+        {
+          "type": "text",
+          "id": "metafield_key",
+          "label": "Metafield key",
+          "default": "custom.products",
+          "info": "Enter the metafield namespace.key (e.g. custom.products or custom.collection)"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

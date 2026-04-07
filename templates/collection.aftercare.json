@@ -1,0 +1,314 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "blocks_yQncrE": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_f1f6909_zWVdfz": {
+          "type": "ai_gen_block_f1f6909",
+          "settings": {
+            "text_1": "FLAT 25% OFF",
+            "text_2": "No Exclusions",
+            "text_3": "FLAT 25% OFF",
+            "text_4": "Limited Time",
+            "text_5": "",
+            "initial_direction": "right",
+            "animation_speed": 10,
+            "background_color": "#fec0c7",
+            "text_color": "#810000",
+            "font_size": 17,
+            "bar_padding": 10,
+            "text_spacing": 40,
+            "show_toggle_button": false,
+            "button_background": "#ffffff",
+            "button_color": "#000000",
+            "button_padding": 8,
+            "button_border_radius": 4,
+            "button_icon_size": 20,
+            "button_position": 20
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_f1f6909_zWVdfz"
+      ],
+      "name": "Sliding announcement bar",
+      "settings": {}
+    },
+    "blocks_F7Brra": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_e2abd90_VeVn4X": {
+          "type": "ai_gen_block_e2abd90",
+          "settings": {
+            "background_color": "#ffffff",
+            "padding_top": 15,
+            "padding_bottom": 10,
+            "desktop_width_percent": 60,
+            "desktop_circle_size": 80,
+            "desktop_item_spacing": 50,
+            "desktop_border_width": 1,
+            "desktop_border_color": "#8c0013",
+            "desktop_overlay_height": 50,
+            "desktop_overlay_angle": 0,
+            "desktop_overlay_color": "#000000",
+            "desktop_text_color": "#ffffff",
+            "desktop_text_size": 11,
+            "desktop_text_weight": "700",
+            "mobile_width_percent": 65,
+            "mobile_circle_size": 60,
+            "mobile_item_spacing": 30,
+            "mobile_text_spacing": 10,
+            "mobile_border_width": 1,
+            "mobile_border_color": "#db1e37",
+            "mobile_text_color": "#000000",
+            "mobile_text_size": 12,
+            "mobile_text_weight": "700",
+            "auto_slide": true,
+            "slide_direction": "left",
+            "slide_speed": 0.5,
+            "collection_1": "nose-jewellery",
+            "image_1": "shopify://shop_images/nose_bc5ae189-ee67-4f88-9668-04c2d4748e40.png",
+            "text_1": "Nose",
+            "collection_2": "tongue-barbells",
+            "image_2": "shopify://shop_images/tongue_5dd1d57d-7106-4583-a074-ea77709522c9.png",
+            "text_2": "Tongue",
+            "collection_3": "labrets",
+            "image_3": "shopify://shop_images/lip_bba8e2e8-ce52-4abf-a69e-3a29abb9c64f.png",
+            "text_3": "Lips",
+            "collection_4": "ear-jewellery",
+            "image_4": "shopify://shop_images/EAR_8d82411f-dba1-4361-ac70-e54df25c8cde.png",
+            "text_4": "Ear",
+            "collection_5": "curved-barbells",
+            "image_5": "shopify://shop_images/eyebrow_36308969-f00a-4946-a60c-4169ae033573.png",
+            "text_5": "Eye",
+            "collection_6": "belly-rings",
+            "image_6": "shopify://shop_images/belly_fe8fd30c-580d-4858-9e75-feeca8a51ab0.png",
+            "text_6": "Belly",
+            "collection_7": "fake-plugs",
+            "image_7": "shopify://shop_images/stretched.png",
+            "text_7": "Stretched",
+            "collection_8": "dermal-anchors",
+            "image_8": "shopify://shop_images/surface.png",
+            "text_8": "Surface",
+            "collection_9": "",
+            "text_9": "",
+            "collection_10": "",
+            "text_10": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_e2abd90_VeVn4X"
+      ],
+      "settings": {}
+    },
+    "dynamic_slideshow_YDe74Y": {
+      "type": "dynamic-slideshow",
+      "blocks": {
+        "slide_NVVnLD": {
+          "type": "slide",
+          "settings": {
+            "background_image": "shopify://shop_images/aftercare.png",
+            "mobile_background_image": "shopify://shop_images/all_aftercare_2bf4d150-4251-4217-b910-23cfb1e7c922.png",
+            "title": "Jewellery Aftercare",
+            "text": "Explore our Jewellery Aftercare collection featuring Sprays, Balms, Polishing Cloths and Polishing Sprays — the perfect kit to care for new piercings and keep your jewellery shining",
+            "color": "#ffffff",
+            "link": "",
+            "text_alignment": "center",
+            "content_position": "center",
+            "heading_size": 40,
+            "subheading_size": 16,
+            "button_size": 14,
+            "button_background_color": "#000000",
+            "button_text_color": "#ffffff",
+            "mobile_content_position": "center",
+            "mobile_vertical_position": "center",
+            "mobile_text_alignment": "center",
+            "mobile_heading_size": 24,
+            "mobile_subheading_size": 14,
+            "mobile_button_size": 12,
+            "button_one_label": "",
+            "button_one_link": "",
+            "button_two_label": "",
+            "button_two_link": "",
+            "show_overlay": true,
+            "overlay_color": "#000000",
+            "overlay_opacity": 57
+          }
+        }
+      },
+      "block_order": [
+        "slide_NVVnLD"
+      ],
+      "disabled": true,
+      "name": "t:sections.slideshow.presets.slideshow.name",
+      "settings": {
+        "enable_autoplay": true,
+        "autoplay_duration": 8,
+        "slideshow_width": "full",
+        "slideshow_height": "medium",
+        "slideshow_height_mobile": "x-large",
+        "slideshow_text_below_image": true
+      }
+    },
+    "main": {
+      "type": "static-collection",
+      "blocks": {
+        "filter-1": {
+          "type": "filter",
+          "settings": {
+            "filter_option": "tag",
+            "filter_groups": "collapse_all",
+            "show_filter_product_count": true,
+            "filter_style": "groups",
+            "filter_limit": "6",
+            "grid_categories": "",
+            "custom_ordered_categories": "Type, Material, Thread Type, Stone, Colour",
+            "custom_ordered_tags": "",
+            "excluded_tags": "Colour_Black, Colour_Steel, Colour_Gold, Colour_Luminescent, Colour_Red, Colour_Yellow",
+            "excluded_groups": "Colour_Black, Colour_Steel, Colour_Gold, Colour_Luminescent, Colour_Red, Colour_Yellow"
+          }
+        }
+      },
+      "block_order": [
+        "filter-1"
+      ],
+      "settings": {
+        "show_collection_image": false,
+        "products_per_page_range": 24,
+        "products_per_row": "5",
+        "sort_by": true,
+        "grid_list": true,
+        "default_view": "grid-view",
+        "enable_subcollection": true,
+        "show_product_count": false,
+        "thumbnail_image": "collection-image",
+        "image_crop": "original"
+      }
+    },
+    "static-recently-viewed": {
+      "type": "static-recently-viewed",
+      "settings": {
+        "enable_recently_viewed_products": true
+      }
+    },
+    "dynamic_rich_text_Kdn3Jt": {
+      "type": "dynamic-rich-text",
+      "name": "t:sections.rich_text.presets.rich_text.name",
+      "settings": {
+        "width": "full-width",
+        "title": "Monster Piercing | Jewellery Aftercare",
+        "text": "<p><strong>Piercing Jewellery Polishing Kit</strong><br/>Keep your jewellery shining like new with our polishing kit, specially designed to gently clean and restore the sparkle of your piercing jewellery.</p><p><strong>Piercing Healing Aftercare</strong><br/>Soothe, protect, and support faster healing with our gentle aftercare solution, formulated to keep new piercings clean and comfortable.</p>",
+        "heading_size": "medium",
+        "text_alignment": "center"
+      }
+    },
+    "dynamic_faq_Fkzcwb": {
+      "type": "dynamic-faq",
+      "blocks": {
+        "category_BxehrJ": {
+          "type": "category",
+          "settings": {
+            "heading": "Jewellery & Piercing Aftercare",
+            "show_category_card": true
+          }
+        },
+        "question_BtY6gg": {
+          "type": "question",
+          "settings": {
+            "question": "Why is aftercare important for piercings and jewellery?",
+            "answer": "<p>Proper aftercare helps prevent irritation, promotes healing, and keeps your jewellery<br/>looking bright and clean. Using high-quality aftercare products ensures your piercings remain healthy and your jewellery maintains its shine over time.</p>",
+            "icon": "none"
+          }
+        },
+        "question_KUMeVf": {
+          "type": "question",
+          "settings": {
+            "question": "What types of aftercare products do you offer?",
+            "answer": "<p>Our aftercare range includes:</p><ul><li><strong>Polishing kits</strong> – designed to safely clean and restore shine to your gold, silver, titanium, and steel jewellery.</li><li><strong>Coco balm</strong> – a natural moisturising balm that soothes and nourishes healed piercings.</li><li><strong>Tea tree oil spray</strong> – helps calm irritation and reduce redness around healed piercings.</li><li><strong>Jojoba healing oil</strong> – promotes hydration and supports skin recovery after piercing.</li></ul><p>Each product is carefully formulated for safe, effective use on body jewellery and pierced skin.</p>",
+            "icon": "none"
+          }
+        },
+        "question_RYdfWg": {
+          "type": "question",
+          "settings": {
+            "question": "How do I use your polishing kits?",
+            "answer": "<p>Our polishing kits include specialised cloths and cleaners designed for <strong>gold, silver, titanium, and steel jewellery</strong>. Gently polish the surface in small circular motions to restore shine — do not use on raw skin or fresh piercings. Avoid soaking jewellery in cleaning solutions.</p>",
+            "icon": "none"
+          }
+        },
+        "question_yyxfHK": {
+          "type": "question",
+          "settings": {
+            "question": "What’s the difference between jojoba oil and tea tree oil spray?",
+            "answer": "<ul><li><strong>Jojoba oil</strong> is deeply moisturising and helps maintain skin elasticity around the piercing. It’s gentle enough for sensitive skin and promotes natural healing.</li><li><strong>Tea tree oil spray</strong> is antimicrobial and soothing, ideal for reducing mild redness or irritation in healed or healing piercings.</li></ul><p>Both can be used as part of a gentle aftercare routine for skin and jewellery<br/>upkeep.</p>",
+            "icon": "none"
+          }
+        },
+        "question_kBHWxU": {
+          "type": "question",
+          "settings": {
+            "question": "Are your aftercare products natural and skin-safe?",
+            "answer": "<p>Yes. Our aftercare range is made with <strong>natural, skin-safe ingredients</strong>, free from harsh chemicals or alcohol. They’re formulated to be gentle yet effective for daily piercing and jewellery maintenance.</p>",
+            "icon": "none"
+          }
+        },
+        "question_Ww86FC": {
+          "type": "question",
+          "settings": {
+            "question": "Can I use coco balm on fresh piercings?",
+            "answer": "<p>Coco balm is best for <strong>healed piercings</strong>. It nourishes dry or stretched skin and adds shine to healed areas but should not be applied to fresh piercings, as heavy balms can block airflow and slow healing.</p>",
+            "icon": "none"
+          }
+        },
+        "question_iKhpNQ": {
+          "type": "question",
+          "settings": {
+            "question": "Do you offer wholesale pricing for aftercare products?",
+            "answer": "<p>Yes. We supply our full range of <strong>aftercare products, including oils, sprays, and polishing kits</strong>, at wholesale rates for studios and retailers. Log in or contact our wholesale<br/>team for trade pricing and stock details.</p>",
+            "icon": "none"
+          }
+        }
+      },
+      "block_order": [
+        "category_BxehrJ",
+        "question_BtY6gg",
+        "question_KUMeVf",
+        "question_RYdfWg",
+        "question_yyxfHK",
+        "question_kBHWxU",
+        "question_Ww86FC",
+        "question_iKhpNQ"
+      ],
+      "name": "t:sections.faq.presets.name",
+      "settings": {
+        "section_width": "wide",
+        "heading": "FAQ",
+        "enable_category_cards": false,
+        "category_card_image_crop": "original",
+        "category_heading_size": "medium",
+        "icon_color": "rgba(0,0,0,0)"
+      }
+    }
+  },
+  "order": [
+    "blocks_yQncrE",
+    "blocks_F7Brra",
+    "dynamic_slideshow_YDe74Y",
+    "main",
+    "static-recently-viewed",
+    "dynamic_rich_text_Kdn3Jt",
+    "dynamic_faq_Fkzcwb"
+  ]
+}

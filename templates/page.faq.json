@@ -1,0 +1,158 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "static-faq",
+      "disabled": true,
+      "settings": {}
+    },
+    "dynamic-faq": {
+      "type": "dynamic-faq",
+      "blocks": {
+        "category_1": {
+          "type": "category",
+          "settings": {
+            "heading": "General Queries",
+            "show_category_card": true
+          }
+        },
+        "question_1": {
+          "type": "question",
+          "settings": {
+            "question": "How do I contact customer service?",
+            "answer": "<p>You can contact us either through the chat box at the bottom right-hand corner of our website, through our site contact form via '<a href=\"https://www.monsterpiercing.com/pages/contact-us\"><span style=\"text-decoration:underline\">contact us</span></a>' page or drop us an email at info@monsterpiercing.com. We always aim to get back to you within 24 hours (except weekends when office is closed).</p>",
+            "icon": "none"
+          }
+        },
+        "question_2": {
+          "type": "question",
+          "settings": {
+            "question": "How do I know what’s the best size for me?",
+            "answer": "<p>All of our pages give a brief information as well as the common piercing sizes worn within that collection. We also have a<a href=\"https://www.monsterpiercing.com/pages/size-guide\">Size Guide</a>page and<a href=\"https://www.monsterpiercing.com/pages/piercing-guide\">Piercing Guide</a>page that can be used for reference on the different jewellery and piercings sizes available. However, as an online store we cannot recommend an exact size for your piercing and jewellery through chat/email even if you provide us with a picture of your piercing. We suggest for the most comfortable fit, safety and style please ensure you know your exact piercing sizes or if unknown it is best to consult with a professional piercer.</p>",
+            "icon": "none"
+          }
+        },
+        "question_3": {
+          "type": "question",
+          "settings": {
+            "question": "Are your pieces sold in pairs?",
+            "answer": "<p>Our pieces are all sold as single items unless it is stated in the title or description that it is sold as a pair. Please check this before purchasing if you are looking for pair items. </p>",
+            "icon": "none"
+          }
+        },
+        "question_EGFGXR": {
+          "type": "question",
+          "settings": {
+            "question": "How can I cancel my order?",
+            "answer": "<p>If you're looking to cancel your order, please get in contact with us either through the <a href=\"https://www.monsterpiercing.com/pages/contact-us\">Contact Form</a>, Live Chat or email us at info@monsterpiercing.com. We will get to cancelling your order in time before it's processed or shipped.</p>",
+            "icon": "none"
+          }
+        },
+        "question_XhFMYq": {
+          "type": "question",
+          "settings": {
+            "question": "Do you offer piercing services?",
+            "answer": "<p>We <strong>do not offer any piercing services</strong>. Our store is <strong>online only</strong> and specialises in high-quality <strong>piercing jewellery</strong>.</p><p>Feel free to browse our collection and reach out if you have any questions, we’re happy to help you find the perfect piece!</p>",
+            "icon": "none"
+          }
+        },
+        "category_2": {
+          "type": "category",
+          "settings": {
+            "heading": "Shipping",
+            "show_category_card": true
+          }
+        },
+        "question_4": {
+          "type": "question",
+          "settings": {
+            "question": "How long will my order take to deliver?",
+            "answer": "<p>All orders are processed and despatched 2 working days after your order is placed and payment is confirmed. Working days are defined as Monday to Friday, excluding public holidays.</p><p>All orders are sent through Royal Mail Tracked service.</p><p>After dispatch, Royal Mail typically delivers within 1-5 working days, depending on your location.</p><p>Please note that delivery times are estimates and may vary due to factors beyond our control, such as postal delays or adverse weather conditions.</p>",
+            "icon": "none"
+          }
+        },
+        "question_5": {
+          "type": "question",
+          "settings": {
+            "question": "Do you offer a dropshipping service?",
+            "answer": "<p>Yes, we do offer a dropshipping service! If you're interested in partnering with us, please reach out to us at info@monsterpiercing. We’ll be happy to provide more details about our dropshipping process, product catalog, and how we can support your business</p>",
+            "icon": "none"
+          }
+        },
+        "question_6": {
+          "type": "question",
+          "settings": {
+            "question": "Can I change my shipping address?",
+            "answer": "<p>If you notice your shipping address to be incorrect, please contact us immediately with your order details. If possible, we will change the shipping address from our side before it has been processed or shipped. You can contact us at info@monsterpiercing.com or our live chat, where we typically reply within 24 hours.</p>",
+            "icon": "none"
+          }
+        },
+        "category_3": {
+          "type": "category",
+          "settings": {
+            "heading": "Returns",
+            "show_category_card": true
+          }
+        },
+        "question_7": {
+          "type": "question",
+          "settings": {
+            "question": "How can I return my item?",
+            "answer": "<p>We have a 30-day return policy, which means you have 30 days after receiving your item to request a return. All return periods start from the date Royal Mail tracking shows as 'delivered'.</p><p>To be eligible for a return for undamaged/wrongly sent items, your item must be in the same condition that you received it, unworn or unused, and in its original sealed packaging. You’ll also need to provide us with your order number. <br/><br/>To start a return, you can either contact us at <a href=\"mailto:info@monsterpiercing.com\">info@monsterpiercing.com</a> or start a return <a href=\"https://www.monsterpiercing.com/pages/start-a-return\">here</a>. If your return is accepted, we’ll send you a return shipping label*, as well as instructions on how and where to send your package. Items sent back to us without first requesting a return will not be accepted. </p><p>Shipping costs for returns due to faulty/damaged item will be borne by us, Monster Piercing. *Customers looking to return undamaged items for a refund or exchange will have to bear the shipping costs.  </p>",
+            "icon": "none"
+          }
+        },
+        "question_8": {
+          "type": "question",
+          "settings": {
+            "question": "Can I exchange the item I have received?",
+            "answer": "<p>Customers looking to exchange an item they received must ensure it is still in its original, sealed packaging. For hygiene purposes, all items come in this packet, allowing you to inspect and decide whether this item is the one you're happy with. Customers must return the item back to us and place an order for their preferred item. Refunds will be processed and issued back to the original payment method used during checkout. Please allow a few days for the funds to appear in your account, depending on your payment provider. In the case of exchanges, the customer is responsible for the return shipping cost. Please get in touch with us via the <a href=\"https://www.monsterpiercing.com/pages/contact-us\">Contact Form</a>, Live Chat or email us at info@monsterpiercing.com with your order number to process a return. </p>",
+            "icon": "none"
+          }
+        }
+      },
+      "block_order": [
+        "category_1",
+        "question_1",
+        "question_2",
+        "question_3",
+        "question_EGFGXR",
+        "question_XhFMYq",
+        "category_2",
+        "question_4",
+        "question_5",
+        "question_6",
+        "category_3",
+        "question_7",
+        "question_8"
+      ],
+      "settings": {
+        "section_width": "regular",
+        "heading": "FAQ'S",
+        "enable_category_cards": true,
+        "category_card_image_crop": "original",
+        "category_heading_size": "medium",
+        "icon_color": "rgba(0,0,0,0)"
+      }
+    },
+    "17640556245b3e2b73": {
+      "type": "apps",
+      "settings": {
+        "include_padding": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "dynamic-faq",
+    "17640556245b3e2b73"
+  ]
+}

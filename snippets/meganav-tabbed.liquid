@@ -1,0 +1,454 @@
+{% comment %}
+  Tabbed Mega Menu - Category Style
+  Features:
+  - Top: Horizontal category tabs with icons
+  - Middle: Grid of subcategory links
+  - Right: Image that changes on category/subcategory hover
+
+  @param menu LinkList - List of menu items
+  @param block Block - The block with the meganav properties
+{% endcomment %}
+
+{%- capture meganav_classes -%}
+  navmenu-meganav
+  navmenu-meganav--desktop
+  navmenu-meganav-tabbed
+{%- endcapture -%}
+
+{% comment %} Collect all images for categories and subcategories {% endcomment %}
+{% assign image_index = 0 %}
+
+<div
+  class="{{ meganav_classes | strip_newlines }}"
+  data-navmenu-submenu
+  data-meganav-menu
+  data-meganav-id="{{ block.id }}"
+  data-meganav-tabbed
+>
+  <div class="navmenu-meganav-wrapper meganav-tabbed__wrapper">
+    <!-- Main Content Area -->
+    <div class="meganav-tabbed__content">
+      <!-- Top: Horizontal Category Tabs -->
+      {% if menu.title contains 'Explore' %}
+        <a href="{{ block.settings.explore_header_link | default: '/collections/all' }}" class="meganav-tabbed__explore-header">
+          <span class="meganav-tabbed__explore-icon">
+            {% if block.settings.explore_header_svg != blank %}
+              {{ block.settings.explore_header_svg }}
+            {% elsif block.settings.explore_header_icon != blank %}
+              <img src="{{ block.settings.explore_header_icon | image_url: width: 48 }}" alt="{{ block.settings.explore_header_title | default: 'All Body Jewellery' }}" loading="lazy">
+            {% else %}
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+              </svg>
+            {% endif %}
+          </span>
+          <span class="meganav-tabbed__explore-title">{{ block.settings.explore_header_title | default: 'All Body Jewellery' }}</span>
+        </a>
+      {% endif %}
+      <div class="meganav-tabbed__categories-bar {% if menu.title contains 'Explore' %}meganav-tabbed__categories-bar--explore{% endif %}">
+        {% for menu_item in menu.links %}
+          {% assign cat_index = forloop.index %}
+          {% comment %} Get custom icon setting for this category {% endcomment %}
+          {% assign custom_icon = nil %}
+          {% assign custom_link = nil %}
+          {% case forloop.index %}
+            {% when 1 %}
+              {% assign custom_icon = block.settings.category_1_icon %}
+              {% assign custom_link = block.settings.category_1_link %}
+            {% when 2 %}
+              {% assign custom_icon = block.settings.category_2_icon %}
+              {% assign custom_link = block.settings.category_2_link %}
+            {% when 3 %}
+              {% assign custom_icon = block.settings.category_3_icon %}
+              {% assign custom_link = block.settings.category_3_link %}
+            {% when 4 %}
+              {% assign custom_icon = block.settings.category_4_icon %}
+              {% assign custom_link = block.settings.category_4_link %}
+            {% when 5 %}
+              {% assign custom_icon = block.settings.category_5_icon %}
+              {% assign custom_link = block.settings.category_5_link %}
+            {% when 6 %}
+              {% assign custom_icon = block.settings.category_6_icon %}
+              {% assign custom_link = block.settings.category_6_link %}
+            {% when 7 %}
+              {% assign custom_icon = block.settings.category_7_icon %}
+              {% assign custom_link = block.settings.category_7_link %}
+            {% when 8 %}
+              {% assign custom_icon = block.settings.category_8_icon %}
+              {% assign custom_link = block.settings.category_8_link %}
+            {% when 9 %}
+              {% assign custom_icon = block.settings.category_9_icon %}
+              {% assign custom_link = block.settings.category_9_link %}
+            {% when 10 %}
+              {% assign custom_icon = block.settings.category_10_icon %}
+              {% assign custom_link = block.settings.category_10_link %}
+          {% endcase %}
+          {% comment %} Use custom link if set, otherwise use default menu item URL {% endcomment %}
+          {% assign category_url = custom_link | default: menu_item.url %}
+          <a
+            href="{{ category_url }}"
+            class="meganav-tabbed__category-tab {% if forloop.first %}meganav-tabbed__category-tab--active{% endif %}"
+            data-tabbed-category="{{ forloop.index }}"
+            data-image-id="cat-{{ forloop.index }}"
+            data-nav-url="{{ category_url }}"
+          >
+            <span class="meganav-tabbed__tab-icon">
+              {% if custom_icon != blank %}
+                <img src="{{ custom_icon | image_url: width: 36 }}" alt="{{ menu_item.title }}" loading="lazy">
+              {% else %}
+                {% render 'meganav-category-icon', title: menu_item.title %}
+              {% endif %}
+            </span>
+            <span class="meganav-tabbed__tab-title">{{ menu_item.title }}</span>
+          </a>
+        {% endfor %}
+      </div>
+
+      <div class="meganav-tabbed__divider"></div>
+      <div class="meganav-tabbed__links-container">
+        {% assign global_submenu_index = 0 %}
+        {% for menu_item in menu.links %}
+          {% assign cat_index = forloop.index %}
+          <div
+            class="meganav-tabbed__links-panel {% if forloop.first %}meganav-tabbed__links-panel--active{% endif %}"
+            data-tabbed-panel="{{ forloop.index }}"
+          >
+            <div class="meganav-tabbed__links-grid {% if block.settings.show_submenu_icons %}meganav-tabbed__links-grid--with-icons{% endif %}">
+              {% if menu_item.links.size > 0 %}
+                {% for sub_item in menu_item.links %}
+                  {% assign global_submenu_index = global_submenu_index | plus: 1 %}
+                  {% comment %} Get custom submenu icon based on global index {% endcomment %}
+                  {% assign custom_submenu_icon = nil %}
+                  {% case global_submenu_index %}
+                    {% when 1 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_1_icon %}
+                    {% when 2 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_2_icon %}
+                    {% when 3 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_3_icon %}
+                    {% when 4 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_4_icon %}
+                    {% when 5 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_5_icon %}
+                    {% when 6 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_6_icon %}
+                    {% when 7 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_7_icon %}
+                    {% when 8 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_8_icon %}
+                    {% when 9 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_9_icon %}
+                    {% when 10 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_10_icon %}
+                    {% when 11 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_11_icon %}
+                    {% when 12 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_12_icon %}
+                    {% when 13 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_13_icon %}
+                    {% when 14 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_14_icon %}
+                    {% when 15 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_15_icon %}
+                    {% when 16 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_16_icon %}
+                    {% when 17 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_17_icon %}
+                    {% when 18 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_18_icon %}
+                    {% when 19 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_19_icon %}
+                    {% when 20 %}
+                      {% assign custom_submenu_icon = block.settings.submenu_20_icon %}
+                  {% endcase %}
+
+                  <a
+                    href="{{ sub_item.url }}"
+                    class="meganav-tabbed__link-item {% if block.settings.show_submenu_icons and custom_submenu_icon != blank %}meganav-tabbed__link-item--with-icon{% endif %}"
+                    data-sub-image-id="sub-{{ cat_index }}-{{ forloop.index }}"
+                    data-parent-image-id="cat-{{ cat_index }}"
+                  >
+                    {% if block.settings.show_submenu_icons and custom_submenu_icon != blank %}
+                      <span class="meganav-tabbed__submenu-icon">
+                        <img src="{{ custom_submenu_icon | image_url: width: 64 }}" alt="{{ sub_item.title }}" loading="lazy">
+                      </span>
+                    {% endif %}
+                    <span class="meganav-tabbed__link-text">{{ sub_item.title }}</span>
+                  </a>
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Right Side: Images Container -->
+    <div class="meganav-tabbed__image-container">
+      <!-- Category Images -->
+      {% for menu_item in menu.links %}
+        {% assign cat_index = forloop.index %}
+        {% assign menu_url = menu_item.url %}
+        {% assign collection = nil %}
+        {% if menu_url contains '/collections/' %}
+          {% assign collection_handle = menu_url | split: '/collections/' | last | split: '/' | first | split: '?' | first %}
+          {% assign collection = collections[collection_handle] %}
+        {% endif %}
+
+        <div
+          class="meganav-tabbed__category-image {% if forloop.first %}meganav-tabbed__category-image--active{% endif %}"
+          data-image-panel="cat-{{ forloop.index }}"
+        >
+          {% if collection != blank and collection.image != blank %}
+            <img
+              src="{{ collection.image | image_url: width: 400 }}"
+              alt="{{ collection.title | escape }}"
+              loading="lazy"
+            >
+          {% elsif collection != blank and collection.products.first.featured_image != blank %}
+            <img
+              src="{{ collection.products.first.featured_image | image_url: width: 400 }}"
+              alt="{{ collection.title | escape }}"
+              loading="lazy"
+            >
+          {% elsif block.settings.default_image != blank %}
+            {% if block.settings.default_image_link != blank %}
+              <a href="{{ block.settings.default_image_link }}" class="meganav-tabbed__default-image-link">
+            {% endif %}
+            <img
+              src="{{ block.settings.default_image | image_url: width: 400 }}"
+              alt="{{ menu_item.title | escape }}"
+              loading="lazy"
+            >
+            {% if block.settings.default_image_link != blank %}
+              </a>
+            {% endif %}
+          {% else %}
+            {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {% endif %}
+        </div>
+
+        <!-- Subcategory Images for this category -->
+        {% if menu_item.links.size > 0 %}
+          {% for sub_item in menu_item.links %}
+            {% assign sub_url = sub_item.url %}
+            {% assign sub_collection = nil %}
+            {% if sub_url contains '/collections/' %}
+              {% assign sub_collection_handle = sub_url | split: '/collections/' | last | split: '/' | first | split: '?' | first %}
+              {% assign sub_collection = collections[sub_collection_handle] %}
+            {% endif %}
+
+            <div
+              class="meganav-tabbed__category-image"
+              data-image-panel="sub-{{ cat_index }}-{{ forloop.index }}"
+            >
+              {% if sub_collection != blank and sub_collection.image != blank %}
+                <img
+                  src="{{ sub_collection.image | image_url: width: 400 }}"
+                  alt="{{ sub_collection.title | escape }}"
+                  loading="lazy"
+                >
+              {% elsif sub_collection != blank and sub_collection.products.first.featured_image != blank %}
+                <img
+                  src="{{ sub_collection.products.first.featured_image | image_url: width: 400 }}"
+                  alt="{{ sub_collection.title | escape }}"
+                  loading="lazy"
+                >
+              {% elsif collection != blank and collection.image != blank %}
+                <img
+                  src="{{ collection.image | image_url: width: 400 }}"
+                  alt="{{ sub_item.title | escape }}"
+                  loading="lazy"
+                >
+              {% elsif block.settings.default_image != blank %}
+                {% if block.settings.default_image_link != blank %}
+                  <a href="{{ block.settings.default_image_link }}" class="meganav-tabbed__default-image-link">
+                {% endif %}
+                <img
+                  src="{{ block.settings.default_image | image_url: width: 400 }}"
+                  alt="{{ sub_item.title | escape }}"
+                  loading="lazy"
+                >
+                {% if block.settings.default_image_link != blank %}
+                  </a>
+                {% endif %}
+              {% else %}
+                {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const meganav = document.querySelector('[data-meganav-id="{{ block.id }}"]');
+    if (!meganav) return;
+
+    const categoryTabs = meganav.querySelectorAll('[data-tabbed-category]');
+    const linksPanels = meganav.querySelectorAll('[data-tabbed-panel]');
+    const linkItems = meganav.querySelectorAll('[data-sub-image-id]');
+    const allImages = meganav.querySelectorAll('[data-image-panel]');
+    const linksContainer = meganav.querySelector('.meganav-tabbed__links-container');
+
+    // Track the current active category image ID
+    let activeCategoryImageId = 'cat-1';
+
+    // Function to show specific image
+    function showImage(imageId) {
+      allImages.forEach(img => img.classList.remove('meganav-tabbed__category-image--active'));
+      const targetImage = meganav.querySelector(`[data-image-panel="${imageId}"]`);
+      if (targetImage) {
+        targetImage.classList.add('meganav-tabbed__category-image--active');
+      }
+    }
+
+    // Function to show the active category image
+    function showActiveCategoryImage() {
+      showImage(activeCategoryImageId);
+    }
+
+    // Category tab hover
+    categoryTabs.forEach(tab => {
+      tab.addEventListener('mouseenter', function() {
+        const index = this.dataset.tabbedCategory;
+        const imageId = this.dataset.imageId;
+
+        // Update active category image ID
+        activeCategoryImageId = imageId;
+
+        // Update active tab
+        categoryTabs.forEach(t => t.classList.remove('meganav-tabbed__category-tab--active'));
+        this.classList.add('meganav-tabbed__category-tab--active');
+
+        // Update active links panel
+        linksPanels.forEach(p => p.classList.remove('meganav-tabbed__links-panel--active'));
+        const activePanel = meganav.querySelector(`[data-tabbed-panel="${index}"]`);
+        if (activePanel) {
+          activePanel.classList.add('meganav-tabbed__links-panel--active');
+        }
+
+        // Update active image (category image)
+        showImage(imageId);
+      });
+
+      // Category tab click - navigate to collection (using capturing phase for priority)
+      tab.addEventListener('click', function(e) {
+        const url = this.getAttribute('data-nav-url') || this.getAttribute('href');
+        if (url && url !== '#' && url !== '' && url !== 'javascript:void(0)') {
+          e.preventDefault();
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          window.location.href = url;
+          return false;
+        }
+      }, true);
+    });
+
+    // Subcategory link hover - show subcollection image
+    linkItems.forEach(link => {
+      link.addEventListener('mouseenter', function() {
+        const subImageId = this.dataset.subImageId;
+        showImage(subImageId);
+      });
+
+      // On mouse leave, go back to parent category image
+      link.addEventListener('mouseleave', function() {
+        showActiveCategoryImage();
+      });
+    });
+
+    // When mouse enters the links container but not on a link item, show category image
+    if (linksContainer) {
+      linksContainer.addEventListener('mouseenter', function(e) {
+        if (!e.target.closest('[data-sub-image-id]')) {
+          showActiveCategoryImage();
+        }
+      });
+    }
+
+    // When mouse enters the categories bar, show the active category image
+    const categoriesBar = meganav.querySelector('.meganav-tabbed__categories-bar');
+    if (categoriesBar) {
+      categoriesBar.addEventListener('mouseenter', function() {
+        showActiveCategoryImage();
+      });
+    }
+  })();
+
+  // Global click handler with capturing phase for category tabs
+  document.addEventListener('click', function(e) {
+    const tab = e.target.closest('.meganav-tabbed__category-tab');
+    if (tab) {
+      const url = tab.getAttribute('data-nav-url') || tab.getAttribute('href');
+      if (url && url !== '#' && url !== '' && url !== 'javascript:void(0)') {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        window.location.href = url;
+        return false;
+      }
+    }
+  }, true);
+
+  // Custom open/close handler for mega menu (since navmenu-submenu class was removed)
+  (function() {
+    const meganavs = document.querySelectorAll('.navmenu-meganav-tabbed');
+
+    meganavs.forEach(function(meganav) {
+      const parentItem = meganav.closest('[data-navmenu-meganav-trigger]');
+      if (!parentItem) return;
+
+      let isOpen = false;
+      let closeTimeout = null;
+
+      function openMenu() {
+        if (closeTimeout) {
+          clearTimeout(closeTimeout);
+          closeTimeout = null;
+        }
+        if (!isOpen) {
+          isOpen = true;
+          meganav.style.display = 'block';
+          meganav.style.opacity = '1';
+          meganav.style.visibility = 'visible';
+          const details = parentItem.querySelector('[data-navmenu-details]');
+          if (details) details.setAttribute('open', 'open');
+        }
+      }
+
+      function closeMenu() {
+        closeTimeout = setTimeout(function() {
+          isOpen = false;
+          meganav.style.display = 'none';
+          meganav.style.opacity = '0';
+          meganav.style.visibility = 'hidden';
+          const details = parentItem.querySelector('[data-navmenu-details]');
+          if (details) details.removeAttribute('open');
+          closeTimeout = null;
+        }, 100);
+      }
+
+      // Our mouseenter/mouseleave handlers (no event blocking needed)
+      parentItem.addEventListener('mouseenter', openMenu);
+      parentItem.addEventListener('mouseleave', closeMenu);
+      meganav.addEventListener('mouseenter', openMenu);
+      meganav.addEventListener('mouseleave', closeMenu);
+
+      // Handle click on parent link to navigate
+      const parentLink = parentItem.querySelector('.navmenu-link');
+      if (parentLink) {
+        parentLink.addEventListener('click', function(e) {
+          const href = this.getAttribute('href') || this.dataset.href;
+          if (href && href !== '#' && href !== '') {
+            window.location.href = href;
+          }
+        });
+      }
+    });
+  })();
+</script>

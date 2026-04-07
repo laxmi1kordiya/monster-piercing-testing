@@ -1,0 +1,88 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "static-cart",
+      "blocks": {
+        "richtext_jD9fh7": {
+          "type": "richtext",
+          "settings": {
+            "richtext": "<p>Every order is carefully checked and packaged for your safety and satisfaction.<br/></p><p><strong>IMPORTANT</strong>: For Gold Plated Silver Belly Rings, kindly allow an additional 3 days for processing.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "richtext_jD9fh7"
+      ],
+      "settings": {
+        "show_vendor": false,
+        "show_sku": false,
+        "enable_order_notes": true,
+        "enable_shipping_calc": true,
+        "shipping_calc_default_country": "United Kingdom",
+        "enable_free_gift": false,
+        "show_progress_bar": true,
+        "free_gift_collection": "valentines-day-free-gifts",
+        "free_gift_threshold": "10000",
+        "free_gift_max_products": 4,
+        "free_gift_bg_color": "#f5f5f5",
+        "free_gift_progress_color": "#db1e37"
+      }
+    },
+    "dynamic_featured_collection_qmFaAz": {
+      "type": "dynamic-featured-collection",
+      "name": "t:sections.featured_collection.presets.featured_collection.name",
+      "settings": {
+        "title": "Shine bright, heal right with...",
+        "header_font_size_desktop": 24,
+        "header_font_size_mobile": 20,
+        "layout": "slideshow",
+        "mobile_layout": "slideshow",
+        "collection": "jewellery-piercing-aftercare",
+        "product_count": 9,
+        "sort_by_reviews": false,
+        "cta_label": "",
+        "cta_button_style": "primary"
+      }
+    },
+    "pxs_newsletter_rxQHjm": {
+      "type": "pxs-newsletter",
+      "name": "t:sections.newsletter.presets.name",
+      "settings": {
+        "title": "Don't forget your 10%!",
+        "text": "<p>Subscribe to Monster Piercing and get sales, discounts and more!</p>",
+        "desktop_alignment": "left",
+        "mobile_alignment": "top"
+      }
+    },
+    "1757924626a3679f45": {
+      "type": "apps",
+      "blocks": {
+        "selleasy_lb_upsell_addon_block_Kcq3Hm": {
+          "type": "shopify://apps/selleasy/blocks/lb-upsell-addon-block/790c1a03-a71f-4bc1-9869-00dad526d3c2",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "selleasy_lb_upsell_addon_block_Kcq3Hm"
+      ],
+      "settings": {
+        "include_padding": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "dynamic_featured_collection_qmFaAz",
+    "pxs_newsletter_rxQHjm",
+    "1757924626a3679f45"
+  ]
+}

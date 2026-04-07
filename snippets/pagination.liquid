@@ -1,0 +1,146 @@
+{%- comment -%}
+  Pagination snippet - single render.
+  Special-case: New Arrivals shows only pages 1..3 (Prev shown when >1; Next hidden on last allowed page).
+  Other collections use normal paginate.parts behavior.
+{%- endcomment -%}
+
+{% assign grid_list = grid_list | default: nil %}
+
+{%- assign total_pages = paginate.pages | default: 1 -%}
+{%- assign current_page = paginate.current_page | default: 1 -%}
+
+{%- if paginate.previous or paginate.next -%}
+  <nav class="pagination--container" aria-label="Pagination">
+    <ul class="pagination--inner">
+
+      {%- if collection.handle == 'new-arrivals' -%}
+        {%- comment -%} Limit pages to max 3 for New Arrivals {%- endcomment -%}
+        {%- assign max_pages = total_pages -%}
+        {%- if max_pages > 3 -%}
+          {%- assign max_pages = 3 -%}
+        {%- endif -%}
+
+        {%- comment -%} Prev: show only when current_page > 1 {%- endcomment -%}
+        {% if current_page > 1 %}
+          {% assign prev_page = current_page | minus: 1 %}
+          {% if prev_page < 1 %}{% assign prev_page = 1 %}{% endif %}
+          <li class="pagination--previous">
+            <a
+              class="pagination--item"
+              href="{{ collection.url }}?page={{ prev_page }}{% if grid_list %}&grid_list{% endif %}"
+              aria-label="Go to previous page"
+            >
+              <span class="pagination--chevron-left" aria-hidden="true">{% render 'icon-chevron-down-small' %}</span>
+              {{ 'general.pagination.prev' | t }}
+            </a>
+          </li>
+        {% endif %}
+
+        {%- comment -%} Pages 1..max_pages {%- endcomment -%}
+        {%- for i in (1..max_pages) -%}
+          {% if i == current_page %}
+            <li class="pagination--active" aria-current="true">
+              <span class="pagination--item">{{ i }}</span>
+            </li>
+          {% else %}
+            <li>
+              <a
+                class="pagination--item"
+                href="{{ collection.url }}?page={{ i }}{% if grid_list %}&grid_list{% endif %}"
+                aria-label="Go to page {{ i }}"
+              >
+                {{ i }}
+              </a>
+            </li>
+          {% endif %}
+        {%- endfor %}
+
+        {%- comment -%}
+          Next: render ONLY when current_page < max_pages.
+          Otherwise render nothing (no disabled Next).
+        {%- endcomment -%}
+        {% if current_page < max_pages %}
+          {% assign next_page = current_page | plus: 1 %}
+          {% if next_page > max_pages %}{% assign next_page = max_pages %}{% endif %}
+          <li class="pagination--next">
+            <a
+              class="pagination--item"
+              href="{{ collection.url }}?page={{ next_page }}{% if grid_list %}&grid_list{% endif %}"
+              aria-label="Go to next page"
+            >
+              {{ 'general.pagination.next' | t }}
+              <span class="pagination--chevron-right" aria-hidden="true">{% render 'icon-chevron-down-small' %}</span>
+            </a>
+          </li>
+        {% endif %}
+
+      {%- else -%}
+
+        {%- comment -%} Default pagination for all other collections {%- endcomment -%}
+
+        {% if paginate.previous %}
+          <li class="pagination--previous">
+            <a
+              class="pagination--item"
+              href="{{- paginate.previous.url -}}{%- if grid_list -%}&grid_list{%- endif -%}"
+              aria-label="Go to previous page"
+            >
+              <span class="pagination--chevron-left" aria-hidden="true">
+                {% render 'icon-chevron-down-small' %}
+              </span>
+              {{ 'general.pagination.prev' | t }}
+            </a>
+          </li>
+        {% endif %}
+
+        {% for part in paginate.parts %}
+          {% if part.is_link %}
+            <li>
+              <a
+                class="pagination--item"
+                href="{{ part.url }}{% if grid_list %}&grid_list{% endif %}"
+                aria-label="Go to page {{ part.title }}"
+              >
+                {{ part.title }}
+              </a>
+            </li>
+          {% else %}
+            {% if part.title == '&hellip;' %}
+              <li class="pagination--ellipsis">
+                <span class="pagination--item">
+                  {{ part.title }}
+                </span>
+              </li>
+            {% else %}
+              <li
+                class="pagination--active"
+                aria-label="Page {{ part.title }}"
+                aria-current="true"
+              >
+                <span class="pagination--item">
+                  {{ part.title }}
+                </span>
+              </li>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+
+        {% if paginate.next %}
+          <li class="pagination--next">
+            <a
+              class="pagination--item"
+              href="{{- paginate.next.url -}}{%- if grid_list -%}&grid_list{%- endif -%}"
+              aria-label="Go to next page"
+            >
+              {{ 'general.pagination.next' | t }}
+              <span class="pagination--chevron-right" aria-hidden="true">
+                {% render 'icon-chevron-down-small' %}
+              </span>
+            </a>
+          </li>
+        {% endif %}
+
+      {%- endif -%}
+    </ul>
+  </nav>
+{%- endif -%}

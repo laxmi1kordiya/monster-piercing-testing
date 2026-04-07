@@ -1,0 +1,163 @@
+{%- comment -%}
+  Shared Product Showcase Snippet
+  Used in cart-drawer.liquid and static-cart.liquid
+{%- endcomment -%}
+
+{%- comment -%} Set threshold based on Shopify native country detection {%- endcomment -%}
+{%- assign country_code = localization.country.iso_code -%}
+{%- assign currency_code = localization.country.currency.iso_code -%}
+{%- assign free_shipping_threshold = 0 -%}
+{%- assign show_free_shipping_bar = false -%}
+
+{%- comment -%} Define EUR countries for Europe shipping {%- endcomment -%}
+{%- assign eur_countries = 'AT,BE,CY,EE,FI,FR,DE,GR,IE,IT,LV,LT,LU,MT,NL,PT,SK,SI,ES,MC,SM,VA,AD' -%}
+
+{%- comment -%} Determine threshold based on country {%- endcomment -%}
+{%- if country_code == 'GB' -%}
+  {%- assign free_shipping_threshold = 2000 -%}
+  {%- assign show_free_shipping_bar = true -%}
+{%- elsif country_code == 'US' -%}
+  {%- assign free_shipping_threshold = 3000 -%}
+  {%- assign show_free_shipping_bar = true -%}
+{%- elsif eur_countries contains country_code -%}
+  {%- assign free_shipping_threshold = 3000 -%}
+  {%- assign show_free_shipping_bar = true -%}
+{%- endif -%}
+
+{%- assign subtotal = cart.items_subtotal_price | default: 0 -%}
+{%- assign remaining = free_shipping_threshold | minus: subtotal -%}
+{%- assign progress_pct = 0 -%}
+
+{%- if free_shipping_threshold > 0 -%}
+  {%- assign progress_pct = subtotal | times: 100 | divided_by: free_shipping_threshold -%}
+  {%- if progress_pct > 100 -%}{%- assign progress_pct = 100 -%}{%- endif -%}
+{%- endif -%}
+
+<div class="cart-drawer__shipping-showcase-section">
+  {%- if show_free_shipping_bar -%}
+    <div class="free-shipping-bar-dynamic" role="status" aria-live="polite" data-country-code="{{ country_code }}" data-currency-code="{{ currency_code }}" data-threshold="{{ free_shipping_threshold }}" style="display: block;">
+      {% if remaining > 0 %}
+        <div class="free-shipping-bar-dynamic__message">
+          <span class="free-shipping-bar-dynamic__icon">🚚</span>
+          <span class="free-shipping-bar-dynamic__text">
+            <strong class="free-shipping-bar-dynamic__amount">{{ remaining | money }}</strong> away from free shipping
+          </span>
+        </div>
+        <div class="free-shipping-bar-dynamic__progress">
+          <div class="free-shipping-bar-dynamic__progress-fill" style="width: {{ progress_pct }}%"></div>
+        </div>
+      {% else %}
+        <div class="free-shipping-bar-dynamic__message free-shipping-bar-dynamic__message--eligible">
+          <span class="free-shipping-bar-dynamic__text">
+            <strong>You're eligible for free shipping!</strong> 🎉
+          </span>
+        </div>
+      {% endif %}
+    </div>
+  {%- else -%}
+    <div class="free-shipping-bar-dynamic" role="status" aria-live="polite" data-country-code="{{ country_code }}" data-currency-code="{{ currency_code }}" data-threshold="0" style="display: none;"></div>
+  {%- endif -%}
+
+  {%- comment -%} Product Showcase Section {%- endcomment -%}
+  {%- assign showcase_collection = collections['best-seller'] | default: collections.all -%}
+  {%- if showcase_collection and showcase_collection.products.size > 0 -%}
+    <div class="cart-drawer__product-showcase">
+      <h3 class="cart-drawer__showcase-title">You May Also Like</h3>
+      <div class="cart-drawer__showcase-grid" data-showcase-container data-collection-handle="{{ showcase_collection.handle }}">
+        {%- assign products_shown = 0 -%}
+        {%- for product in showcase_collection.products -%}
+          {%- comment -%} Skip free gift products {%- endcomment -%}
+          {%- assign skip_product = false -%}
+          {%- if product.collections -%}
+            {%- for collection in product.collections -%}
+              {%- if collection.handle == 'valentines-day-free-gifts' -%}
+                {%- assign skip_product = true -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+
+          {%- comment -%} Also skip if product has free/gift/valentine in tags or handle {%- endcomment -%}
+          {%- if product.handle contains 'free-gift' or product.handle contains 'valentine' -%}
+            {%- assign skip_product = true -%}
+          {%- endif -%}
+
+          {%- unless skip_product -%}
+            {%- assign products_shown = products_shown | plus: 1 -%}
+            {%- if products_shown <= 20 -%}
+          <div class="showcase-card{% if forloop.index > 3 %} showcase-card--hidden{% endif %}" data-product-id="{{ product.id }}" data-showcase-index="{{ forloop.index }}">
+            <div class="showcase-card__top-row">
+              <a href="{{ product.url }}" class="showcase-card__image-link">
+                {% if product.featured_image %}
+                  <img
+                    src="{{ product.featured_image | img_url: '200x' }}"
+                    alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                    class="showcase-card__image"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="showcase-card__image-placeholder"></div>
+                {% endif %}
+              </a>
+
+              <a href="{{ product.url }}" class="showcase-card__title">
+                {{ product.title | truncate: 40 }}
+              </a>
+            </div>
+
+            <div class="showcase-card__content">
+              <div class="showcase-card__variant-wrapper">
+                {% if product.variants.size > 1 %}
+                  <select class="showcase-card__variant-selector" data-product-variant-selector>
+                    {% for variant in product.variants %}
+                      {% if variant.available %}
+                        <option value="{{ variant.id }}" data-price="{{ variant.price }}">
+                          {{ variant.title }} - {{ variant.price | money }}
+                        </option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                {% else %}
+                  <input type="hidden" class="showcase-card__variant-id" value="{{ product.variants.first.id }}" data-price="{{ product.variants.first.price }}">
+                {% endif %}
+              </div>
+
+              <div class="showcase-card__price-wrapper">
+                <span class="showcase-card__price">
+                  {% if product.price_varies %}
+                    {{ product.price_min | money }} - {{ product.price_max | money }}
+                  {% else %}
+                    {{ product.price | money }}
+                  {% endif %}
+                </span>
+              </div>
+
+              <div class="showcase-card__actions">
+                <button
+                  class="showcase-card__add-btn"
+                  type="button"
+                  data-showcase-quick-add
+                  data-product-id="{{ product.id }}"
+                  {% if product.variants.size == 1 %}data-variant-id="{{ product.variants.first.id }}"{% endif %}
+                  aria-label="Quick add {{ product.title }} to cart"
+                >
+                  Quick Add
+                </button>
+                <button
+                  class="showcase-card__remove-btn"
+                  type="button"
+                  data-showcase-remove
+                  aria-label="Remove {{ product.title }} from suggestions"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+          </div>
+            {%- endif -%}
+          {%- endunless -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</div>

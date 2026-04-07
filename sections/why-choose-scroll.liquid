@@ -1,0 +1,787 @@
+{% comment %}
+  Why Choose Us - Scroll Section
+  - Left: Scrolling images with alternating backgrounds
+  - Right: Sticky content with progress bars
+  - Mobile: Carousel with dot navigation
+{% endcomment %}
+
+{%- style -%}
+  .why-choose-{{ section.id }} {
+    --bg-primary: {{ section.settings.background_color_primary }};
+    --bg-secondary: {{ section.settings.background_color_secondary }};
+    --heading-color: {{ section.settings.heading_color }};
+    --subheading-color: {{ section.settings.subheading_color }};
+    --description-color: {{ section.settings.description_color }};
+    --progress-active: {{ section.settings.progress_bar_active_color }};
+    --progress-inactive: {{ section.settings.progress_bar_inactive_color }};
+  }
+
+  .why-choose-{{ section.id }} {
+    position: relative;
+    width: 100%;
+  }
+
+  /* Desktop Layout */
+  .why-choose-{{ section.id }} .wc-desktop {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  .why-choose-{{ section.id }} .wc-left {
+    width: 55%;
+    position: relative;
+  }
+
+  .why-choose-{{ section.id }} .wc-image-block {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+    transition: background-color 0.3s ease;
+  }
+
+  .why-choose-{{ section.id }} .wc-image-block.bg-primary {
+    background-color: var(--bg-primary);
+  }
+
+  .why-choose-{{ section.id }} .wc-image-block.bg-secondary {
+    background-color: var(--bg-secondary);
+  }
+
+  .why-choose-{{ section.id }} .wc-image-block img {
+    max-width: 100%;
+    max-height: 80vh;
+    width: auto;
+    height: auto;
+    object-fit: cover;
+    display: block;
+  }
+
+  .why-choose-{{ section.id }} .wc-right {
+    width: 45%;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-primary);
+    transition: background-color 0.4s ease;
+  }
+
+  .why-choose-{{ section.id }} .wc-right.bg-secondary {
+    background-color: var(--bg-secondary);
+  }
+
+  .why-choose-{{ section.id }} .wc-content {
+    padding: {{ section.settings.content_padding }}px;
+    max-width: 500px;
+  }
+
+  .why-choose-{{ section.id }} .wc-section-heading {
+    font-size: {{ section.settings.section_heading_size }}px;
+    font-weight: {{ section.settings.section_heading_weight }};
+    color: var(--heading-color);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0 0 30px 0;
+    text-align: {{ section.settings.text_alignment }};
+  }
+
+  .why-choose-{{ section.id }} .wc-progress-bars {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+
+  .why-choose-{{ section.id }} .wc-progress-bar {
+    flex: 1;
+    height: 3px;
+    background-color: var(--progress-inactive);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .why-choose-{{ section.id }} .wc-progress-bar::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0%;
+    background-color: var(--progress-active);
+    transition: width 0.4s ease;
+  }
+
+  .why-choose-{{ section.id }} .wc-progress-bar.active::after {
+    width: 100%;
+  }
+
+  .why-choose-{{ section.id }} .wc-slides {
+    position: relative;
+  }
+
+  .why-choose-{{ section.id }} .wc-slide {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .why-choose-{{ section.id }} .wc-slide.active {
+    display: block;
+    opacity: 1;
+  }
+
+  .why-choose-{{ section.id }} .wc-item-heading {
+    font-size: {{ section.settings.item_heading_size }}px;
+    font-weight: {{ section.settings.item_heading_weight }};
+    color: var(--subheading-color);
+    margin: 0 0 20px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: {{ section.settings.text_alignment }};
+  }
+
+  .why-choose-{{ section.id }} .wc-item-description {
+    font-size: {{ section.settings.description_size }}px;
+    font-weight: {{ section.settings.description_weight }};
+    color: var(--description-color);
+    line-height: 1.6;
+    margin: 0;
+    text-align: {{ section.settings.text_alignment }};
+  }
+
+  /* Mobile Layout */
+  .why-choose-{{ section.id }} .wc-mobile {
+    display: none;
+    background-color: var(--bg-primary);
+    padding: 0 0 40px 0;
+  }
+
+  .why-choose-{{ section.id }} .wc-mobile-slider {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .why-choose-{{ section.id }} .wc-mobile-slides {
+    display: flex;
+    transition: transform 0.4s ease;
+  }
+
+  .why-choose-{{ section.id }} .wc-mobile-slide {
+    min-width: 100%;
+    flex-shrink: 0;
+  }
+
+  .why-choose-{{ section.id }} .wc-mobile-image {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .why-choose-{{ section.id }} .wc-mobile-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .why-choose-{{ section.id }} .wc-mobile-content {
+    padding: 30px 20px;
+  }
+
+  .why-choose-{{ section.id }} .wc-mobile-section-heading {
+    font-size: {{ section.settings.section_heading_size | times: 0.8 }}px;
+    font-weight: {{ section.settings.section_heading_weight }};
+    color: var(--heading-color);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0 0 20px 0;
+    text-align: {{ section.settings.text_alignment }};
+  }
+
+  .why-choose-{{ section.id }} .wc-mobile-progress-bars {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 30px;
+  }
+
+  .why-choose-{{ section.id }} .wc-mobile-progress-bar {
+    flex: 1;
+    height: 3px;
+    background-color: var(--progress-inactive);
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .why-choose-{{ section.id }} .wc-mobile-progress-bar::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0%;
+    background-color: var(--progress-active);
+    transition: width 0.3s ease;
+  }
+
+  .why-choose-{{ section.id }} .wc-mobile-progress-bar.active::after {
+    width: 100%;
+  }
+
+  .why-choose-{{ section.id }} .wc-mobile-item-heading {
+    font-size: {{ section.settings.item_heading_size | times: 0.85 }}px;
+    font-weight: {{ section.settings.item_heading_weight }};
+    color: var(--subheading-color);
+    margin: 0 0 15px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: {{ section.settings.text_alignment }};
+  }
+
+  .why-choose-{{ section.id }} .wc-mobile-item-description {
+    font-size: {{ section.settings.description_size | times: 0.95 }}px;
+    font-weight: {{ section.settings.description_weight }};
+    color: var(--description-color);
+    line-height: 1.6;
+    margin: 0 0 30px 0;
+    text-align: {{ section.settings.text_alignment }};
+  }
+
+  .why-choose-{{ section.id }} .wc-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .why-choose-{{ section.id }} .wc-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--progress-inactive);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .why-choose-{{ section.id }} .wc-dot.active {
+    background-color: var(--progress-active);
+  }
+
+  @media screen and (max-width: 989px) {
+    .why-choose-{{ section.id }} .wc-desktop {
+      display: none;
+    }
+
+    .why-choose-{{ section.id }} .wc-mobile {
+      display: block;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .why-choose-{{ section.id }} .wc-desktop {
+      display: flex;
+    }
+
+    .why-choose-{{ section.id }} .wc-mobile {
+      display: none;
+    }
+  }
+{%- endstyle -%}
+
+<section class="why-choose-{{ section.id }}" data-section-id="{{ section.id }}" data-block-count="{{ section.blocks.size }}">
+  
+  <!-- Desktop Layout -->
+  <div class="wc-desktop">
+    <!-- Left Side - Scrolling Images -->
+    <div class="wc-left">
+      {% for block in section.blocks %}
+        {% assign is_odd = forloop.index | modulo: 2 %}
+        <div class="wc-image-block{% if is_odd == 1 %} bg-primary{% else %} bg-secondary{% endif %}" data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+          {% if block.settings.image != blank %}
+            <img 
+              src="{{ block.settings.image | image_url: width: 800 }}" 
+              alt="{{ block.settings.heading | escape }}"
+              loading="lazy"
+              width="800"
+              height="{{ 800 | divided_by: block.settings.image.aspect_ratio | round }}"
+            >
+          {% else %}
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Right Side - Sticky Content -->
+    <div class="wc-right" data-sticky-content>
+      <div class="wc-content">
+        {% if section.settings.section_heading != blank %}
+          <h2 class="wc-section-heading">{{ section.settings.section_heading }}</h2>
+        {% endif %}
+
+        <!-- Progress Bars -->
+        <div class="wc-progress-bars">
+          {% for block in section.blocks %}
+            <div class="wc-progress-bar{% if forloop.first %} active{% endif %}" data-progress="{{ forloop.index0 }}"></div>
+          {% endfor %}
+        </div>
+
+        <!-- Slides Content -->
+        <div class="wc-slides">
+          {% for block in section.blocks %}
+            <div class="wc-slide{% if forloop.first %} active{% endif %}" data-slide="{{ forloop.index0 }}">
+              {% if block.settings.heading != blank %}
+                <h3 class="wc-item-heading">{{ block.settings.heading }}</h3>
+              {% endif %}
+              {% if block.settings.description != blank %}
+                <p class="wc-item-description">{{ block.settings.description }}</p>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Layout -->
+  <div class="wc-mobile">
+    <div class="wc-mobile-slider" data-mobile-slider>
+      <div class="wc-mobile-slides" data-mobile-slides>
+        {% for block in section.blocks %}
+          <div class="wc-mobile-slide" data-mobile-slide="{{ forloop.index0 }}">
+            <div class="wc-mobile-image">
+              {% if block.settings.image != blank %}
+                <img 
+                  src="{{ block.settings.image | image_url: width: 600 }}" 
+                  alt="{{ block.settings.heading | escape }}"
+                  loading="lazy"
+                  width="600"
+                  height="{{ 600 | divided_by: block.settings.image.aspect_ratio | round }}"
+                >
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="wc-mobile-content">
+      {% if section.settings.section_heading != blank %}
+        <h2 class="wc-mobile-section-heading">{{ section.settings.section_heading }}</h2>
+      {% endif %}
+
+      <!-- Mobile Progress Bars -->
+      <div class="wc-mobile-progress-bars">
+        {% for block in section.blocks %}
+          <div class="wc-mobile-progress-bar{% if forloop.first %} active{% endif %}" data-mobile-progress="{{ forloop.index0 }}"></div>
+        {% endfor %}
+      </div>
+
+      <!-- Mobile Content Slides -->
+      <div class="wc-mobile-text-slides">
+        {% for block in section.blocks %}
+          <div class="wc-mobile-text-slide{% if forloop.first %} active{% endif %}" data-mobile-text="{{ forloop.index0 }}" style="{% unless forloop.first %}display: none;{% endunless %}">
+            {% if block.settings.heading != blank %}
+              <h3 class="wc-mobile-item-heading">{{ block.settings.heading }}</h3>
+            {% endif %}
+            {% if block.settings.description != blank %}
+              <p class="wc-mobile-item-description">{{ block.settings.description }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Dots Navigation -->
+      <div class="wc-dots">
+        {% for block in section.blocks %}
+          <div class="wc-dot{% if forloop.first %} active{% endif %}" data-dot="{{ forloop.index0 }}"></div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function() {
+    const section = document.querySelector('.why-choose-{{ section.id }}');
+    if (!section) return;
+
+    const blockCount = parseInt(section.dataset.blockCount) || 0;
+    if (blockCount === 0) return;
+
+    // Desktop functionality
+    function initDesktop() {
+      const imageBlocks = section.querySelectorAll('.wc-image-block');
+      const rightPanel = section.querySelector('.wc-right');
+      const progressBars = section.querySelectorAll('.wc-progress-bar');
+      const slides = section.querySelectorAll('.wc-slide');
+      
+      if (!imageBlocks.length || !rightPanel) return;
+
+      let currentIndex = 0;
+
+      function updateActiveSlide(index) {
+        if (index === currentIndex) return;
+        currentIndex = index;
+
+        // Update progress bars
+        progressBars.forEach((bar, i) => {
+          bar.classList.toggle('active', i <= index);
+        });
+
+        // Update slides
+        slides.forEach((slide, i) => {
+          slide.classList.toggle('active', i === index);
+        });
+
+        // Update right panel background
+        const isOdd = (index % 2) === 0;
+        rightPanel.classList.toggle('bg-secondary', !isOdd);
+      }
+
+      function onScroll() {
+        const viewportHeight = window.innerHeight;
+        const viewportCenter = viewportHeight / 2;
+
+        imageBlocks.forEach((block, index) => {
+          const rect = block.getBoundingClientRect();
+          const blockCenter = rect.top + rect.height / 2;
+
+          if (blockCenter >= 0 && blockCenter <= viewportHeight) {
+            if (Math.abs(blockCenter - viewportCenter) < rect.height / 2) {
+              updateActiveSlide(index);
+            }
+          }
+        });
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    }
+
+    // Mobile functionality
+    function initMobile() {
+      const slider = section.querySelector('[data-mobile-slides]');
+      const slides = section.querySelectorAll('.wc-mobile-slide');
+      const progressBars = section.querySelectorAll('.wc-mobile-progress-bar');
+      const textSlides = section.querySelectorAll('.wc-mobile-text-slide');
+      const dots = section.querySelectorAll('.wc-dot');
+
+      if (!slider || !slides.length) return;
+
+      let currentIndex = 0;
+      let startX = 0;
+      let isDragging = false;
+
+      function goToSlide(index) {
+        if (index < 0) index = 0;
+        if (index >= blockCount) index = blockCount - 1;
+        if (index === currentIndex) return;
+
+        currentIndex = index;
+        slider.style.transform = `translateX(-${index * 100}%)`;
+
+        // Update progress bars
+        progressBars.forEach((bar, i) => {
+          bar.classList.toggle('active', i <= index);
+        });
+
+        // Update text slides
+        textSlides.forEach((slide, i) => {
+          slide.style.display = i === index ? 'block' : 'none';
+          slide.classList.toggle('active', i === index);
+        });
+
+        // Update dots
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === index);
+        });
+      }
+
+      // Touch events
+      slider.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+      }, { passive: true });
+
+      slider.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        const endX = e.changedTouches[0].clientX;
+        const diff = startX - endX;
+
+        if (Math.abs(diff) > 50) {
+          if (diff > 0) {
+            goToSlide(currentIndex + 1);
+          } else {
+            goToSlide(currentIndex - 1);
+          }
+        }
+      }, { passive: true });
+
+      // Dot click
+      dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => goToSlide(index));
+      });
+
+      // Progress bar click
+      progressBars.forEach((bar, index) => {
+        bar.addEventListener('click', () => goToSlide(index));
+      });
+    }
+
+    // Initialize based on screen size
+    function init() {
+      if (window.innerWidth >= 990) {
+        initDesktop();
+      } else {
+        initMobile();
+      }
+    }
+
+    // Run on load
+    if (document.readyState === 'complete') {
+      init();
+    } else {
+      window.addEventListener('load', init);
+    }
+
+    // Reinitialize on resize
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(init, 250);
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Why Choose Us Scroll",
+  "tag": "section",
+  "class": "section-why-choose-scroll",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Heading"
+    },
+    {
+      "type": "text",
+      "id": "section_heading",
+      "label": "Section Heading",
+      "default": "WHY CHOOSE TITANIUM JEWELLERY?"
+    },
+    {
+      "type": "range",
+      "id": "section_heading_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Section Heading Size",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "section_heading_weight",
+      "label": "Section Heading Weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "header",
+      "content": "Item Heading Style"
+    },
+    {
+      "type": "range",
+      "id": "item_heading_size",
+      "min": 20,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Item Heading Size",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "item_heading_weight",
+      "label": "Item Heading Weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" },
+        { "value": "700", "label": "Bold" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "header",
+      "content": "Description Style"
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Description Size",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "description_weight",
+      "label": "Description Weight",
+      "options": [
+        { "value": "300", "label": "Light" },
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "header",
+      "content": "Text Alignment"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color_primary",
+      "label": "Background Color 1 (Odd Items)",
+      "default": "#F8C8C8"
+    },
+    {
+      "type": "color",
+      "id": "background_color_secondary",
+      "label": "Background Color 2 (Even Items)",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Section Heading Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Item Heading Color",
+      "default": "#555555"
+    },
+    {
+      "type": "color",
+      "id": "description_color",
+      "label": "Description Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "progress_bar_active_color",
+      "label": "Progress Bar Active",
+      "default": "#555555"
+    },
+    {
+      "type": "color",
+      "id": "progress_bar_inactive_color",
+      "label": "Progress Bar Inactive",
+      "default": "#CCCCCC"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "content_padding",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Content Padding",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "HYPOALLERGENIC"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Our range of titanium jewellery is hypoallergenic and perfect for those with sensitive skin or allergies."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Why Choose Us Scroll",
+      "blocks": [
+        {
+          "type": "item",
+          "settings": {
+            "heading": "HYPOALLERGENIC",
+            "description": "Our range of titanium jewellery is hypoallergenic and perfect for those with sensitive skin or allergies."
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "heading": "TARNISH FREE",
+            "description": "Our titanium jewellery won't tarnish - you can get it wet, covered in make up and perfume and will remain looking it's best."
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "heading": "DURABLE",
+            "description": "Our titanium jewellery will stand the test of time, it's a super durable material and resistant to scuffs and scratches."
+          }
+        },
+        {
+          "type": "item",
+          "settings": {
+            "heading": "AFFORDABLE",
+            "description": "Whilst titanium is a superb material used to create piercing jewellery, it's relatively inexpensive in comparison to more exotic materials such as silver and gold."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

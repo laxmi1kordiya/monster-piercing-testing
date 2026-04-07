@@ -1,0 +1,829 @@
+{% doc %}
+  @prompt
+    Create a USP point with 3*2 grid. Allow me to change icons, font sizes, wiith headings and subheadings, highly responsive on hover., THere is no heading and subheading of the entire section, remove black dot on hover in thw icon secrtion
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-usp-grid-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: {{ block.settings.section_padding }}px 20px;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .ai-usp-section-header-{{ ai_gen_id }} {
+    text-align: {{ block.settings.header_alignment }};
+    max-width: 1400px;
+    margin: 0 auto {{ block.settings.header_spacing }}px;
+  }
+
+  .ai-usp-section-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.section_title_size }}px;
+    font-weight: {{ block.settings.section_title_weight }};
+    color: {{ block.settings.section_title_color }};
+    margin: 0 0 {{ block.settings.title_spacing }}px 0;
+    line-height: 1.2;
+  }
+
+  .ai-usp-section-subtitle-{{ ai_gen_id }} {
+    font-size: {{ block.settings.section_subtitle_size }}px;
+    font-weight: {{ block.settings.section_subtitle_weight }};
+    color: {{ block.settings.section_subtitle_color }};
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .ai-usp-grid-container-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: {{ block.settings.grid_gap }}px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .ai-usp-item-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: {{ block.settings.item_padding }}px;
+    background-color: {{ block.settings.item_background_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .ai-usp-item-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.item_hover_background }};
+    border-color: {{ block.settings.border_hover_color }};
+    transform: translateY({{ block.settings.hover_lift }}px);
+    box-shadow: 0 {{ block.settings.hover_shadow_size }}px {{ block.settings.hover_shadow_size | times: 2 }}px rgba(0, 0, 0, {{ block.settings.hover_shadow_opacity | divided_by: 100.0 }});
+  }
+
+  .ai-usp-icon-wrapper-{{ ai_gen_id }} {
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: {{ block.settings.icon_spacing }}px;
+    background-color: {{ block.settings.icon_background }};
+    border-radius: {{ block.settings.icon_border_radius }}px;
+    transition: all 0.3s ease;
+  }
+
+  .ai-usp-item-{{ ai_gen_id }}:hover .ai-usp-icon-wrapper-{{ ai_gen_id }} {
+    transform: scale({{ block.settings.icon_hover_scale | divided_by: 100.0 }}) rotate({{ block.settings.icon_hover_rotate }}deg);
+  }
+
+  .ai-usp-icon-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: all 0.3s ease;
+  }
+
+  .ai-usp-icon-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-usp-icon-placeholder-{{ ai_gen_id }} svg {
+    width: 70%;
+    height: 70%;
+    opacity: 0.3;
+  }
+
+  .ai-usp-item-{{ ai_gen_id }}:hover .ai-usp-icon-{{ ai_gen_id }} {
+    filter: brightness({{ block.settings.icon_hover_brightness }}%);
+  }
+
+  .ai-usp-content-{{ ai_gen_id }} {
+    width: 100%;
+  }
+
+  .ai-usp-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    font-weight: {{ block.settings.heading_weight }};
+    color: {{ block.settings.heading_color }};
+    margin: 0 0 {{ block.settings.heading_spacing }}px 0;
+    transition: color 0.3s ease;
+  }
+
+  .ai-usp-item-{{ ai_gen_id }}:hover .ai-usp-heading-{{ ai_gen_id }} {
+    color: {{ block.settings.heading_hover_color }};
+  }
+
+  .ai-usp-subheading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subheading_size }}px;
+    font-weight: {{ block.settings.subheading_weight }};
+    color: {{ block.settings.subheading_color }};
+    line-height: 1.5;
+    margin: 0;
+    transition: color 0.3s ease;
+  }
+
+  .ai-usp-item-{{ ai_gen_id }}:hover .ai-usp-subheading-{{ ai_gen_id }} {
+    color: {{ block.settings.subheading_hover_color }};
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-usp-grid-container-{{ ai_gen_id }} {
+      grid-template-columns: repeat(2, 1fr);
+      gap: {{ block.settings.grid_gap | times: 0.8 }}px;
+    }
+
+    .ai-usp-section-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.section_title_size | times: 0.85 }}px;
+    }
+
+    .ai-usp-section-subtitle-{{ ai_gen_id }} {
+      font-size: {{ block.settings.section_subtitle_size | times: 0.9 }}px;
+    }
+
+    .ai-usp-icon-wrapper-{{ ai_gen_id }} {
+      width: {{ block.settings.icon_size | times: 0.85 }}px;
+      height: {{ block.settings.icon_size | times: 0.85 }}px;
+    }
+
+    .ai-usp-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.9 }}px;
+    }
+
+    .ai-usp-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size | times: 0.9 }}px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-usp-grid-container-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: {{ block.settings.grid_gap | times: 0.7 }}px;
+    }
+
+    .ai-usp-grid-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding | times: 0.7 }}px 15px;
+    }
+
+    .ai-usp-section-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.section_title_size | times: 0.75 }}px;
+    }
+
+    .ai-usp-section-subtitle-{{ ai_gen_id }} {
+      font-size: {{ block.settings.section_subtitle_size | times: 0.85 }}px;
+    }
+
+    .ai-usp-item-{{ ai_gen_id }} {
+      padding: {{ block.settings.item_padding | times: 0.8 }}px;
+    }
+
+    .ai-usp-icon-wrapper-{{ ai_gen_id }} {
+      width: {{ block.settings.icon_size | times: 0.75 }}px;
+      height: {{ block.settings.icon_size | times: 0.75 }}px;
+    }
+
+    .ai-usp-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.85 }}px;
+    }
+
+    .ai-usp-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size | times: 0.85 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-usp-grid-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.section_title != blank or block.settings.section_subtitle != blank %}
+    <div class="ai-usp-section-header-{{ ai_gen_id }}">
+      {% if block.settings.section_title != blank %}
+        <h2 class="ai-usp-section-title-{{ ai_gen_id }}">{{ block.settings.section_title }}</h2>
+      {% endif %}
+      
+      {% if block.settings.section_subtitle != blank %}
+        <p class="ai-usp-section-subtitle-{{ ai_gen_id }}">{{ block.settings.section_subtitle }}</p>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="ai-usp-grid-container-{{ ai_gen_id }}">
+    {% for i in (1..6) %}
+      {% liquid
+        assign heading_key = 'heading_' | append: i
+        assign subheading_key = 'subheading_' | append: i
+        assign icon_key = 'icon_' | append: i
+        
+        assign heading = block.settings[heading_key]
+        assign subheading = block.settings[subheading_key]
+        assign icon = block.settings[icon_key]
+      %}
+      
+      <div class="ai-usp-item-{{ ai_gen_id }}">
+        <div class="ai-usp-icon-wrapper-{{ ai_gen_id }}">
+          {% if icon != blank %}
+            <img
+              src="{{ icon | image_url: width: 200 }}"
+              alt="{{ heading | escape }}"
+              class="ai-usp-icon-{{ ai_gen_id }}"
+              loading="lazy"
+              width="200"
+              height="200"
+            >
+          {% else %}
+            <div class="ai-usp-icon-placeholder-{{ ai_gen_id }}">
+              {{ 'image' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+        </div>
+        
+        <div class="ai-usp-content-{{ ai_gen_id }}">
+          {% if heading != blank %}
+            <h3 class="ai-usp-heading-{{ ai_gen_id }}">{{ heading }}</h3>
+          {% endif %}
+          
+          {% if subheading != blank %}
+            <p class="ai-usp-subheading-{{ ai_gen_id }}">{{ subheading }}</p>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "USP grid",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section header"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Title",
+      "default": "Why Shop With Us"
+    },
+    {
+      "type": "textarea",
+      "id": "section_subtitle",
+      "label": "Subtitle",
+      "default": "Discover the benefits that make us your trusted choice"
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "section_title_size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Title font size",
+      "default": 36
+    },
+    {
+      "type": "select",
+      "id": "section_title_weight",
+      "label": "Title font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "color",
+      "id": "section_title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "title_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "label": "Space below title",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "section_subtitle_size",
+      "min": 14,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "label": "Subtitle font size",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "section_subtitle_weight",
+      "label": "Subtitle font weight",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "color",
+      "id": "section_subtitle_color",
+      "label": "Subtitle color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "header_spacing",
+      "min": 20,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Space below header",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "section_padding",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Section padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap between items",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "item_padding",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Item padding",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "item_background_color",
+      "label": "Item background",
+      "default": "#f9f9f9"
+    },
+    {
+      "type": "color",
+      "id": "item_hover_background",
+      "label": "Item hover background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "color",
+      "id": "border_hover_color",
+      "label": "Border hover",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Icon style"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 40,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "icon_spacing",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Space below icon",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "icon_border_radius",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Icon border radius",
+      "default": 50
+    },
+    {
+      "type": "color",
+      "id": "icon_background",
+      "label": "Icon background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Hover effects"
+    },
+    {
+      "type": "range",
+      "id": "hover_lift",
+      "min": -10,
+      "max": 0,
+      "step": 1,
+      "unit": "px",
+      "label": "Lift on hover",
+      "default": -5
+    },
+    {
+      "type": "range",
+      "id": "hover_shadow_size",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Shadow size",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "hover_shadow_opacity",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "%",
+      "label": "Shadow opacity",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "icon_hover_scale",
+      "min": 80,
+      "max": 120,
+      "step": 5,
+      "unit": "%",
+      "label": "Icon scale",
+      "default": 110
+    },
+    {
+      "type": "range",
+      "id": "icon_hover_rotate",
+      "min": -15,
+      "max": 15,
+      "step": 5,
+      "unit": "deg",
+      "label": "Icon rotation",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "icon_hover_brightness",
+      "min": 50,
+      "max": 150,
+      "step": 10,
+      "unit": "%",
+      "label": "Icon brightness",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Item heading style"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 14,
+      "max": 36,
+      "step": 2,
+      "unit": "px",
+      "label": "Font size",
+      "default": 20
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "label": "Space below heading",
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "heading_hover_color",
+      "label": "Hover color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Item subheading style"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "subheading_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "subheading_hover_color",
+      "label": "Hover color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "USP 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_1",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "heading_1",
+      "label": "Heading",
+      "default": "Free Shipping"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading_1",
+      "label": "Subheading",
+      "default": "On orders over £20"
+    },
+    {
+      "type": "header",
+      "content": "USP 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_2",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "heading_2",
+      "label": "Heading",
+      "default": "Secure Payment"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading_2",
+      "label": "Subheading",
+      "default": "100% secure transactions"
+    },
+    {
+      "type": "header",
+      "content": "USP 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_3",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "heading_3",
+      "label": "Heading",
+      "default": "Easy Returns"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading_3",
+      "label": "Subheading",
+      "default": "30-day return policy"
+    },
+    {
+      "type": "header",
+      "content": "USP 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_4",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "heading_4",
+      "label": "Heading",
+      "default": "Quality Guaranteed"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading_4",
+      "label": "Subheading",
+      "default": "Premium materials only"
+    },
+    {
+      "type": "header",
+      "content": "USP 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_5",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "heading_5",
+      "label": "Heading",
+      "default": "24/7 Support"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading_5",
+      "label": "Subheading",
+      "default": "Always here to help"
+    },
+    {
+      "type": "header",
+      "content": "USP 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_6",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "heading_6",
+      "label": "Heading",
+      "default": "Fast Delivery"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading_6",
+      "label": "Subheading",
+      "default": "Express shipping available"
+    }
+  ],
+  "presets": [
+    {
+      "name": "USP grid"
+    }
+  ]
+}
+{% endschema %}

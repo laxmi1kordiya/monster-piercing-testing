@@ -1,0 +1,177 @@
+{% assign tag_limit = filter_limit | times: 1 %}
+
+<!-- Existing collection filters -->
+{% if collection.all_tags.size > 0 and filter_style != 'none' %}
+  {% capture cat_array %}{%- render 'advanced-tag-loop', block: block -%}{% endcapture %}
+  {% assign cat_array = cat_array | split: '|' %}
+  <div class="productgrid--sidebar-section" aria-label="Filters" data-productgrid-filters-content>
+    <nav aria-label="Collection filters">
+      {% if filter_style == 'groups' %}
+        {% render 'product-grid-tag-groups', block: block, tag_limit: tag_limit, cat_array: cat_array %}
+      {% endif %}
+
+      {% if filter_style == 'tags' %}
+        {% render 'product-grid-tags', block: block, tag_limit: tag_limit, cat_array: cat_array %}
+      {% endif %}
+    </nav>
+  </div>
+{% endif %}
+
+<!-- ✅ Price Filter Section -->
+<div class="productgrid--sidebar-section" id="price-filter-section">
+  <h4 class="productgrid--sidebar-title">Price Filter</h4>
+
+  <div class="price-filter">
+    <!-- Single range slider -->
+    <input type="range" id="priceRange" min="4" max="790" value="790" step="1" style="width: 100%;">
+
+    <!-- Min/Max input boxes -->
+    <div class="price-filter-inputs" style="display: flex; justify-content: space-between; margin-top: 10px;">
+      <div style="position: relative; width: 45%;">
+        <input type="number" id="priceMin" placeholder="Min" value="4" style="width: 100%; border: 1px solid #ccc; padding: 5px; border-radius: 4px;">
+        <span id="currencyMin" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); color: red;"></span>
+      </div>
+      <div style="position: relative; width: 45%;">
+        <input type="number" id="priceMax" placeholder="Max" value="790" style="width: 100%; border: 1px solid #ccc; padding: 5px; border-radius: 4px;">
+        <span id="currencyMax" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); color: red;"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const slider = document.getElementById('priceRange');
+  const minInput = document.getElementById('priceMin');
+  const maxInput = document.getElementById('priceMax');
+  const currencyMin = document.getElementById('currencyMin');
+  const currencyMax = document.getElementById('currencyMax');
+  const url = new URL(window.location.href);
+  const minDefault = 4;
+  const maxDefault = 790;
+
+  // Get currency symbol from existing element
+  const currencyEl = document.querySelector('.money.price__current--min');
+  let currencySymbol = '';
+  if(currencyEl) {
+    currencySymbol = currencyEl.textContent.trim().replace(/[0-9.,\s]/g, '');
+  }
+  currencyMin.textContent = currencySymbol;
+  currencyMax.textContent = currencySymbol;
+
+  // Load saved values from URL if present
+  const minParam = url.searchParams.get('filter.v.price.gte');
+  const maxParam = url.searchParams.get('filter.v.price.lte');
+
+  if (minParam) minInput.value = minParam; else minInput.value = minDefault;
+  if (maxParam) { maxInput.value = maxParam; slider.value = maxParam; } else { maxInput.value = maxDefault; slider.value = maxDefault; }
+
+  function updateSliderTrack() {
+    const min = slider.min;
+    const max = slider.max;
+    const val = slider.value;
+    const percent = ((val - min) / (max - min)) * 100;
+    slider.style.background = `linear-gradient(to right, #db1e37 0%, #db1e37 ${percent}%, #ddd ${percent}%, #ddd 100%)`;
+  }
+
+  updateSliderTrack();
+
+  slider.addEventListener('input', () => {
+    maxInput.value = slider.value;
+    updateSliderTrack();
+  });
+
+  ['mouseup', 'touchend'].forEach(evt => {
+    slider.addEventListener(evt, () => applyPriceFilter());
+  });
+
+  minInput.addEventListener('change', () => {
+    let val = parseFloat(minInput.value);
+    if (isNaN(val)) val = minDefault;
+    if (val < minDefault) val = minDefault;
+    if (val > maxInput.value) val = maxInput.value;
+    minInput.value = val;
+    applyPriceFilter();
+  });
+
+  maxInput.addEventListener('change', () => {
+    let val = parseFloat(maxInput.value);
+    if (isNaN(val)) val = maxDefault;
+    if (val < minInput.value) val = minInput.value;
+    if (val > maxDefault) val = maxDefault;
+    maxInput.value = val;
+    slider.value = val;
+    updateSliderTrack();
+    applyPriceFilter();
+  });
+
+  function applyPriceFilter() {
+    const minVal = minInput.value;
+    const maxVal = maxInput.value;
+    const newUrl = new URL(window.location.href);
+
+    if (minVal) newUrl.searchParams.set('filter.v.price.gte', minVal);
+    else newUrl.searchParams.delete('filter.v.price.gte');
+
+    if (maxVal) newUrl.searchParams.set('filter.v.price.lte', maxVal);
+    else newUrl.searchParams.delete('filter.v.price.lte');
+
+    window.location.href = newUrl.toString();
+  }
+});
+</script>
+
+<!-- ✅ Slider Styling -->
+<style>
+#priceRange {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #ddd;
+  outline: none;
+}
+
+#priceRange::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #000;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -7px;
+}
+
+#priceRange::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #000;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#priceRange::-moz-range-track {
+  height: 6px;
+  background: #ddd;
+  border-radius: 3px;
+}
+
+#priceRange::-ms-thumb {
+  width: 20px;
+  height: 20px;
+  background: #000;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#priceRange::-ms-track {
+  height: 6px;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+</style>

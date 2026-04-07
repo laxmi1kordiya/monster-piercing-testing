@@ -1,0 +1,287 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "blocks_yQncrE": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_f1f6909_zWVdfz": {
+          "type": "ai_gen_block_f1f6909",
+          "settings": {
+            "text_1": "FLAT 25% OFF",
+            "text_2": "No Exclusions",
+            "text_3": "FLAT 25% OFF",
+            "text_4": "Limited Time",
+            "text_5": "",
+            "initial_direction": "right",
+            "animation_speed": 10,
+            "background_color": "#fec0c7",
+            "text_color": "#810000",
+            "font_size": 17,
+            "bar_padding": 10,
+            "text_spacing": 40,
+            "show_toggle_button": false,
+            "button_background": "#ffffff",
+            "button_color": "#000000",
+            "button_padding": 8,
+            "button_border_radius": 4,
+            "button_icon_size": 20,
+            "button_position": 20
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_f1f6909_zWVdfz"
+      ],
+      "name": "Sliding announcement bar",
+      "settings": {}
+    },
+    "blocks_D4wbUy": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_e2abd90_64y3b4": {
+          "type": "ai_gen_block_e2abd90",
+          "settings": {
+            "background_color": "#ffffff",
+            "padding_top": 15,
+            "padding_bottom": 10,
+            "desktop_width_percent": 60,
+            "desktop_circle_size": 80,
+            "desktop_item_spacing": 50,
+            "desktop_border_width": 1,
+            "desktop_border_color": "#8c0013",
+            "desktop_overlay_height": 50,
+            "desktop_overlay_angle": 0,
+            "desktop_overlay_color": "#000000",
+            "desktop_text_color": "#ffffff",
+            "desktop_text_size": 11,
+            "desktop_text_weight": "700",
+            "mobile_width_percent": 65,
+            "mobile_circle_size": 60,
+            "mobile_item_spacing": 30,
+            "mobile_text_spacing": 10,
+            "mobile_border_width": 1,
+            "mobile_border_color": "#db1e37",
+            "mobile_text_color": "#000000",
+            "mobile_text_size": 12,
+            "mobile_text_weight": "700",
+            "auto_slide": true,
+            "slide_direction": "left",
+            "slide_speed": 0.5,
+            "collection_1": "nose-jewellery",
+            "image_1": "shopify://shop_images/nose_bc5ae189-ee67-4f88-9668-04c2d4748e40.png",
+            "text_1": "Nose",
+            "collection_2": "tongue-barbells",
+            "image_2": "shopify://shop_images/tongue_5dd1d57d-7106-4583-a074-ea77709522c9.png",
+            "text_2": "Tongue",
+            "collection_3": "labrets",
+            "image_3": "shopify://shop_images/lip_bba8e2e8-ce52-4abf-a69e-3a29abb9c64f.png",
+            "text_3": "Lips",
+            "collection_4": "ear-jewellery",
+            "image_4": "shopify://shop_images/EAR_8d82411f-dba1-4361-ac70-e54df25c8cde.png",
+            "text_4": "Ear",
+            "collection_5": "curved-barbells",
+            "image_5": "shopify://shop_images/eyebrow_36308969-f00a-4946-a60c-4169ae033573.png",
+            "text_5": "Eye",
+            "collection_6": "belly-rings",
+            "image_6": "shopify://shop_images/belly_fe8fd30c-580d-4858-9e75-feeca8a51ab0.png",
+            "text_6": "Belly",
+            "collection_7": "fake-plugs",
+            "image_7": "shopify://shop_images/stretched.png",
+            "text_7": "Stretched",
+            "collection_8": "dermal-anchors",
+            "image_8": "shopify://shop_images/surface.png",
+            "text_8": "Surface",
+            "collection_9": "",
+            "text_9": "",
+            "collection_10": "",
+            "text_10": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_e2abd90_64y3b4"
+      ],
+      "settings": {}
+    },
+    "dynamic_slideshow_c6hWxk": {
+      "type": "dynamic-slideshow",
+      "blocks": {
+        "slide_EKg3yd": {
+          "type": "slide",
+          "settings": {
+            "background_image": "shopify://shop_images/barbells_curved_1e84ec71-b649-41c9-a4bd-e7ef2aa52403.png",
+            "mobile_background_image": "shopify://shop_images/barbells_curved_118cabe6-e817-4edf-9e1a-d66456b81657.png",
+            "title": "Curved Barbells",
+            "text": "Explore our curved barbells collection in Gold, Silver, Steel and Titanium crafted for secure, stylish piercings",
+            "color": "#efefef",
+            "link": "",
+            "text_alignment": "left",
+            "content_position": "center",
+            "heading_size": 40,
+            "subheading_size": 16,
+            "button_size": 14,
+            "button_background_color": "#000000",
+            "button_text_color": "#ffffff",
+            "mobile_content_position": "center",
+            "mobile_vertical_position": "center",
+            "mobile_text_alignment": "center",
+            "mobile_heading_size": 24,
+            "mobile_subheading_size": 14,
+            "mobile_button_size": 12,
+            "button_one_label": "",
+            "button_one_link": "",
+            "button_two_label": "",
+            "button_two_link": "",
+            "show_overlay": true,
+            "overlay_color": "#000000",
+            "overlay_opacity": 19
+          }
+        }
+      },
+      "block_order": [
+        "slide_EKg3yd"
+      ],
+      "disabled": true,
+      "name": "t:sections.slideshow.presets.slideshow.name",
+      "settings": {
+        "enable_autoplay": true,
+        "autoplay_duration": 8,
+        "slideshow_width": "full",
+        "slideshow_height": "medium",
+        "slideshow_height_mobile": "x-large",
+        "slideshow_text_below_image": true
+      }
+    },
+    "main": {
+      "type": "static-collection",
+      "blocks": {
+        "filter-1": {
+          "type": "filter",
+          "settings": {
+            "filter_option": "tag",
+            "filter_groups": "collapse_all",
+            "show_filter_product_count": true,
+            "filter_style": "groups",
+            "filter_limit": "6",
+            "grid_categories": "",
+            "custom_ordered_categories": "Type, Material, Thread Type, Stone, Colour",
+            "custom_ordered_tags": "",
+            "excluded_tags": "Colour_Black, Colour_Steel, Colour_Gold, Colour_Luminescent, Colour_Red, Colour_Yellow",
+            "excluded_groups": "Colour_Black, Colour_Steel, Colour_Gold, Colour_Luminescent, Colour_Red, Colour_Yellow"
+          }
+        }
+      },
+      "block_order": [
+        "filter-1"
+      ],
+      "settings": {
+        "show_collection_image": false,
+        "products_per_page_range": 24,
+        "products_per_row": "5",
+        "sort_by": true,
+        "grid_list": true,
+        "default_view": "grid-view",
+        "enable_subcollection": true,
+        "show_product_count": false,
+        "thumbnail_image": "collection-image",
+        "image_crop": "original"
+      }
+    },
+    "static-recently-viewed": {
+      "type": "static-recently-viewed",
+      "settings": {
+        "enable_recently_viewed_products": true
+      }
+    },
+    "dynamic_rich_text_atBiR3": {
+      "type": "dynamic-rich-text",
+      "name": "t:sections.rich_text.presets.rich_text.name",
+      "settings": {
+        "width": "full-width",
+        "title": "Monster Piercing | Curved Barbells",
+        "text": "<p>Curved barbells, also known as banana bars, are a popular choice for body piercings that follow the natural contours of the body, such as eyebrow, rook, and belly button piercings. Monster Piercing offers an extensive selection of curved barbells crafted from premium materials like surgical steel, titanium, and gold. The slight curve of the barbell ensures a comfortable fit, making it ideal for piercings in areas where straight barbells might cause discomfort or migration. Our curved bars come in a variety of sizes, gauges, and styles, including simple, unadorned bars for a minimalist look or more decorative options featuring gems, opals, or UV acrylics. The versatility of curved barbells makes them suitable for both initial piercings and long-term wear, and they are designed with smooth surfaces to prevent irritation and promote faster healing. Whether you’re looking for a classic design or something more eye-catching, curved barbells offer both comfort and style for body piercings that require a more tailored fit.</p>",
+        "heading_size": "medium",
+        "text_alignment": "center"
+      }
+    },
+    "dynamic_faq_ae4gxx": {
+      "type": "dynamic-faq",
+      "blocks": {
+        "category_3qCFbK": {
+          "type": "category",
+          "settings": {
+            "heading": "Curved Barbells",
+            "show_category_card": true
+          }
+        },
+        "question_HFg3WL": {
+          "type": "question",
+          "settings": {
+            "question": "What are curved barbells?",
+            "answer": "<p>Curved barbells are a type of body jewellery shaped with a gentle curve and ball or gem ends on both sides. Also known as <strong>banana bars</strong>, they are designed to follow the natural contours of the body for a comfortable and secure fit.</p>",
+            "icon": "none"
+          }
+        },
+        "question_Lic6Gn": {
+          "type": "question",
+          "settings": {
+            "question": "What piercings can curved barbells be used for?",
+            "answer": "<p>Curved barbells are versatile and suitable for a wide range of piercings, including <strong>eyebrow</strong>, <strong>rook</strong>, <strong>daith</strong>, <strong>vertical labret</strong>, <strong>belly button (navel)</strong>, <strong>intimate piercings</strong>, and <strong>some ear cartilage piercings</strong>. The shape reduces pressure and enhances comfort, especially in curved or angled piercings.</p>",
+            "icon": "none"
+          }
+        },
+        "question_CNiE6e": {
+          "type": "question",
+          "settings": {
+            "question": "How do I clean and care for my curved barbell?",
+            "answer": "<p>Clean your jewellery with warm water and mild soap, then dry it gently with a soft cloth. Avoid harsh cleaners or alcohol-based solutions. For piercings that are still healing, use sterile saline to keep the area clean and healthy.</p>",
+            "icon": "none"
+          }
+        },
+        "question_FQUd4a": {
+          "type": "question",
+          "settings": {
+            "question": "What materials are your curved barbells made from?",
+            "answer": "<p>We offer curved barbells in <strong>implant-grade titanium</strong>, <strong>solid gold</strong>, <strong>925 sterling silver</strong>,<br/>and <strong>316L surgical steel</strong>. All are made to professional standards, with smooth, polished finishes for comfort and durability. Titanium and gold are recommended for sensitive skin or healing piercings.</p>",
+            "icon": "none"
+          }
+        }
+      },
+      "block_order": [
+        "category_3qCFbK",
+        "question_HFg3WL",
+        "question_Lic6Gn",
+        "question_CNiE6e",
+        "question_FQUd4a"
+      ],
+      "name": "t:sections.faq.presets.name",
+      "settings": {
+        "section_width": "wide",
+        "heading": "FAQ",
+        "enable_category_cards": false,
+        "category_card_image_crop": "original",
+        "category_heading_size": "medium",
+        "icon_color": "rgba(0,0,0,0)"
+      }
+    }
+  },
+  "order": [
+    "blocks_yQncrE",
+    "blocks_D4wbUy",
+    "dynamic_slideshow_c6hWxk",
+    "main",
+    "static-recently-viewed",
+    "dynamic_rich_text_atBiR3",
+    "dynamic_faq_ae4gxx"
+  ]
+}

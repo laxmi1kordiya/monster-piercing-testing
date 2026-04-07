@@ -1,0 +1,77 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "static-article",
+      "blocks": {
+        "related_products_MNmbmj": {
+          "type": "related_products",
+          "settings": {
+            "title": "Buy Product Here:",
+            "product_list": []
+          }
+        },
+        "product_block_3LGJwW": {
+          "type": "product_block",
+          "disabled": true,
+          "settings": {
+            "marker_text": "[products-1]",
+            "heading": "",
+            "metafield_key": "custom.products"
+          }
+        },
+        "product_block_cHfEwx": {
+          "type": "product_block",
+          "disabled": true,
+          "settings": {
+            "marker_text": "[collection-2]",
+            "heading": "Valetinue spacial",
+            "metafield_key": "custom.collection"
+          }
+        }
+      },
+      "block_order": [
+        "related_products_MNmbmj",
+        "product_block_3LGJwW",
+        "product_block_cHfEwx"
+      ],
+      "settings": {
+        "featured_image_width": "full-width",
+        "show_date": true,
+        "show_author": true,
+        "use_share_buttons": true,
+        "show_author_box": true,
+        "heading_size": 30,
+        "heading_color": "#db1e37",
+        "shop_btn_label": "SHOP",
+        "shop_btn_bg": "#db1e37",
+        "shop_btn_color": "#ffffff",
+        "card_width": 190,
+        "card_ratio": "1 / 1",
+        "card_radius": 12,
+        "card_bg_color": "#f5f0eb",
+        "product_gap": 35,
+        "show_nav_desktop": false,
+        "show_nav_mobile": false,
+        "nav_btn_bg": "#ffffff",
+        "nav_btn_color": "#333333",
+        "nav_btn_border": "#dddddd",
+        "show_add_to_cart": true,
+        "add_to_cart_text": "Add to cart",
+        "add_to_cart_bg": "#000000",
+        "add_to_cart_color": "#ffffff"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,0 +1,110 @@
+ <style>
+  li.site-header-actions__account-link.last_site_icon
+  {
+    display: inline !important;
+  }
+</style> 
+<ul class="site-header-actions" data-header-actions>
+  <li class="site-header-actions__contact-us-link">
+    <div class="site-header-contact-us">
+        <a class="site-header-contact-us-button" href="/pages/contact-us">
+          <span class="contact-us-text">Contact Us</span>
+          <span class="contact-us-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 9v.906a2.25 2.25 0 01-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 001.183 1.981l6.478 3.488m8.839 2.51l-4.66-2.51m0 0l-1.023-.55a2.25 2.25 0 00-2.134 0l-1.022.55m0 0l-4.661 2.51m16.5 1.615a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V8.844a2.25 2.25 0 011.183-1.98l7.5-4.04a2.25 2.25 0 012.134 0l7.5 4.04a2.25 2.25 0 011.183 1.98V19.5z" />
+            </svg>
+          </span>
+        </a>
+      </div>
+  </li>
+  <li class="site-header-actions__page-link loyalty-program__page-link">
+    <a class="site-header_page-link-anchor" href="/pages/loyalty-program">
+     
+        
+     
+      <span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 48 48" fill="#00000000" stroke="#000">
+          <path d="M 24.009766 5 A 1.50015 1.50015 0 0 0 22.658203 5.8300781 L 17.505859 16.134766 L 5.2714844 18.017578 A 1.50015 1.50015 0 0 0 4.4394531 20.560547 L 12.902344 29.023438 L 11.017578 41.271484 A 1.50015 1.50015 0 0 0 13.193359 42.830078 L 24 37.191406 L 34.806641 42.830078 A 1.50015 1.50015 0 0 0 36.982422 41.271484 L 35.097656 29.023438 L 43.560547 20.560547 A 1.50015 1.50015 0 0 0 42.728516 18.017578 L 30.494141 16.134766 L 25.341797 5.8300781 A 1.50015 1.50015 0 0 0 24.009766 5 z"></path>
+        </svg>
+      </span>
+      
+    </a>
+  </li>
+  {% if shop.customer_accounts_enabled %}
+    {% unless customer %}
+      <li class="site-header-actions__account-link first_site_icon">
+        <a
+          class="site-header_account-link-anchor"
+          href="{{ routes.account_login_url }}"
+        >
+          <span class="site-header__account-icon">
+            {% 
+                render 'icon-library', 
+                id: 'icon-account', 
+            %}
+          </span>
+          
+          <span class="site-header_account-link-text">
+            {{ 'header.account.login' | t }}
+          </span>
+        </a>
+      </li>
+    {% else %}
+      <li class="site-header-actions__account-link first_site_icon">
+        <span class="site-header__account-icon">
+          {% render 'icon-library', id: 'icon-account' %}
+        </span>
+        <span class="site-header__account-links">
+          <a
+            class="site-header__account-link--account"
+            href="{{ routes.account_url }}"
+          >
+            {{ 'header.account.title' | t }}
+          </a>
+          
+          <a
+            class="site-header__account-link--logout"
+            href="{{ routes.account_logout_url }}"
+            data-no-instant
+          >
+            {{ 'header.account.logout' | t }}
+          </a>
+        </span>
+      </li>
+    {% endunless %}
+  {% endif %}
+  <li class="site-header-actions__account-link last_site_icon" style="display:none">
+    {% render 'wishlisthero-header-icon' %}
+  </li>
+  <li class="site-header-actions__search-link site-header-mobile-search-button hide-desktop" style="display:none">
+    <button data-asset="search-button">
+       <div class="site-header-mobile-search-button--button" tabindex="-1">
+          {%- render 'icon-search' -%}
+        </div>
+    </button>
+  </li>
+        
+                  
+               
+  <li class="site-header-actions__cart-link">
+<a 
+  class="site-header-cart--button" 
+  href="#" 
+  data-cart-open
+  aria-label="{{ 'general.accessibility.cart' | t }}"
+>      <span
+        class="site-header-cart--count {% if cart.item_count > 0 %}visible{% endif %}"
+        data-header-cart-count="{% if cart.item_count > 0 %}{{ cart.item_count }}{% endif %}">
+      </span>
+      <span class="site-header-cart-icon site-header-cart-icon--svg">
+        {%- if section.settings.cart_icon == 'icon-bag' -%}
+          {%- render 'icon-library', id: 'icon-bag' -%}
+        {%- else -%}
+          {%- render 'icon-library', id: 'icon-cart' -%}
+         {% endif -%}
+      </span>
+      <span class="visually-hidden">{{ 'general.accessibility.cart' | t }}</span>
+    </a>
+  </li>
+  
+</ul>

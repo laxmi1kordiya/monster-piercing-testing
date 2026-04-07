@@ -1,0 +1,2232 @@
+/* ======================================================
+   cart-drawer.css — polished UI (clean & compact)
+   ====================================================== */
+
+/* Variables */
+:root {
+  --drawer-width-desktop: 600px;
+  --drawer-bg: #ffffff;
+  --overlay-bg: rgba(0, 0, 0, 0.36);
+  --muted: #6b6b6b;
+  --border: #e7e7e7;
+  --accent: #111111;
+  --accent-2: #1aa260;
+  --radius: 12px;
+  --soft-shadow: 0 10px 30px rgba(20, 20, 20, 0.08);
+}
+
+/* Drawer base */
+.cart-drawer {
+  position: fixed;
+  inset: 0 0 0 auto;
+  right: 0;
+  width: var(--drawer-width-desktop);
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--drawer-bg);
+  box-shadow: -22px 0 50px rgba(15, 15, 15, 0.12);
+  transform: translateX(100%);
+  transition: transform 360ms cubic-bezier(.2, .9, .25, 1);
+  z-index: 9999;
+  border-left: 1px solid rgba(0, 0, 0, 0.03);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: #111;
+  padding: 0;
+  will-change: transform;
+}
+
+/* Open state */
+.cart-drawer--open {
+  transform: translateX(0);
+}
+
+/* Overlay */
+.cart-drawer__overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay-bg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 260ms ease;
+  z-index: 9998;
+}
+
+#CartDrawerOverlay[aria-hidden="false"],
+.cart-drawer__overlay[aria-hidden="false"],
+#CartDrawerOverlay[style*="display: block"],
+.cart-drawer__overlay[style*="display: block"] {
+  display: block !important;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Header */
+.cart-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.cart-drawer__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.cart-drawer__close {
+  border: none;
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  color: #111;
+  /* solid black */
+  font-size: 22px;
+  /* slightly bigger X */
+  font-weight: 600;
+  /* bolder X */
+  transition: background 180ms, color 180ms;
+}
+
+.cart-drawer__close:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #000;
+}
+
+
+/* Content */
+.cart-drawer__form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+/* Scrollable content wrapper - contains cart items, free shipping bar, and product showcase */
+.cart-drawer__scrollable-content {
+  flex: 1 1 auto !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Scrollbar styling for main content area */
+.cart-drawer__scrollable-content::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+.cart-drawer__scrollable-content::-webkit-scrollbar-track {
+  background: #f1f5f9 !important;
+  border-radius: 10px !important;
+}
+
+.cart-drawer__scrollable-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #cbd5e1 0%, #94a3b8 100%) !important;
+  border-radius: 10px !important;
+}
+
+.cart-drawer__scrollable-content::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%) !important;
+}
+
+/* The .cart-drawer__items is now NOT scrollable, just a flex container */
+.cart-drawer__items {
+  list-style: none;
+  margin: 0;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: auto;
+}
+
+
+/* Item */
+.cart-drawer__item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 12px;
+  padding: 12px 0;
+  align-items: flex-start;
+}
+
+.cart-drawer__item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--soft-shadow);
+}
+
+/* Image */
+.cart-drawer__image-wrapper {
+  display: block;
+  width: 84px;
+  height: 84px;
+  flex: 0 0 84px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fafafa;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-drawer__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Main column */
+.cart-drawer__item-main {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-right: 110px;
+  min-width: 0;
+}
+
+.cart-drawer__item-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+  text-decoration: none;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cart-drawer__item-variant,
+.cart-drawer__item-selling-plan {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Meta row: keep qty & other controls left, price absolutely right */
+.cart-drawer__item-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 6px;
+}
+
+.cart-drawer__qty {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  padding: 4px;
+  background: #fff;
+}
+
+.cart-drawer__qty-btn {
+  border: none;
+  background: transparent;
+  width: 32px;
+  height: 32px;
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.cart-drawer__qty-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+  color: #111;
+  outline: none;
+}
+
+.cart-drawer__qty-input {
+  width: 48px;
+  text-align: center;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  padding: 4px 6px;
+  background: transparent;
+}
+
+/* Price (absolutely positioned to the right) */
+.cart-drawer__price {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  text-align: right;
+  white-space: nowrap;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.cart-drawer__price-original {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: line-through;
+  font-weight: 400;
+}
+
+/* Footer - Compact */
+.cart-drawer__footer {
+  border-top: 1px solid #e5e5e5;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #fff;
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.cart-drawer__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.cart-drawer__total-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cart-drawer__label {
+  font-size: 14px;
+  color: #333;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.cart-drawer__value {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.cart-drawer__note {
+  font-size: 12px !important;
+  color: #666 !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+}
+
+/* Update the Savings Line to be Red */
+.cart-drawer__savings .cart-drawer__label {
+  color: #c62828 !important;
+}
+
+.cart-drawer__savings .cart-drawer__value {
+  color: #c62828 !important;
+}
+
+.cart-drawer__total .cart-drawer__value {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+/* Checkout button */
+.cart-drawer__checkout-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 15px;
+  background: linear-gradient(90deg, var(--accent) 0%, #222 100%);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(17, 17, 17, 0.08);
+}
+
+.cart-drawer__checkout-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(17, 17, 17, 0.12);
+}
+
+/* Empty state */
+.cart-drawer__empty--center {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.cart-drawer__empty-message {
+  font-size: 15px;
+  margin-bottom: 14px;
+  color: #444;
+}
+
+.cart-drawer__empty-btn {
+  display: inline-block;
+  margin: 0 auto;
+}
+
+
+/* Cross-sell - Reduced Height */
+.cart-drawer__cross-sell {
+  padding: 10px 14px;
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  margin: 20px 0 8px 0;
+  position: relative;
+  z-index: 1;
+}
+
+.cart-drawer__cross-sell-title {
+  margin: 0 0 6px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.cart-drawer__cross-sell-list {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.cart-drawer__cross-item {
+  flex: 0 0 180px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.cart-drawer__cross-image {
+  display: block;
+  width: 56px;
+  height: 56px;
+  flex: 0 0 56px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cart-drawer__cross-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.cart-drawer__cross-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.cart-drawer__cross-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111;
+  text-decoration: none;
+  display: block;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 36px;
+  line-height: 1.2;
+}
+
+.cart-drawer__cross-price {
+  font-weight: 700;
+  font-size: 13px;
+  color: #111;
+}
+
+.cart-drawer__cross-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.cart-drawer__cross-add {
+  background: #111;
+  color: #fff;
+  border-radius: 8px;
+  padding: 6px 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.cart-drawer__cross-view {
+  color: #666;
+  font-size: 13px;
+  text-decoration: none;
+  padding: 6px 4px;
+}
+
+/* Small helpers */
+.visually-hidden {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+/* Responsive */
+@media (max-width: 820px) {
+  .cart-drawer {
+    width: min(100%, 420px);
+  }
+}
+
+@media (max-width: 600px) {
+  .cart-drawer {
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .cart-drawer__items {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .cart-drawer__image-wrapper {
+    width: 72px;
+    height: 72px;
+    flex: 0 0 72px;
+  }
+
+  .cart-drawer__item {
+    grid-template-columns: 70px 1fr;
+  }
+
+  .cart-drawer__item-main {
+    padding-right: 92px;
+  }
+
+  .cart-drawer__price {
+    right: 14px;
+    top: 15px;
+    font-size: 14px;
+  }
+}
+
+/* Hide original cross-sell price (the one that shows above the title) */
+.cart-drawer__cross-price {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Show inline price next to Add button (the new location) */
+.cart-drawer__cross-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* the new inline price block (we added earlier) */
+.cart-drawer__cross-inline-price {
+  font-weight: 700;
+  font-size: 13px;
+  color: #111;
+  margin-left: auto;
+  /* pushes price to the right of Add button */
+  white-space: nowrap;
+}
+
+/* If you want a little breathing room on small screens */
+@media (max-width: 600px) {
+  .cart-drawer__cross-inline-price {
+    font-size: 12px;
+    margin-left: 8px;
+  }
+}
+
+/* ----------------------------------------------------------------
+   CART DRAWER: friendly roomy layout — override & scale-up
+   This section contains the overrides, including the fix for the upsell scrolling.
+   ---------------------------------------------------------------- */
+
+/* Bigger drawer width similar to competitor */
+:root {
+  --drawer-width-desktop: 650px;
+  /* INCREASED: wider, modern drawer */
+  --drawer-width-desktop-wide: 680px;
+}
+
+/* make drawer use the new variables (defensive) */
+.cart-drawer {
+  width: var(--drawer-width-desktop) !important;
+  max-width: 100% !important;
+}
+
+/* Slightly increase header/title font + spacing */
+.cart-drawer__header {
+  padding: 20px 24px !important;
+  min-height: 70px !important;
+}
+
+.cart-drawer__title {
+  font-size: 24px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em;
+  color: #111 !important;
+}
+
+/* Larger product image thumbnail */
+.cart-drawer__image-wrapper {
+  width: 90px !important;
+  height: 90px !important;
+  flex: 0 0 90px !important;
+  min-width: 90px !important;
+  min-height: 90px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* keep images covering the container */
+.cart-drawer__image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+/* layout: image + content — increase reserved space for price */
+.cart-drawer__item {
+  grid-template-columns: 90px 1fr !important;
+  padding: 12px !important;
+  gap: 12px !important;
+  background: #fff !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08) !important;
+  margin-bottom: 8px !important;
+  transition: all 0.2s ease !important;
+  min-height: auto !important;
+}
+
+.cart-drawer__item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* reserve more right padding so price sits comfortably */
+.cart-drawer__item-main {
+  padding-right: 0 !important;
+  min-width: 0;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+}
+
+/* Price: positioned below quantity selector */
+.cart-drawer__price {
+  position: static !important;
+  transform: none !important;
+  text-align: left !important;
+  margin-top: 6px !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #111 !important;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* item title & variant — slightly larger and clearer */
+.cart-drawer__item-title {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  color: #111 !important;
+  margin-bottom: 0 !important;
+}
+
+.cart-drawer__item-variant {
+  font-size: 12px !important;
+  color: #666 !important;
+  font-weight: 400 !important;
+}
+
+/* Item meta: quantity and price stacked vertically */
+.cart-drawer__item-meta {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 6px !important;
+  margin-top: 6px !important;
+}
+
+/* Qty control: Compact rounded pill */
+.cart-drawer__qty {
+  display: flex !important;
+  align-items: center !important;
+  border: 1.5px solid #e0e0e0 !important;
+  border-radius: 999px !important;
+  overflow: hidden !important;
+  height: 32px !important;
+  background: #fff !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  transition: all 0.2s ease !important;
+  width: fit-content !important;
+}
+
+.cart-drawer__qty:hover {
+  border-color: #e01817 !important;
+  box-shadow: 0 1px 4px rgba(224, 24, 23, 0.12) !important;
+}
+
+/* - and + buttons */
+.cart-drawer__qty-btn {
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  background: #fff !important;
+  color: #e01817 !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.cart-drawer__qty-btn:hover {
+  background: #fef2f2 !important;
+  color: #dc2626 !important;
+}
+
+.cart-drawer__qty-btn:active {
+  transform: scale(0.95) !important;
+}
+
+/* Middle number box */
+.cart-drawer__qty-input {
+  width: 40px !important;
+  text-align: center !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  background: #fff !important;
+  color: #111 !important;
+  border: none !important;
+  height: 100% !important;
+  padding: 0 !important;
+}
+
+/* NO divider lines - clean pill design */
+.cart-drawer__qty-btn:first-child {
+  border-right: none !important;
+}
+
+.cart-drawer__qty-btn:last-child {
+  border-left: none !important;
+}
+
+/* Remove spinner arrows: Chrome, Edge, Safari */
+.cart-drawer__qty-input::-webkit-inner-spin-button,
+.cart-drawer__qty-input::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+/* Remove spinner arrows: Firefox */
+.cart-drawer__qty-input {
+  -moz-appearance: textfield !important;
+}
+
+
+/* footer / totals: increase font sizes for clarity */
+.cart-drawer__row .cart-drawer__label {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #333 !important;
+}
+
+.cart-drawer__row .cart-drawer__value {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: #111 !important;
+}
+
+/* checkout button: bigger and more prominent */
+.cart-drawer__checkout-btn {
+  padding: 12px 18px !important;
+  border-radius: 8px !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  background: linear-gradient(135deg, #e01817 0%, #b91515 100%) !important;
+  box-shadow: 0 2px 8px rgba(224, 24, 23, 0.25) !important;
+  transition: all 0.2s ease !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.3px !important;
+}
+
+.cart-drawer__checkout-btn:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(224, 24, 23, 0.35) !important;
+}
+
+/* free shipping bar: keep same width but slightly larger type */
+.free-shipping-bar {
+  padding: 16px !important;
+  margin: 14px !important;
+}
+
+.free-shipping-bar__status {
+  font-size: 15px !important;
+}
+
+/* cross-sell: larger cards so image + title + price readable */
+.cart-drawer__cross-sell {
+  padding: 16px 18px !important;
+  margin-top: 8px !important;
+}
+
+.cart-drawer__cross-sell-list {
+  gap: 14px !important;
+  padding-bottom: 8px !important;
+}
+
+.cart-drawer__cross-item {
+  flex: 0 0 200px !important;
+  min-width: 200px !important;
+  padding: 8px !important;
+  min-height: auto !important;
+}
+
+.cart-drawer__cross-image {
+  width: 72px !important;
+  height: 72px !important;
+  flex: 0 0 72px !important;
+  border-radius: 10px !important;
+}
+
+.cart-drawer__cross-title {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  max-height: 40px !important;
+  line-height: 1.2 !important;
+}
+
+.cart-drawer__cross-price {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  margin-top: 6px !important;
+}
+
+/* inline action sizing */
+.cart-drawer__cross-actions {
+  gap: 8px !important;
+  align-items: center !important;
+}
+
+.cart-drawer__cross-add {
+  padding: 8px 10px !important;
+  font-size: 13px !important;
+  border-radius: 10px !important;
+}
+
+.cart-drawer__cross-view {
+  font-size: 13px !important;
+}
+
+/* reduce visual clutter from card shadows while keeping separation */
+
+/* fix the overall vertical rhythm: consistent item height */
+.cart-drawer__item {
+  min-height: 120px !important;
+}
+
+/* Mobile: scale down gracefully but keep clean spacing */
+@media (max-width: 820px) {
+  :root {
+    --drawer-width-desktop: 420px;
+  }
+
+  .cart-drawer {
+    width: min(100%, 420px) !important;
+  }
+
+  .cart-drawer__image-wrapper {
+    width: 84px !important;
+    height: 84px !important;
+    flex: 0 0 84px !important;
+  }
+
+  .cart-drawer__item-main {
+    padding-right: 110px !important;
+  }
+
+  .cart-drawer__price {
+    right: 16px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
+
+  .cart-drawer__cross-item {
+    flex: 0 0 160px !important;
+    min-width: 160px !important;
+  }
+}
+
+/* Small phones: stack price under content to avoid overlap */
+@media (max-width: 480px) {
+  .cart-drawer__item {
+    grid-template-columns: 64px 1fr !important;
+    min-height: auto !important;
+  }
+
+  .cart-drawer__item-main {
+    padding-right: 16px !important;
+  }
+
+  .cart-drawer__price {
+    position: static !important;
+    transform: none !important;
+    margin-top: 10px !important;
+    text-align: right !important;
+    display: block !important;
+  }
+
+  .cart-drawer__image-wrapper {
+    width: 64px !important;
+    height: 64px !important;
+    flex: 0 0 64px !important;
+  }
+
+  .cart-drawer__qty-btn {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .cart-drawer__qty-input {
+    width: 44px !important;
+  }
+
+  .cart-drawer__cross-item {
+    flex: 0 0 140px !important;
+    min-width: 140px !important;
+  }
+}
+
+/* small safety: don't let price overlap title with long product names */
+.cart-drawer__item-title {
+  word-break: break-word;
+}
+
+/* end roomy layout override */
+/* 2. Image and Meta Full Width */
+.cart-drawer__cross-image,
+.cart-drawer__cross-meta {
+  width: 100%;
+  /* Important: forces these blocks to span the card width */
+}
+
+.cart-drawer__cross-image {
+  height: 120px;
+  flex: 0 0 120px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+.cart-drawer__cross-image img {
+  object-fit: contain;
+  background-color: #fff;
+}
+
+.cart-drawer__cross-item {
+  /* Important: forces the card to stack vertically */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  /* Set dimensions for the card */
+  flex: 0 0 160px;
+  /* Adjusted size to 160px width for more room */
+  min-width: 160px;
+
+  padding: 10px;
+  gap: 8px;
+  background: #f7f7f7;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+/* Image: Ensure it takes full width of the card */
+.cart-drawer__cross-image {
+  width: 100%;
+  height: 120px;
+  flex: 0 0 120px;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+.cart-drawer__cross-image img {
+  object-fit: contain;
+  background-color: #fff;
+}
+
+/* Title: Increase allowed lines for longer names */
+.cart-drawer__cross-title {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  /* Allows up to 4 lines of text */
+  max-height: 5.2em;
+  /* 1.3 * 4 lines = 5.2em */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  /* Enable multiline truncation */
+  -webkit-line-clamp: 4;
+  /* Limit to 4 lines */
+  -webkit-box-orient: vertical;
+}
+
+/* Actions: Ensure button and price stack vertically below the title */
+.cart-drawer__cross-actions {
+  display: flex;
+  flex-direction: column;
+  /* CRITICAL: Force vertical stacking */
+  width: 100%;
+  gap: 4px;
+  margin-top: auto;
+  /* Pushes the actions to the bottom */
+  align-items: stretch;
+}
+
+/* Button & Price Styling */
+.cart-drawer__cross-add {
+  width: 100%;
+  padding: 8px;
+  order: 2;
+  /* Below price */
+}
+
+.cart-drawer__cross-inline-price {
+  width: 100%;
+  text-align: center;
+  /* Center the price */
+  margin-bottom: 4px;
+  order: 1;
+  /* Above button */
+}
+
+/* 1. Main Item Stacking */
+.cart-drawer__cross-item {
+  /* ... keep existing styles for width, padding, background ... */
+  position: relative;
+  /* CRITICAL: Allows absolute positioning of children */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 0 0 160px;
+  min-width: 160px;
+  padding: 10px;
+  gap: 8px;
+  /* Gap between header and title */
+  /* ... rest of border/background styles ... */
+}
+
+/* 2. Position the Price and Button */
+
+/* Make the price area float into the top right */
+.cart-drawer__cross-inline-price {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  text-align: right;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+
+  /* MODIFIED TO FULLY TRANSPARENT */
+  background: transparent;
+
+  padding: 2px 4px;
+  border-radius: 4px;
+  order: unset;
+}
+
+/* Make the Add button float into the top right, below the price */
+.cart-drawer__cross-add {
+  position: absolute;
+  top: 35px;
+  /* Adjust this value to sit nicely below the price */
+  right: 10px;
+  z-index: 10;
+  width: auto !important;
+  /* Allow the button to shrink to content width */
+  padding: 6px 8px !important;
+  font-size: 13px !important;
+  border-radius: 6px !important;
+  order: unset;
+  /* Remove order from vertical stacking */
+}
+
+/* 3. Adjust the Image and Title */
+
+/* Image: Reduce size to make room for price/button */
+.cart-drawer__cross-image {
+  width: 60px;
+  /* Smaller square image */
+  height: 60px;
+  flex: 0 0 60px;
+  border-radius: 50%;
+  /* Make it round like in the screenshot */
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+/* Title: Ensure it starts below the image and uses the full width */
+.cart-drawer__cross-title {
+  width: 100%;
+  /* Take full width */
+  margin-top: 5px;
+  /* Add slight space below the floating elements */
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  max-height: 4.2em;
+  /* 3 lines of text */
+  -webkit-line-clamp: 4;
+}
+
+/* Actions Wrapper: Remove from the document flow as children are absolutely positioned */
+.cart-drawer__cross-actions {
+  display: contents;
+  /* Makes the wrapper disappear, but keeps children visible */
+  margin-top: 0;
+}
+
+/* FIX: Prevent product title floating above image in cart drawer (mobile) */
+.cart-drawer__item {
+  display: flex;
+  align-items: flex-start;
+}
+
+.cart-drawer__image-wrapper {
+  flex: 0 0 70px;
+  /* image stays fixed */
+  margin-right: 12px;
+}
+
+.cart-drawer__item-main {
+  flex: 1;
+  min-width: 0;
+  /* prevents wrapping upward */
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-drawer__item-title {
+  margin-top: 0;
+  display: block;
+  word-break: break-word;
+}
+
+/* Extra mobile tightening */
+@media (max-width: 480px) {
+  .cart-drawer__image-wrapper {
+    flex: 0 0 60px;
+  }
+
+  .cart-drawer__item-main {
+    padding-left: 5px;
+  }
+}
+
+/* Force cart drawer to pure white and remove grey overlay */
+#CartDrawer,
+.cart-drawer,
+.cart-drawer--right {
+  background: #ffffff !important;
+  /* drawer panel background */
+  color: #111 !important;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0) !important;
+  /* remove any large gray shadow if undesired */
+}
+
+/* Make the overlay (the page area behind the drawer) transparent.
+   If you want a dimming overlay, change rgba(0,0,0,0.4) to any value you like. */
+#CartDrawerOverlay,
+.cart-drawer__overlay {
+  background: rgba(0, 0, 0, 0) !important;
+  /* transparent */
+  backdrop-filter: none !important;
+  /* remove blur if applied */
+}
+
+/* If the drawer is positioned and a separate wrapper has the grey bg, target that too */
+.cart-drawer__panel,
+.cart-drawer-wrapper,
+[data-cart-drawer] {
+  background: #ffffff !important;
+}
+
+/* Ensure the page body behind the drawer stays visible (no unwanted padding color) */
+html,
+body,
+.site-wrapper,
+.page-wrapper {
+  background: transparent !important;
+}
+
+/* (Optional) if you prefer a subtle shadow but not a grey band */
+.cart-drawer {
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Mobile: ensure full width drawer uses white too */
+@media (max-width: 768px) {
+
+  #CartDrawer,
+  .cart-drawer {
+    background: #ffffff !important;
+  }
+}
+
+/* === Compact competitor-style free shipping banner === */
+.free-shipping-banner {
+  width: 100%;
+  padding: 8px 12px;
+  margin: 12px 0;
+  background: rgb(0, 0, 0) !important;
+  /* brand-match red */
+  border: 1px solidrgb(7, 0, 0) !important;
+  /* darker red border */
+  color: #ffffff !important;
+  /* white text */
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Inner flex wrapper */
+.free-shipping-banner__inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  line-height: 1.2;
+}
+
+/* Text — FIX: MAKE IT WHITE */
+.free-shipping-banner__text {
+  color: #ffffff !important;
+  /* white text */
+  white-space: nowrap;
+}
+
+/* Mobile support */
+@media (max-width: 420px) {
+  .free-shipping-banner__text {
+    white-space: normal;
+  }
+}
+
+/* Reduce space between header and banner */
+.cart-drawer__header {
+  padding-bottom: 6px !important;
+}
+
+.free-shipping-banner {
+  margin-top: 4px !important;
+  margin-bottom: 10px !important;
+}
+
+/* Remove the grey separator line under the header */
+.cart-drawer__header {
+  border-bottom: none !important;
+}
+
+.cart-drawer__note {
+  margin-top: 4px !important;
+  font-weight: 500;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.cart-drawer__checkout-btn {
+  display: block !important;
+  width: 100% !important;
+  text-align: center !important;
+
+  background: rgb(0, 0, 0) !important;
+  /* brand red (same as your logo) */
+  color: #fff !important;
+
+  padding: 14px 0 !important;
+  border-radius: 8px !important;
+  /* if you want straight corners: change to 0 */
+  font-size: 16px !important;
+  font-weight: 700 !important;
+
+  margin: 0 auto !important;
+}
+
+.cart-drawer__checkout-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ============================================================================
+   HORIZONTAL SLIDER FOR CART ITEMS
+   ============================================================================ */
+
+/* Wrapper for horizontal scrolling */
+.cart-drawer__items-wrapper {
+  width: 100%;
+  overflow: hidden;
+  padding: 10px 0 0px 0;
+  margin-bottom: 20px;
+}
+
+/* Convert items list to horizontal slider */
+.cart-drawer__items--slider {
+  display: flex !important;
+  flex-direction: row !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-behavior: smooth;
+  gap: 14px !important;
+  padding: 10px 14px 16px 14px !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Styled scrollbar */
+.cart-drawer__items--slider::-webkit-scrollbar {
+  height: 6px !important;
+}
+
+.cart-drawer__items--slider::-webkit-scrollbar-track {
+  background: #f1f5f9 !important;
+  border-radius: 10px !important;
+  margin: 0 14px !important;
+}
+
+.cart-drawer__items--slider::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #cbd5e1 0%, #94a3b8 100%) !important;
+  border-radius: 10px !important;
+  transition: background 0.3s ease !important;
+}
+
+.cart-drawer__items--slider::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #94a3b8 0%, #64748b 100%) !important;
+}
+
+/* Make each cart item a card in the slider */
+.cart-drawer__items--slider .cart-drawer__item {
+  flex: 0 0 170px !important;
+  min-width: 170px !important;
+  max-width: 170px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  padding: 12px 10px 16px 10px !important;
+  background: #ffffff !important;
+  border: 1.5px solid #d1d5db !important;
+  border-radius: 10px !important;
+  position: relative !important;
+  min-height: 275px !important;
+  max-height: 275px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
+  transition: all 0.3s ease !important;
+  overflow: visible !important;
+}
+
+.cart-drawer__items--slider .cart-drawer__item:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1) !important;
+  border-color: #9ca3af !important;
+}
+
+/* Image in slider - smaller and centered */
+.cart-drawer__items--slider .cart-drawer__image-wrapper {
+  width: 90px !important;
+  height: 90px !important;
+  flex: 0 0 90px !important;
+  margin-bottom: 8px !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  background: #f9fafb !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+.cart-drawer__items--slider .cart-drawer__image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+/* Item content below image - centered */
+.cart-drawer__items--slider .cart-drawer__item-main {
+  width: 100% !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  gap: 4px !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+}
+
+/* Title styling in slider */
+.cart-drawer__items--slider .cart-drawer__item-title {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  margin-bottom: 0 !important;
+  color: #111 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  word-wrap: break-word !important;
+  width: 100% !important;
+  text-decoration: none !important;
+  max-height: 31px !important;
+}
+
+.cart-drawer__items--slider .cart-drawer__item-title:hover {
+  color: #666 !important;
+}
+
+/* Variant - below title */
+.cart-drawer__items--slider .cart-drawer__item-variant {
+  font-size: 11px !important;
+  color: #6b6b6b !important;
+  margin: 0 !important;
+  font-weight: 500 !important;
+  width: 100% !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  word-wrap: break-word !important;
+  max-height: 28px !important;
+  line-height: 1.3 !important;
+}
+
+/* Price - below variant */
+.cart-drawer__items--slider .cart-drawer__price {
+  position: static !important;
+  transform: none !important;
+  text-align: center !important;
+  margin: 3px 0 3px 0 !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #111 !important;
+  line-height: 1 !important;
+}
+
+/* Quantity controls in slider - centered */
+.cart-drawer__items--slider .cart-drawer__item-meta {
+  margin-top: auto !important;
+  margin-bottom: 2px !important;
+  justify-content: center !important;
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding-bottom: 0 !important;
+}
+
+/* Quantity selector styling for slider - Rounded pill design */
+.cart-drawer__items--slider .cart-drawer__qty {
+  margin: 0 !important;
+  height: 28px !important;
+  width: 90px !important;
+  /* 28px (btn) + 34px (input) + 28px (btn) */
+  min-width: 90px !important;
+  max-width: 90px !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  border: 1px solid #ddd !important;
+  border-radius: 999px !important;
+  background: #fff !important;
+}
+
+.cart-drawer__items--slider .cart-drawer__qty-btn {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  max-width: 28px !important;
+  flex-shrink: 0 !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: visible !important;
+  background: #fff !important;
+  color: #e01817 !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+.cart-drawer__items--slider .cart-drawer__qty-btn:hover {
+  background: #f5f5f5 !important;
+}
+
+/* Remove internal borders */
+.cart-drawer__items--slider .cart-drawer__qty-btn:first-child {
+  border-right: none !important;
+}
+
+.cart-drawer__items--slider .cart-drawer__qty-btn:last-child {
+  border-left: none !important;
+}
+
+.cart-drawer__items--slider .cart-drawer__qty-input {
+  width: 34px !important;
+  min-width: 34px !important;
+  max-width: 34px !important;
+  flex-shrink: 0 !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  overflow: visible !important;
+  background: #fff !important;
+  color: #000 !important;
+  border: none !important;
+}
+
+/* Hide selling plan in slider for cleaner look */
+.cart-drawer__items--slider .cart-drawer__item-selling-plan {
+  display: none !important;
+}
+
+/* ============================================================================
+   DYNAMIC FREE SHIPPING BAR (After cart items)
+   ============================================================================ */
+
+/* Black section containing free shipping bar and product showcase */
+.cart-drawer__shipping-showcase-section {
+  margin: 0 !important;
+  padding: 14px 16px !important;
+  background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  clear: both !important;
+  min-height: auto !important;
+}
+
+.free-shipping-bar-dynamic {
+  margin: 0 !important;
+  padding: 8px 12px !important;
+  background: transparent !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transition: all 0.3s ease !important;
+}
+
+/* Subtle background pattern */
+.free-shipping-bar-dynamic::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%) !important;
+  pointer-events: none !important;
+}
+
+.free-shipping-bar-dynamic__message {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  margin-bottom: 10px !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.free-shipping-bar-dynamic__message--eligible {
+  margin-bottom: 0 !important;
+  animation: celebration 0.6s ease-out !important;
+}
+
+.free-shipping-bar-dynamic__message--eligible .free-shipping-bar-dynamic__icon {
+  font-size: 22px !important;
+  animation: iconBounce 0.8s ease-out !important;
+}
+
+@keyframes celebration {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: scale(1.02);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes iconBounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  25% {
+    transform: translateY(-4px);
+  }
+
+  50% {
+    transform: translateY(0);
+  }
+
+  75% {
+    transform: translateY(-2px);
+  }
+}
+
+.free-shipping-bar-dynamic__icon {
+  font-size: 18px !important;
+  line-height: 1 !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1)) !important;
+}
+
+.free-shipping-bar-dynamic__text {
+  color: #ffffff !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  text-align: center !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+  letter-spacing: 0.01em !important;
+}
+
+.free-shipping-bar-dynamic__amount {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  font-size: 14px !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  display: inline-block !important;
+}
+
+/* Progress bar container */
+.free-shipping-bar-dynamic__progress {
+  width: 100% !important;
+  height: 6px !important;
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  z-index: 1 !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Progress bar fill with shimmer effect */
+.free-shipping-bar-dynamic__progress-fill {
+  height: 100% !important;
+  background: linear-gradient(90deg,
+      #ffffff 0%,
+      #f0fdf4 50%,
+      #ffffff 100%) !important;
+  border-radius: 12px !important;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow:
+    0 0 12px rgba(255, 255, 255, 0.6),
+    0 2px 4px rgba(255, 255, 255, 0.3) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Shimmer animation on progress bar */
+.free-shipping-bar-dynamic__progress-fill::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      transparent 100%) !important;
+  animation: shimmer 2s infinite !important;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+
+  100% {
+    left: 200%;
+  }
+}
+
+/* Eligible state - special styling */
+.free-shipping-bar-dynamic__message--eligible+.free-shipping-bar-dynamic__progress {
+  display: none !important;
+}
+
+/* ============================================================================
+   PRODUCT SHOWCASE SECTION (Below Free Shipping Bar)
+   ============================================================================ */
+
+.cart-drawer__product-showcase {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.cart-drawer__showcase-title {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  margin: 0 0 10px 0 !important;
+  padding: 0 !important;
+  letter-spacing: 0.3px !important;
+  text-transform: uppercase !important;
+}
+
+.cart-drawer__showcase-grid {
+  display: flex !important;
+  gap: 10px !important;
+  align-items: stretch !important;
+}
+
+/* Showcase Product Card - FIXED ALIGNMENT */
+.showcase-card {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 10px !important;
+  padding: 10px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 6px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+  position: relative !important;
+  width: 30% !important;
+  min-height: 220px !important;
+  max-height: 220px !important;
+  flex: 0 0 30% !important;
+  overflow: visible !important;
+}
+
+.showcase-card:hover {
+  transform: translateY(-3px) scale(1.01) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3) !important;
+  border-color: rgba(224, 24, 23, 0.4) !important;
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+/* Hidden state for automatic product replacement */
+.showcase-card--hidden {
+  display: none !important;
+}
+
+/* Image - FIXED HEIGHT FOR ALIGNMENT */
+.showcase-card__image-link {
+  width: 45px !important;
+  height: 45px !important;
+  flex-shrink: 0 !important;
+  display: block !important;
+  border-radius: 6px !important;
+  overflow: hidden !important;
+  background: #f9fafb !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+.showcase-card__image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+.showcase-card__image-placeholder {
+  width: 100% !important;
+  height: 100% !important;
+  background: #f3f4f6 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Content - FIXED ALIGNMENT */
+.showcase-card__content {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 4px !important;
+  flex: 1 !important;
+}
+
+/* Title - FIXED HEIGHT FOR ALIGNMENT */
+.showcase-card__title {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  color: #111 !important;
+  text-align: center !important;
+  line-height: 1.3 !important;
+  text-decoration: none !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+  height: 28px !important;
+  /* FIXED HEIGHT for alignment */
+  min-height: 28px !important;
+  max-height: 28px !important;
+  width: 100% !important;
+}
+
+.showcase-card__title:hover {
+  color: #666 !important;
+}
+
+/* Variant Selector - FIXED HEIGHT (whether visible or hidden) */
+.showcase-card__variant-selector {
+  width: 100% !important;
+  height: 24px !important;
+  min-height: 24px !important;
+  max-height: 24px !important;
+  padding: 4px 6px !important;
+  font-size: 9px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 4px !important;
+  background: #ffffff !important;
+  color: #111 !important;
+  cursor: pointer !important;
+  font-weight: 500 !important;
+  transition: border-color 0.2s ease !important;
+  text-align: center !important;
+  line-height: 1.2 !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+}
+
+.showcase-card__variant-selector:hover {
+  border-color: #9ca3af !important;
+}
+
+.showcase-card__variant-selector:focus {
+  outline: none !important;
+  border-color: #111 !important;
+  box-shadow: 0 0 0 2px rgba(17, 17, 17, 0.1) !important;
+}
+
+/* Hidden variant input - TAKES SAME SPACE as selector for alignment */
+.showcase-card__variant-id {
+  width: 100% !important;
+  height: 24px !important;
+  /* SAME HEIGHT as selector for alignment */
+  min-height: 24px !important;
+  max-height: 24px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Price - FIXED HEIGHT FOR ALIGNMENT */
+.showcase-card__price-wrapper {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 18px !important;
+  min-height: 18px !important;
+  max-height: 18px !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+
+.showcase-card__price {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #111 !important;
+  text-align: center !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 100% !important;
+}
+
+/* Actions Wrapper - FIXED HEIGHT at bottom FOR ALIGNMENT */
+.showcase-card__actions {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  max-height: 30px !important;
+  margin-top: auto !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+/* Quick Add Button */
+.showcase-card__add-btn {
+  flex: 1 !important;
+  padding: 6px 10px !important;
+  background: #111 !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 6px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  white-space: nowrap !important;
+  line-height: 1.2 !important;
+  height: 100% !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+.showcase-card__add-btn:hover {
+  background: #000 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+.showcase-card__add-btn:active {
+  transform: translateY(0) !important;
+}
+
+.showcase-card__add-btn:disabled {
+  background: #d1d5db !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+/* Remove Button (X icon) */
+.showcase-card__remove-btn {
+  width: 26px !important;
+  height: 26px !important;
+  flex-shrink: 0 !important;
+  padding: 0 !important;
+  background: #ef4444 !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 6px !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+.showcase-card__remove-btn:hover {
+  background: #dc2626 !important;
+  transform: scale(1.05) !important;
+}
+
+.showcase-card__remove-btn:active {
+  transform: scale(0.95) !important;
+}
+
+/* Loading state */
+.showcase-card__add-btn.loading {
+  opacity: 0.6 !important;
+  pointer-events: none !important;
+}
+
+.showcase-card__add-btn.loading::after {
+  content: '...' !important;
+  animation: dots 1s steps(3, end) infinite !important;
+}
+
+@keyframes dots {
+
+  0%,
+  20% {
+    content: '.' !important;
+  }
+
+  40% {
+    content: '..' !important;
+  }
+
+  60%,
+  100% {
+    content: '...' !important;
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+  .cart-drawer__product-showcase {
+    margin: 14px 10px !important;
+  }
+
+  .cart-drawer__showcase-grid {
+    gap: 8px !important;
+  }
+
+  .showcase-card {
+    padding: 8px !important;
+    min-height: 230px !important;
+    max-height: 230px !important;
+    overflow: hidden !important;
+  }
+
+  .showcase-card__image-link {
+    width: 45px !important;
+    height: 45px !important;
+  }
+
+  .showcase-card__title {
+    font-size: 10px !important;
+    height: 26px !important;
+    /* FIXED HEIGHT on mobile */
+    min-height: 26px !important;
+    max-height: 26px !important;
+  }
+
+  .showcase-card__variant-selector {
+    font-size: 9px !important;
+    padding: 4px 5px !important;
+    height: 24px !important;
+    /* FIXED HEIGHT on mobile */
+    min-height: 24px !important;
+    max-height: 24px !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+  }
+
+  .showcase-card__variant-id {
+    height: 24px !important;
+    /* SAME HEIGHT as selector on mobile */
+    min-height: 24px !important;
+    max-height: 24px !important;
+  }
+
+  .showcase-card__price-wrapper {
+    height: 18px !important;
+    /* FIXED HEIGHT on mobile */
+    min-height: 18px !important;
+    max-height: 18px !important;
+  }
+
+  .showcase-card__price {
+    font-size: 10px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .showcase-card__actions {
+    height: 32px !important;
+    /* FIXED HEIGHT on mobile */
+    min-height: 32px !important;
+    max-height: 32px !important;
+  }
+
+  .showcase-card__add-btn {
+    padding: 5px 8px !important;
+    font-size: 10px !important;
+  }
+
+  .showcase-card__remove-btn {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 14px !important;
+  }
+}
+
+/* ============================================================================
+   VIEW CART BUTTON
+   ============================================================================ */
+
+.cart-drawer__view-cart-btn {
+  flex: 1 !important;
+  padding: 14px 16px !important;
+  border-radius: 12px !important;
+  border: 2px solid #111 !important;
+  background: #ffffff !important;
+  color: #111 !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  display: inline-block !important;
+}
+
+.cart-drawer__view-cart-btn:hover {
+  background: #111 !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(17, 17, 17, 0.12) !important;
+}
+
+.cart-drawer__checkout-btn {
+  flex: 1 !important;
+  padding: 14px 16px !important;
+  border-radius: 12px !important;
+  border: none !important;
+  background: #111 !important;
+  color: #ffffff !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  display: inline-block !important;
+}
+
+.cart-drawer__checkout-btn:hover {
+  background: #000 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 12px 30px rgba(17, 17, 17, 0.15) !important;
+}
+
+/* Mobile adjustments for slider */
+@media (max-width: 600px) {
+  .cart-drawer__items--slider {
+    padding: 10px 10px 14px 10px !important;
+  }
+
+  .cart-drawer__items--slider .cart-drawer__item {
+    flex: 0 0 170px !important;
+    min-width: 170px !important;
+    max-width: 170px !important;
+    padding: 12px 10px 16px 10px !important;
+    min-height: 275px !important;
+    max-height: 275px !important;
+  }
+
+  .cart-drawer__items--slider .cart-drawer__image-wrapper {
+    width: 90px !important;
+    height: 90px !important;
+    flex: 0 0 90px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .cart-drawer__items--slider .cart-drawer__item-title {
+    font-size: 12px !important;
+    max-height: 31px !important;
+  }
+
+  .cart-drawer__items--slider .cart-drawer__item-variant {
+    font-size: 11px !important;
+    max-height: 28px !important;
+  }
+
+  .cart-drawer__items--slider .cart-drawer__price {
+    font-size: 14px !important;
+    margin: 5px 0 3px 0 !important;
+  }
+
+  .cart-drawer__items--slider .cart-drawer__qty {
+    height: 26px !important;
+    width: 82px !important;
+    /* 26px (btn) + 30px (input) + 26px (btn) */
+    min-width: 82px !important;
+    max-width: 82px !important;
+  }
+
+  .cart-drawer__items--slider .cart-drawer__qty-btn {
+    width: 26px !important;
+    height: 26px !important;
+    min-width: 26px !important;
+    max-width: 26px !important;
+    font-size: 14px !important;
+  }
+
+  .cart-drawer__items--slider .cart-drawer__qty-input {
+    width: 30px !important;
+    min-width: 30px !important;
+    max-width: 30px !important;
+    font-size: 12px !important;
+  }
+
+  /* Free shipping bar on mobile */
+  .free-shipping-bar-dynamic {
+    margin: 0px 10px 12px 10px !important;
+    padding: 10px 12px !important;
+  }
+
+  .cart-drawer__items-wrapper {
+    padding: 10px 0 0px 0 !important;
+  }
+
+  .free-shipping-bar-dynamic__icon {
+    font-size: 16px !important;
+  }
+
+  .free-shipping-bar-dynamic__text {
+    font-size: 12px !important;
+  }
+
+  .free-shipping-bar-dynamic__amount {
+    font-size: 13px !important;
+  }
+
+  .free-shipping-bar-dynamic__progress {
+    height: 5px !important;
+  }
+
+  /* Buttons on mobile */
+  .cart-drawer__checkout-wrap {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .cart-drawer__view-cart-btn,
+  .cart-drawer__checkout-btn {
+    width: 100% !important;
+  }
+}

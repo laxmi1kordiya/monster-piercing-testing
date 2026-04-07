@@ -1,0 +1,1945 @@
+{% comment %}
+  Get the Look Section
+  - Desktop: Tab buttons with product slider overlay on image
+  - Mobile: Horizontal image carousel with circular thumbnails + modal popup
+  - Supports up to unlimited tabs via blocks
+  - Image size controls
+  - Desktop: 15% left/right margins
+  - Arrows hidden when 3 or fewer products
+{% endcomment %}
+
+<script type="application/json" data-section-id="{{ section.id }}" data-section-type="get-the-look"></script>
+
+{% style %}
+  #shopify-section-{{ section.id }} {
+    --gtl-text-color: {{ section.settings.text_color }};
+    --gtl-button-color: {{ section.settings.button_color }};
+    --gtl-button-text-color: {{ section.settings.button_text_color }};
+    --gtl-active-button-color: {{ section.settings.active_button_color }};
+    --gtl-active-button-text-color: {{ section.settings.active_button_text_color }};
+    --gtl-image-height-desktop: {{ section.settings.image_height_desktop }}px;
+    --gtl-image-height-mobile: {{ section.settings.image_height_mobile }}px;
+    --gtl-section-margin: {% if section.settings.section_width == 'large' %}5%{% else %}15%{% endif %};
+  }
+
+  .get-the-look {
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;
+  }
+
+  .get-the-look__header {
+    text-align: {{ section.settings.header_alignment }};
+    margin-bottom: 15px;
+    padding: 0 15px;
+  }
+
+  .get-the-look__title {
+    font-size: {{ section.settings.heading_size }}px;
+    color: var(--gtl-text-color);
+    margin: 0;
+    font-weight: 700;
+  }
+
+  .get-the-look__description {
+    font-size: 16px;
+    color: var(--gtl-text-color);
+    opacity: 0.8;
+    margin: 0;
+  }
+
+  .get-the-look__description-tabs-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+  }
+
+  /* ===================== */
+  /* DESKTOP STYLES - TABS */
+  /* ===================== */
+  .get-the-look__desktop {
+    display: none;
+  }
+
+  @media screen and (min-width: 769px) {
+    .get-the-look__desktop {
+      display: block;
+      margin-left: var(--gtl-section-margin);
+      margin-right: var(--gtl-section-margin);
+    }
+
+    .get-the-look__mobile {
+      display: none !important;
+    }
+
+    .get-the-look__header {
+      margin-left: var(--gtl-section-margin);
+      margin-right: var(--gtl-section-margin);
+      padding: 0;
+    }
+
+  }
+
+  .get-the-look__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-bottom: 0;
+  }
+
+  .get-the-look__tab-button {
+    padding: 10px 24px;
+    border: 1px solid var(--gtl-button-color);
+    background-color: transparent;
+    color: var(--gtl-button-color);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 5px 25px 5px 25px;
+  }
+
+  .get-the-look__tab-button:hover {
+    background-color: var(--gtl-button-color);
+    color: var(--gtl-button-text-color);
+  }
+
+  .get-the-look__tab-button.active {
+    background-color: var(--gtl-active-button-color);
+    border-color: var(--gtl-active-button-color);
+    color: var(--gtl-active-button-text-color);
+  }
+
+  .get-the-look__content {
+    position: relative;
+  }
+
+  .get-the-look__panel {
+    display: none;
+    position: relative;
+    border-radius: {{ section.settings.image_border_radius }}px;
+    overflow: hidden;
+  }
+
+  .get-the-look__panel.active {
+    display: block;
+  }
+
+  .get-the-look__image-wrapper {
+    position: relative;
+    width: 100%;
+    height: var(--gtl-image-height-desktop);
+    overflow: hidden;
+  }
+
+  .get-the-look__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .get-the-look__slider-wrapper {
+    position: absolute;
+    width: 100%;
+    max-width: {{ section.settings.slider_max_width }}%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .get-the-look__slider-wrapper.position-top-left {
+    top: 20px;
+    left: 20px;
+  }
+
+  .get-the-look__slider-wrapper.position-top-center {
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .get-the-look__slider-wrapper.position-top-right {
+    top: 20px;
+    right: 20px;
+  }
+
+  .get-the-look__slider-wrapper.position-center-left {
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+  }
+
+  .get-the-look__slider-wrapper.position-center-center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .get-the-look__slider-wrapper.position-center-right {
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+  }
+
+  .get-the-look__slider-wrapper.position-bottom-left {
+    bottom: 20px;
+    left: 20px;
+  }
+
+  .get-the-look__slider-wrapper.position-bottom-center {
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .get-the-look__slider-wrapper.position-bottom-right {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .get-the-look__slider-header {
+    margin-bottom: 15px;
+  }
+
+  .get-the-look__slider-title {
+    font-size: {{ section.settings.slider_title_size }}px;
+    font-weight: 600;
+    color: {{ section.settings.slider_title_color }};
+    margin: 0;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .get-the-look__slider {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .get-the-look__slider::-webkit-scrollbar {
+    display: none;
+  }
+
+  .get-the-look__slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.9);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    z-index: 10;
+  }
+
+  .get-the-look__slider-nav:hover {
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  .get-the-look__slider-nav--prev {
+    left: -20px;
+  }
+
+  .get-the-look__slider-nav--next {
+    right: -20px;
+  }
+
+  .get-the-look__slider-nav svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Hide arrows when 3 or fewer products */
+  .get-the-look__slider-nav.hide-arrows {
+    display: none !important;
+  }
+
+  .get-the-look__product-card {
+    flex: 0 0 auto;
+    width: {{ section.settings.product_card_width }}px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    text-decoration: none;
+    display: block;
+  }
+
+  .get-the-look__product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+
+  .get-the-look__product-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: {{ section.settings.badge_color }};
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    z-index: 2;
+  }
+
+  .get-the-look__product-image {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    display: block;
+    background: #f5f5f5;
+  }
+
+  .get-the-look__product-info {
+    padding: 12px;
+  }
+
+  .get-the-look__product-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+    margin: 0 0 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .get-the-look__product-vendor {
+    font-size: 11px;
+    color: #888;
+    margin: 0 0 8px;
+  }
+
+  .get-the-look__product-price {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+
+  .get-the-look__product-price--compare {
+    font-size: 12px;
+    color: #999;
+    text-decoration: line-through;
+    margin-left: 6px;
+    font-weight: 400;
+  }
+
+  .get-the-look__product-image-link {
+    display: block;
+  }
+
+  a.get-the-look__product-title {
+    display: block;
+    text-decoration: none;
+    color: #333;
+    transition: color 0.2s ease;
+  }
+
+  a.get-the-look__product-title:hover {
+    color: #000;
+  }
+
+  .get-the-look__add-to-cart {
+    width: 100%;
+    padding: 8px 12px;
+    margin-top: 8px;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .get-the-look__add-to-cart:hover {
+    background: #000;
+  }
+
+  .get-the-look__add-to-cart:active {
+    transform: scale(0.98);
+  }
+
+  .get-the-look__add-to-cart.is-loading {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
+  .get-the-look__add-to-cart.is-added {
+    background: #4ade80;
+  }
+
+  /* ========================= */
+  /* MOBILE STYLES - CAROUSEL  */
+  /* ========================= */
+  .get-the-look__mobile {
+    display: block;
+  }
+
+  @media screen and (min-width: 769px) {
+    .get-the-look__mobile {
+      display: none !important;
+    }
+  }
+
+  .get-the-look__carousel {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0 15px;
+  }
+
+  .get-the-look__carousel::-webkit-scrollbar {
+    display: none;
+  }
+
+  .get-the-look__slide {
+    flex: 0 0 auto;
+    width: {{ section.settings.mobile_slide_width }}%;
+    max-width: 350px;
+    position: relative;
+    border-radius: {{ section.settings.image_border_radius }}px;
+    overflow: hidden;
+  }
+
+  .get-the-look__slide-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: var(--gtl-image-height-mobile);
+    overflow: hidden;
+  }
+
+  .get-the-look__slide-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .get-the-look__products-bar {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 8px 12px;
+    border-radius: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  }
+
+  .get-the-look__product-thumbs {
+    display: flex;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .get-the-look__product-thumb {
+    width: {{ section.settings.mobile_thumb_size }}px;
+    height: {{ section.settings.mobile_thumb_size }}px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+    background: #f5f5f5;
+  }
+
+  .get-the-look__product-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .get-the-look__more-count {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    padding: 0 6px;
+  }
+
+  .get-the-look__view-all-btn {
+    background: none;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    padding: 6px 10px;
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
+  }
+
+  .get-the-look__view-all-btn:hover {
+    opacity: 0.7;
+  }
+
+  /* ============= */
+  /* MODAL STYLES  */
+  /* ============= */
+  .get-the-look__modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 99999;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .get-the-look__modal.active {
+    display: flex !important;
+  }
+
+  .get-the-look__modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+  }
+
+  .get-the-look__modal-content {
+    position: relative;
+    background: #fff;
+    width: 100%;
+    max-width: 500px;
+    max-height: 85vh;
+    border-radius: 20px 20px 0 0;
+    overflow: hidden;
+    animation: gtlSlideUp 0.3s ease;
+    z-index: 1;
+  }
+
+  @keyframes gtlSlideUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  @media screen and (min-width: 769px) {
+    .get-the-look__modal {
+      align-items: center;
+    }
+
+    .get-the-look__modal-content {
+      border-radius: 20px;
+      max-height: 80vh;
+    }
+  }
+
+  .get-the-look__modal-header {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    gap: 12px;
+  }
+
+  .get-the-look__modal-thumb {
+    width: 45px;
+    height: 45px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .get-the-look__modal-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .get-the-look__modal-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+    flex: 1;
+    text-transform: uppercase;
+  }
+
+  .get-the-look__modal-close {
+    background: none;
+    border: none;
+    font-size: 28px;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .get-the-look__modal-close:hover {
+    color: #333;
+  }
+
+  .get-the-look__modal-body {
+    padding: 15px 20px 20px;
+    overflow-y: auto;
+    max-height: calc(85vh - 80px);
+  }
+
+  .get-the-look__modal-count {
+    font-size: 13px;
+    color: #666;
+    margin: 0 0 15px;
+  }
+
+  .get-the-look__modal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .get-the-look__modal-product {
+    color: inherit;
+    display: block;
+  }
+
+  .get-the-look__modal-product-link {
+    display: block;
+  }
+
+  .get-the-look__modal-product-image {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    background: #f9f9f9;
+    margin-bottom: 8px;
+  }
+
+  a.get-the-look__modal-product-title {
+    display: block;
+    font-size: 11px;
+    color: #333;
+    margin: 0 0 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: none;
+  }
+
+  a.get-the-look__modal-product-title:hover {
+    color: #000;
+  }
+
+  .get-the-look__modal-product-price {
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 6px;
+  }
+
+  .get-the-look__add-to-cart--modal {
+    padding: 6px 10px;
+    font-size: 11px;
+    margin-top: 6px;
+  }
+
+  /* Empty State */
+  .get-the-look__empty {
+    text-align: center;
+    padding: 60px 20px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    margin: 0 15px;
+  }
+
+  .get-the-look__empty p {
+    margin: 0;
+    color: #666;
+  }
+{% endstyle %}
+
+<div class="get-the-look" id="get-the-look-{{ section.id }}">
+  <div class="page-width">
+    {% if section.settings.heading != blank %}
+      <div class="get-the-look__header">
+        <h2 class="get-the-look__title">{{ section.settings.heading }}</h2>
+      </div>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+
+      <!-- ==================== -->
+      <!-- DESKTOP VIEW - TABS  -->
+      <!-- ==================== -->
+      <div class="get-the-look__desktop">
+        <div class="get-the-look__description-tabs-row">
+          {% if section.settings.description != blank %}
+            <p class="get-the-look__description">{{ section.settings.description }}</p>
+          {% endif %}
+          <div class="get-the-look__tabs" role="tablist">
+            {% for block in section.blocks %}
+              <button
+                class="get-the-look__tab-button {% if forloop.first %}active{% endif %}"
+                data-tab-target="desktop-panel-{{ block.id }}"
+                role="tab"
+                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                {{ block.shopify_attributes }}
+              >
+                {{ block.settings.button_label | default: 'Style' }}
+              </button>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="get-the-look__content">
+          {% for block in section.blocks %}
+            {% comment %} Count products for this block {% endcomment %}
+            {% assign products_count = 0 %}
+            {% if block.settings.product_1 != blank %}
+              {% assign products_count = products_count | plus: 1 %}
+            {% endif %}
+            {% if block.settings.product_2 != blank %}
+              {% assign products_count = products_count | plus: 1 %}
+            {% endif %}
+            {% if block.settings.product_3 != blank %}
+              {% assign products_count = products_count | plus: 1 %}
+            {% endif %}
+            {% if block.settings.product_4 != blank %}
+              {% assign products_count = products_count | plus: 1 %}
+            {% endif %}
+            {% if block.settings.product_5 != blank %}
+              {% assign products_count = products_count | plus: 1 %}
+            {% endif %}
+            {% if block.settings.product_6 != blank %}
+              {% assign products_count = products_count | plus: 1 %}
+            {% endif %}
+
+            {% comment %} Determine if arrows should be hidden (3 or fewer products) {% endcomment %}
+            {% assign hide_arrows = false %}
+            {% if products_count <= 3 %}
+              {% assign hide_arrows = true %}
+            {% endif %}
+
+            <div 
+              class="get-the-look__panel {% if forloop.first %}active{% endif %}"
+              id="desktop-panel-{{ block.id }}"
+              data-tab-panel="desktop-panel-{{ block.id }}"
+              role="tabpanel"
+            >
+              <div class="get-the-look__image-wrapper">
+                {% if block.settings.image != blank %}
+                  <img 
+                    class="get-the-look__image"
+                    src="{{ block.settings.image | image_url: width: 1600 }}"
+                    alt="{{ block.settings.image.alt | default: block.settings.button_label }}"
+                    loading="lazy"
+                  >
+                {% else %}
+                  {{ 'lifestyle-1' | placeholder_svg_tag: 'get-the-look__image placeholder-svg' }}
+                {% endif %}
+
+                <div class="get-the-look__slider-wrapper position-{{ block.settings.slider_position }}">
+                  {% if block.settings.slider_title != blank %}
+                    <div class="get-the-look__slider-header">
+                      <h3 class="get-the-look__slider-title">{{ block.settings.slider_title }}</h3>
+                    </div>
+                  {% endif %}
+
+                  <div class="get-the-look__slider-container" style="position: relative;">
+                    <button class="get-the-look__slider-nav get-the-look__slider-nav--prev {% if hide_arrows %}hide-arrows{% endif %}" aria-label="Previous products">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                      </svg>
+                    </button>
+
+                    <div class="get-the-look__slider" data-slider>
+                      {% assign displayed_products = 0 %}
+
+                      {% if block.settings.product_1 != blank %}
+                        {% assign product = block.settings.product_1 %}
+                        <div class="get-the-look__product-card">
+                          {% if block.settings.show_badges and product.compare_at_price > product.price %}
+                            <div class="get-the-look__product-badge">Sale</div>
+                          {% endif %}
+                          <a href="{{ product.url }}" class="get-the-look__product-image-link">
+                            {% if product.featured_image != blank %}
+                              <img class="get-the-look__product-image" src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ product.title | escape }}" loading="lazy">
+                            {% else %}
+                              {{ 'product-1' | placeholder_svg_tag: 'get-the-look__product-image placeholder-svg' }}
+                            {% endif %}
+                          </a>
+                          <div class="get-the-look__product-info">
+                            <a href="{{ product.url }}" class="get-the-look__product-title">{{ product.title | truncate: 18 }}</a>
+                            <p class="get-the-look__product-vendor">{{ product.vendor }}</p>
+                            <p class="get-the-look__product-price">
+                              {{ product.price | money }}
+                              {% if product.compare_at_price > product.price %}
+                                <span class="get-the-look__product-price--compare">{{ product.compare_at_price | money }}</span>
+                              {% endif %}
+                            </p>
+                            <button type="button" class="get-the-look__add-to-cart" data-variant-id="{{ product.variants.first.id }}">Add to Cart</button>
+                          </div>
+                        </div>
+                        {% assign displayed_products = displayed_products | plus: 1 %}
+                      {% endif %}
+
+                      {% if block.settings.product_2 != blank %}
+                        {% assign product = block.settings.product_2 %}
+                        <div class="get-the-look__product-card">
+                          {% if block.settings.show_badges and product.compare_at_price > product.price %}
+                            <div class="get-the-look__product-badge">Sale</div>
+                          {% endif %}
+                          <a href="{{ product.url }}" class="get-the-look__product-image-link">
+                            {% if product.featured_image != blank %}
+                              <img class="get-the-look__product-image" src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ product.title | escape }}" loading="lazy">
+                            {% else %}
+                              {{ 'product-1' | placeholder_svg_tag: 'get-the-look__product-image placeholder-svg' }}
+                            {% endif %}
+                          </a>
+                          <div class="get-the-look__product-info">
+                            <a href="{{ product.url }}" class="get-the-look__product-title">{{ product.title | truncate: 18 }}</a>
+                            <p class="get-the-look__product-vendor">{{ product.vendor }}</p>
+                            <p class="get-the-look__product-price">
+                              {{ product.price | money }}
+                              {% if product.compare_at_price > product.price %}
+                                <span class="get-the-look__product-price--compare">{{ product.compare_at_price | money }}</span>
+                              {% endif %}
+                            </p>
+                            <button type="button" class="get-the-look__add-to-cart" data-variant-id="{{ product.variants.first.id }}">Add to Cart</button>
+                          </div>
+                        </div>
+                        {% assign displayed_products = displayed_products | plus: 1 %}
+                      {% endif %}
+
+                      {% if block.settings.product_3 != blank %}
+                        {% assign product = block.settings.product_3 %}
+                        <div class="get-the-look__product-card">
+                          {% if block.settings.show_badges and product.compare_at_price > product.price %}
+                            <div class="get-the-look__product-badge">Sale</div>
+                          {% endif %}
+                          <a href="{{ product.url }}" class="get-the-look__product-image-link">
+                            {% if product.featured_image != blank %}
+                              <img class="get-the-look__product-image" src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ product.title | escape }}" loading="lazy">
+                            {% else %}
+                              {{ 'product-1' | placeholder_svg_tag: 'get-the-look__product-image placeholder-svg' }}
+                            {% endif %}
+                          </a>
+                          <div class="get-the-look__product-info">
+                            <a href="{{ product.url }}" class="get-the-look__product-title">{{ product.title | truncate: 18 }}</a>
+                            <p class="get-the-look__product-vendor">{{ product.vendor }}</p>
+                            <p class="get-the-look__product-price">
+                              {{ product.price | money }}
+                              {% if product.compare_at_price > product.price %}
+                                <span class="get-the-look__product-price--compare">{{ product.compare_at_price | money }}</span>
+                              {% endif %}
+                            </p>
+                            <button type="button" class="get-the-look__add-to-cart" data-variant-id="{{ product.variants.first.id }}">Add to Cart</button>
+                          </div>
+                        </div>
+                        {% assign displayed_products = displayed_products | plus: 1 %}
+                      {% endif %}
+
+                      {% if block.settings.product_4 != blank %}
+                        {% assign product = block.settings.product_4 %}
+                        <div class="get-the-look__product-card">
+                          {% if block.settings.show_badges and product.compare_at_price > product.price %}
+                            <div class="get-the-look__product-badge">Sale</div>
+                          {% endif %}
+                          <a href="{{ product.url }}" class="get-the-look__product-image-link">
+                            {% if product.featured_image != blank %}
+                              <img class="get-the-look__product-image" src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ product.title | escape }}" loading="lazy">
+                            {% else %}
+                              {{ 'product-1' | placeholder_svg_tag: 'get-the-look__product-image placeholder-svg' }}
+                            {% endif %}
+                          </a>
+                          <div class="get-the-look__product-info">
+                            <a href="{{ product.url }}" class="get-the-look__product-title">{{ product.title | truncate: 18 }}</a>
+                            <p class="get-the-look__product-vendor">{{ product.vendor }}</p>
+                            <p class="get-the-look__product-price">
+                              {{ product.price | money }}
+                              {% if product.compare_at_price > product.price %}
+                                <span class="get-the-look__product-price--compare">{{ product.compare_at_price | money }}</span>
+                              {% endif %}
+                            </p>
+                            <button type="button" class="get-the-look__add-to-cart" data-variant-id="{{ product.variants.first.id }}">Add to Cart</button>
+                          </div>
+                        </div>
+                        {% assign displayed_products = displayed_products | plus: 1 %}
+                      {% endif %}
+
+                      {% if block.settings.product_5 != blank %}
+                        {% assign product = block.settings.product_5 %}
+                        <div class="get-the-look__product-card">
+                          {% if block.settings.show_badges and product.compare_at_price > product.price %}
+                            <div class="get-the-look__product-badge">Sale</div>
+                          {% endif %}
+                          <a href="{{ product.url }}" class="get-the-look__product-image-link">
+                            {% if product.featured_image != blank %}
+                              <img class="get-the-look__product-image" src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ product.title | escape }}" loading="lazy">
+                            {% else %}
+                              {{ 'product-1' | placeholder_svg_tag: 'get-the-look__product-image placeholder-svg' }}
+                            {% endif %}
+                          </a>
+                          <div class="get-the-look__product-info">
+                            <a href="{{ product.url }}" class="get-the-look__product-title">{{ product.title | truncate: 18 }}</a>
+                            <p class="get-the-look__product-vendor">{{ product.vendor }}</p>
+                            <p class="get-the-look__product-price">
+                              {{ product.price | money }}
+                              {% if product.compare_at_price > product.price %}
+                                <span class="get-the-look__product-price--compare">{{ product.compare_at_price | money }}</span>
+                              {% endif %}
+                            </p>
+                            <button type="button" class="get-the-look__add-to-cart" data-variant-id="{{ product.variants.first.id }}">Add to Cart</button>
+                          </div>
+                        </div>
+                        {% assign displayed_products = displayed_products | plus: 1 %}
+                      {% endif %}
+
+                      {% if block.settings.product_6 != blank %}
+                        {% assign product = block.settings.product_6 %}
+                        <div class="get-the-look__product-card">
+                          {% if block.settings.show_badges and product.compare_at_price > product.price %}
+                            <div class="get-the-look__product-badge">Sale</div>
+                          {% endif %}
+                          <a href="{{ product.url }}" class="get-the-look__product-image-link">
+                            {% if product.featured_image != blank %}
+                              <img class="get-the-look__product-image" src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ product.title | escape }}" loading="lazy">
+                            {% else %}
+                              {{ 'product-1' | placeholder_svg_tag: 'get-the-look__product-image placeholder-svg' }}
+                            {% endif %}
+                          </a>
+                          <div class="get-the-look__product-info">
+                            <a href="{{ product.url }}" class="get-the-look__product-title">{{ product.title | truncate: 18 }}</a>
+                            <p class="get-the-look__product-vendor">{{ product.vendor }}</p>
+                            <p class="get-the-look__product-price">
+                              {{ product.price | money }}
+                              {% if product.compare_at_price > product.price %}
+                                <span class="get-the-look__product-price--compare">{{ product.compare_at_price | money }}</span>
+                              {% endif %}
+                            </p>
+                            <button type="button" class="get-the-look__add-to-cart" data-variant-id="{{ product.variants.first.id }}">Add to Cart</button>
+                          </div>
+                        </div>
+                        {% assign displayed_products = displayed_products | plus: 1 %}
+                      {% endif %}
+
+                      {% if displayed_products == 0 %}
+                        {% for i in (1..3) %}
+                          <div class="get-the-look__product-card">
+                            <div class="get-the-look__product-badge">HOT</div>
+                            {{ 'product-1' | placeholder_svg_tag: 'get-the-look__product-image placeholder-svg' }}
+                            <div class="get-the-look__product-info">
+                              <p class="get-the-look__product-title">Product Title</p>
+                              <p class="get-the-look__product-vendor">Material</p>
+                              <p class="get-the-look__product-price">{{ 29900 | money }}</p>
+                            </div>
+                          </div>
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+
+                    <button class="get-the-look__slider-nav get-the-look__slider-nav--next {% if hide_arrows %}hide-arrows{% endif %}" aria-label="Next products">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- ======================== -->
+      <!-- MOBILE VIEW - CAROUSEL   -->
+      <!-- ======================== -->
+      <div class="get-the-look__mobile">
+        <div class="get-the-look__carousel">
+          {% for block in section.blocks %}
+            {% liquid
+              assign product_count = 0
+              if block.settings.product_1 != blank
+                assign product_count = product_count | plus: 1
+              endif
+              if block.settings.product_2 != blank
+                assign product_count = product_count | plus: 1
+              endif
+              if block.settings.product_3 != blank
+                assign product_count = product_count | plus: 1
+              endif
+              if block.settings.product_4 != blank
+                assign product_count = product_count | plus: 1
+              endif
+              if block.settings.product_5 != blank
+                assign product_count = product_count | plus: 1
+              endif
+              if block.settings.product_6 != blank
+                assign product_count = product_count | plus: 1
+              endif
+
+              assign visible_thumbs = 3
+              assign extra_count = product_count | minus: visible_thumbs
+              if extra_count < 0
+                assign extra_count = 0
+              endif
+            %}
+
+            <div class="get-the-look__slide" {{ block.shopify_attributes }}>
+              <div class="get-the-look__slide-image-wrapper">
+                {% liquid
+                  if block.settings.mobile_image != blank
+                    assign mobile_slide_image = block.settings.mobile_image
+                  elsif block.settings.image != blank
+                    assign mobile_slide_image = block.settings.image
+                  else
+                    assign mobile_slide_image = blank
+                  endif
+                %}
+                {% if mobile_slide_image != blank %}
+                  <img
+                    class="get-the-look__slide-image"
+                    src="{{ mobile_slide_image | image_url: width: 800 }}"
+                    alt="{{ mobile_slide_image.alt | default: block.settings.button_label }}"
+                    loading="lazy"
+                  >
+                {% else %}
+                  {{ 'lifestyle-1' | placeholder_svg_tag: 'get-the-look__slide-image placeholder-svg' }}
+                {% endif %}
+
+                {% if product_count > 0 %}
+                  <div class="get-the-look__products-bar">
+                    <div class="get-the-look__product-thumbs">
+                      {% if block.settings.product_1 != blank %}
+                        <div class="get-the-look__product-thumb">
+                          {% if block.settings.product_1.featured_image != blank %}
+                            <img src="{{ block.settings.product_1.featured_image | image_url: width: 100 }}" alt="{{ block.settings.product_1.title | escape }}">
+                          {% else %}
+                            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                          {% endif %}
+                        </div>
+                      {% endif %}
+
+                      {% if block.settings.product_2 != blank %}
+                        <div class="get-the-look__product-thumb">
+                          {% if block.settings.product_2.featured_image != blank %}
+                            <img src="{{ block.settings.product_2.featured_image | image_url: width: 100 }}" alt="{{ block.settings.product_2.title | escape }}">
+                          {% else %}
+                            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                          {% endif %}
+                        </div>
+                      {% endif %}
+
+                      {% if block.settings.product_3 != blank %}
+                        <div class="get-the-look__product-thumb">
+                          {% if block.settings.product_3.featured_image != blank %}
+                            <img src="{{ block.settings.product_3.featured_image | image_url: width: 100 }}" alt="{{ block.settings.product_3.title | escape }}">
+                          {% else %}
+                            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                          {% endif %}
+                        </div>
+                      {% endif %}
+                    </div>
+
+                    {% if extra_count > 0 %}
+                      <span class="get-the-look__more-count">+{{ extra_count }}</span>
+                    {% endif %}
+
+                    <button 
+                      type="button"
+                      class="get-the-look__view-all-btn js-gtl-modal-open" 
+                      data-modal-id="gtl-modal-{{ block.id }}"
+                    >
+                      View all
+                    </button>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+    {% else %}
+      <div class="get-the-look__empty">
+        <p>Click the "+" button to add style tabs</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- ============= -->
+<!-- MODALS        -->
+<!-- ============= -->
+{% for block in section.blocks %}
+  {% liquid
+    assign product_count = 0
+    if block.settings.product_1 != blank
+      assign product_count = product_count | plus: 1
+    endif
+    if block.settings.product_2 != blank
+      assign product_count = product_count | plus: 1
+    endif
+    if block.settings.product_3 != blank
+      assign product_count = product_count | plus: 1
+    endif
+    if block.settings.product_4 != blank
+      assign product_count = product_count | plus: 1
+    endif
+    if block.settings.product_5 != blank
+      assign product_count = product_count | plus: 1
+    endif
+    if block.settings.product_6 != blank
+      assign product_count = product_count | plus: 1
+    endif
+  %}
+
+  <div class="get-the-look__modal" id="gtl-modal-{{ block.id }}" data-gtl-modal>
+    <div class="get-the-look__modal-overlay js-gtl-modal-close"></div>
+    <div class="get-the-look__modal-content">
+      <div class="get-the-look__modal-header">
+        <div class="get-the-look__modal-thumb">
+          {% if block.settings.image != blank %}
+            <img src="{{ block.settings.image | image_url: width: 100 }}" alt="{{ block.settings.button_label }}">
+          {% else %}
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {% endif %}
+        </div>
+        <h3 class="get-the-look__modal-title">{{ block.settings.button_label | default: 'Products' }}</h3>
+        <button type="button" class="get-the-look__modal-close js-gtl-modal-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="get-the-look__modal-body">
+        <p class="get-the-look__modal-count">{{ product_count }} available products</p>
+        <div class="get-the-look__modal-grid">
+          {% if block.settings.product_1 != blank %}
+            {% assign product = block.settings.product_1 %}
+            <div class="get-the-look__modal-product">
+              <a href="{{ product.url }}" class="get-the-look__modal-product-link">
+                {% if product.featured_image != blank %}
+                  <img class="get-the-look__modal-product-image" src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ product.title | escape }}">
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag: 'get-the-look__modal-product-image placeholder-svg' }}
+                {% endif %}
+              </a>
+              <a href="{{ product.url }}" class="get-the-look__modal-product-title">{{ product.title | truncate: 18 }}</a>
+              <p class="get-the-look__modal-product-price">{{ product.price | money }}</p>
+              <button type="button" class="get-the-look__add-to-cart get-the-look__add-to-cart--modal" data-variant-id="{{ product.variants.first.id }}">Add</button>
+            </div>
+          {% endif %}
+
+          {% if block.settings.product_2 != blank %}
+            {% assign product = block.settings.product_2 %}
+            <div class="get-the-look__modal-product">
+              <a href="{{ product.url }}" class="get-the-look__modal-product-link">
+                {% if product.featured_image != blank %}
+                  <img class="get-the-look__modal-product-image" src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ product.title | escape }}">
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag: 'get-the-look__modal-product-image placeholder-svg' }}
+                {% endif %}
+              </a>
+              <a href="{{ product.url }}" class="get-the-look__modal-product-title">{{ product.title | truncate: 18 }}</a>
+              <p class="get-the-look__modal-product-price">{{ product.price | money }}</p>
+              <button type="button" class="get-the-look__add-to-cart get-the-look__add-to-cart--modal" data-variant-id="{{ product.variants.first.id }}">Add</button>
+            </div>
+          {% endif %}
+
+          {% if block.settings.product_3 != blank %}
+            {% assign product = block.settings.product_3 %}
+            <div class="get-the-look__modal-product">
+              <a href="{{ product.url }}" class="get-the-look__modal-product-link">
+                {% if product.featured_image != blank %}
+                  <img class="get-the-look__modal-product-image" src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ product.title | escape }}">
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag: 'get-the-look__modal-product-image placeholder-svg' }}
+                {% endif %}
+              </a>
+              <a href="{{ product.url }}" class="get-the-look__modal-product-title">{{ product.title | truncate: 18 }}</a>
+              <p class="get-the-look__modal-product-price">{{ product.price | money }}</p>
+              <button type="button" class="get-the-look__add-to-cart get-the-look__add-to-cart--modal" data-variant-id="{{ product.variants.first.id }}">Add</button>
+            </div>
+          {% endif %}
+
+          {% if block.settings.product_4 != blank %}
+            {% assign product = block.settings.product_4 %}
+            <div class="get-the-look__modal-product">
+              <a href="{{ product.url }}" class="get-the-look__modal-product-link">
+                {% if product.featured_image != blank %}
+                  <img class="get-the-look__modal-product-image" src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ product.title | escape }}">
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag: 'get-the-look__modal-product-image placeholder-svg' }}
+                {% endif %}
+              </a>
+              <a href="{{ product.url }}" class="get-the-look__modal-product-title">{{ product.title | truncate: 18 }}</a>
+              <p class="get-the-look__modal-product-price">{{ product.price | money }}</p>
+              <button type="button" class="get-the-look__add-to-cart get-the-look__add-to-cart--modal" data-variant-id="{{ product.variants.first.id }}">Add</button>
+            </div>
+          {% endif %}
+
+          {% if block.settings.product_5 != blank %}
+            {% assign product = block.settings.product_5 %}
+            <div class="get-the-look__modal-product">
+              <a href="{{ product.url }}" class="get-the-look__modal-product-link">
+                {% if product.featured_image != blank %}
+                  <img class="get-the-look__modal-product-image" src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ product.title | escape }}">
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag: 'get-the-look__modal-product-image placeholder-svg' }}
+                {% endif %}
+              </a>
+              <a href="{{ product.url }}" class="get-the-look__modal-product-title">{{ product.title | truncate: 18 }}</a>
+              <p class="get-the-look__modal-product-price">{{ product.price | money }}</p>
+              <button type="button" class="get-the-look__add-to-cart get-the-look__add-to-cart--modal" data-variant-id="{{ product.variants.first.id }}">Add</button>
+            </div>
+          {% endif %}
+
+          {% if block.settings.product_6 != blank %}
+            {% assign product = block.settings.product_6 %}
+            <div class="get-the-look__modal-product">
+              <a href="{{ product.url }}" class="get-the-look__modal-product-link">
+                {% if product.featured_image != blank %}
+                  <img class="get-the-look__modal-product-image" src="{{ product.featured_image | image_url: width: 300 }}" alt="{{ product.title | escape }}">
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag: 'get-the-look__modal-product-image placeholder-svg' }}
+                {% endif %}
+              </a>
+              <a href="{{ product.url }}" class="get-the-look__modal-product-title">{{ product.title | truncate: 18 }}</a>
+              <p class="get-the-look__modal-product-price">{{ product.price | money }}</p>
+              <button type="button" class="get-the-look__add-to-cart get-the-look__add-to-cart--modal" data-variant-id="{{ product.variants.first.id }}">Add</button>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+
+<script>
+(function() {
+  function initGetTheLook() {
+    // Desktop Tab functionality
+    var sectionEl = document.getElementById('get-the-look-{{ section.id }}');
+    if (!sectionEl) return;
+
+    var tabButtons = sectionEl.querySelectorAll('.get-the-look__tab-button');
+    var tabPanels = sectionEl.querySelectorAll('.get-the-look__panel');
+
+    tabButtons.forEach(function(button) {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        var targetId = this.getAttribute('data-tab-target');
+
+        tabButtons.forEach(function(btn) {
+          btn.classList.remove('active');
+          btn.setAttribute('aria-selected', 'false');
+        });
+        this.classList.add('active');
+        this.setAttribute('aria-selected', 'true');
+
+        tabPanels.forEach(function(panel) {
+          panel.classList.remove('active');
+        });
+        var targetPanel = document.getElementById(targetId);
+        if (targetPanel) {
+          targetPanel.classList.add('active');
+        }
+      });
+    });
+
+    // Desktop Slider navigation
+    var sliderContainers = document.querySelectorAll('#shopify-section-{{ section.id }} .get-the-look__slider-container');
+    sliderContainers.forEach(function(container) {
+      var slider = container.querySelector('[data-slider]');
+      var prevBtn = container.querySelector('.get-the-look__slider-nav--prev');
+      var nextBtn = container.querySelector('.get-the-look__slider-nav--next');
+      
+      if (!slider) return;
+
+      var scrollAmount = {{ section.settings.product_card_width | plus: 15 }};
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', function() {
+          slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', function() {
+          slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        });
+      }
+    });
+
+    // Modal Open
+    var modalOpenBtns = document.querySelectorAll('.js-gtl-modal-open');
+    modalOpenBtns.forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var modalId = this.getAttribute('data-modal-id');
+        var modal = document.getElementById(modalId);
+        if (modal) {
+          modal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+      });
+    });
+
+    // Modal Close
+    var modalCloseBtns = document.querySelectorAll('.js-gtl-modal-close');
+    modalCloseBtns.forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        var modal = this.closest('.get-the-look__modal');
+        if (modal) {
+          modal.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        var activeModals = document.querySelectorAll('.get-the-look__modal.active');
+        activeModals.forEach(function(modal) {
+          modal.classList.remove('active');
+        });
+        document.body.style.overflow = '';
+      }
+    });
+
+  }
+
+  // Initialize on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGetTheLook);
+  } else {
+    initGetTheLook();
+  }
+
+  // Reinitialize on Shopify section reload (for theme editor)
+  document.addEventListener('shopify:section:load', function(e) {
+    if (e.target.querySelector('.get-the-look')) {
+      initGetTheLook();
+    }
+  });
+
+  // Add to Cart functionality - Use event delegation to prevent duplicate handlers
+  var sectionEl = document.getElementById('shopify-section-{{ section.id }}');
+  if (sectionEl && !sectionEl._gtlAddToCartBound) {
+    sectionEl._gtlAddToCartBound = true;
+    sectionEl.addEventListener('click', function(e) {
+      var button = e.target.closest('.get-the-look__add-to-cart');
+      if (!button) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      var variantId = button.getAttribute('data-variant-id');
+      var isModal = button.classList.contains('get-the-look__add-to-cart--modal');
+      var originalText = isModal ? 'Add' : 'Add to Cart';
+
+      if (!variantId || button.classList.contains('is-loading')) return;
+
+      button.classList.add('is-loading');
+      button.textContent = 'Adding...';
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: variantId,
+          quantity: 1
+        })
+      })
+      .then(function(response) {
+        if (!response.ok) throw new Error('Add to cart failed');
+        return response.json();
+      })
+      .then(function(data) {
+        button.classList.remove('is-loading');
+        button.classList.add('is-added');
+        button.textContent = 'Added!';
+
+        // Close any open Get the Look modal first
+        var activeModals = document.querySelectorAll('.get-the-look__modal.active');
+        activeModals.forEach(function(modal) {
+          modal.classList.remove('active');
+        });
+        document.body.style.overflow = '';
+
+        // Update cart count by fetching cart data
+        fetch('/cart.js')
+          .then(function(r) { return r.json(); })
+          .then(function(cart) {
+            var count = cart.item_count || 0;
+            var countSelectors = [
+              '[data-header-cart-count]',
+              '[data-cart-count]',
+              '[data-cart-bubble]',
+              '[data-cart-quantity]',
+              '.site-header-cart--count',
+              '.site-header__cart-count',
+              '.site-cart-count',
+              '.cart-count-bubble',
+              '.cart-count',
+              '.cart-quantity',
+              '.header-cart-count',
+              '.site-header-cart-badge',
+              '.cart-bubble',
+              '.mini-cart__count',
+              '.cart-badge'
+            ];
+            countSelectors.forEach(function(sel) {
+              document.querySelectorAll(sel).forEach(function(el) {
+                el.textContent = count > 0 ? String(count) : '';
+                if (count > 0) el.classList.add('visible');
+                else el.classList.remove('visible');
+              });
+            });
+          });
+
+        // Refresh and open the cart drawer - properly replace the element
+        fetch('/?section_id=cart-drawer')
+          .then(function(res) { return res.text(); })
+          .then(function(html) {
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(html, 'text/html');
+            var newDrawer = doc.getElementById('CartDrawer');
+            var oldDrawer = document.getElementById('CartDrawer');
+
+            if (newDrawer && oldDrawer && oldDrawer.parentNode) {
+              // Replace the entire element to preserve proper structure
+              oldDrawer.parentNode.replaceChild(newDrawer, oldDrawer);
+            }
+
+            // Get fresh references after DOM replacement
+            var cartDrawer = document.getElementById('CartDrawer');
+            var cartOverlay = document.getElementById('CartDrawerOverlay');
+
+            // Ensure overlay exists
+            if (!cartOverlay) {
+              cartOverlay = document.createElement('div');
+              cartOverlay.id = 'CartDrawerOverlay';
+              cartOverlay.className = 'cart-drawer__overlay';
+              document.body.appendChild(cartOverlay);
+            }
+
+            // Open the cart drawer
+            if (cartDrawer) {
+              cartDrawer.classList.add('cart-drawer--open');
+              document.documentElement.style.overflow = 'hidden';
+            }
+
+            // Show overlay with proper styles
+            if (cartOverlay) {
+              Object.assign(cartOverlay.style, {
+                position: 'fixed',
+                top: '0',
+                left: '0',
+                right: '0',
+                bottom: '0',
+                width: '100%',
+                height: '100%',
+                zIndex: '9998',
+                display: 'block',
+                pointerEvents: 'auto',
+                opacity: '1',
+                visibility: 'visible',
+                background: 'rgba(0,0,0,0.36)'
+              });
+            }
+
+            // Bind close handlers for the new drawer
+            var closeDrawerFn = function() {
+              var drawer = document.getElementById('CartDrawer');
+              var overlay = document.getElementById('CartDrawerOverlay');
+              if (drawer) drawer.classList.remove('cart-drawer--open');
+              if (overlay) {
+                overlay.style.display = 'none';
+                overlay.style.pointerEvents = 'none';
+                overlay.style.opacity = '0';
+                overlay.style.visibility = 'hidden';
+              }
+              document.documentElement.style.overflow = '';
+            };
+
+            // Bind close buttons
+            if (cartDrawer) {
+              var closeButtons = cartDrawer.querySelectorAll('[data-cart-drawer-close]');
+              closeButtons.forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                  e.preventDefault();
+                  closeDrawerFn();
+                });
+              });
+            }
+
+            // Bind overlay click
+            if (cartOverlay && !cartOverlay._gtlBound) {
+              cartOverlay._gtlBound = true;
+              cartOverlay.addEventListener('click', function(e) {
+                e.preventDefault();
+                closeDrawerFn();
+              });
+            }
+
+            // Bind quantity buttons
+            if (cartDrawer) {
+              cartDrawer.querySelectorAll('[data-qty-change]').forEach(function(btn) {
+                btn.addEventListener('click', function(e) {
+                  e.preventDefault();
+                  var line = btn.getAttribute('data-line');
+                  var change = btn.getAttribute('data-qty-change');
+                  var input = cartDrawer.querySelector('[data-line-input="' + line + '"]');
+                  var qty = parseInt(input ? input.value : '0', 10) || 0;
+                  qty = change === 'increase' ? qty + 1 : qty - 1;
+                  if (qty < 0) qty = 0;
+
+                  var params = new URLSearchParams();
+                  params.append('line', String(line));
+                  params.append('quantity', String(qty));
+
+                  fetch('/cart/change.js', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params.toString()
+                  })
+                  .then(function() {
+                    // Refresh the page section to update drawer
+                    location.reload();
+                  });
+                });
+              });
+            }
+          });
+
+        // Reset button after delay
+        setTimeout(function() {
+          button.classList.remove('is-added');
+          button.textContent = originalText;
+        }, 2000);
+      })
+      .catch(function(error) {
+        console.error('Error:', error);
+        button.classList.remove('is-loading');
+        button.textContent = originalText;
+      });
+    });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Get the Look",
+  "tag": "section",
+  "class": "get-the-look-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get the Look"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Ready for a new style?"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 18,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading size",
+      "default": 28
+    },
+    {
+      "type": "select",
+      "id": "header_alignment",
+      "label": "Header alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Section width",
+      "options": [
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "header",
+      "content": "Image Settings"
+    },
+    {
+      "type": "range",
+      "id": "image_height_desktop",
+      "min": 300,
+      "max": 800,
+      "step": 10,
+      "unit": "px",
+      "label": "Desktop image height",
+      "default": 550
+    },
+    {
+      "type": "range",
+      "id": "image_height_mobile",
+      "min": 250,
+      "max": 600,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile image height",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Button Styling (Desktop)"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button border/text color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color (on hover)",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "active_button_color",
+      "label": "Active button background",
+      "default": "#2196F3"
+    },
+    {
+      "type": "color",
+      "id": "active_button_text_color",
+      "label": "Active button text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Product Slider Settings (Desktop)"
+    },
+    {
+      "type": "range",
+      "id": "slider_max_width",
+      "min": 30,
+      "max": 80,
+      "step": 1,
+      "unit": "%",
+      "label": "Slider max width",
+      "default": 55
+    },
+    {
+      "type": "range",
+      "id": "slider_title_size",
+      "min": 18,
+      "max": 42,
+      "step": 2,
+      "unit": "px",
+      "label": "Slider title size",
+      "default": 28
+    },
+    {
+      "type": "color",
+      "id": "slider_title_color",
+      "label": "Slider title color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "product_card_width",
+      "min": 120,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Product card width",
+      "default": 160
+    },
+    {
+      "type": "color",
+      "id": "badge_color",
+      "label": "Badge color",
+      "default": "#ff6b35"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Settings"
+    },
+    {
+      "type": "range",
+      "id": "mobile_slide_width",
+      "min": 60,
+      "max": 95,
+      "step": 5,
+      "unit": "%",
+      "label": "Mobile slide width",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "mobile_thumb_size",
+      "min": 30,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile thumbnail size",
+      "default": 42
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 50
+    }
+  ],
+  "blocks": [
+    {
+      "type": "style_tab",
+      "name": "Style Tab",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Tab Button"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Style"
+        },
+        {
+          "type": "header",
+          "content": "Background Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Desktop Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile Image",
+          "info": "Optional. If not set, desktop image will be used."
+        },
+        {
+          "type": "header",
+          "content": "Product Slider (Desktop)"
+        },
+        {
+          "type": "text",
+          "id": "slider_title",
+          "label": "Slider title",
+          "default": "Style"
+        },
+        {
+          "type": "select",
+          "id": "slider_position",
+          "label": "Slider position on image",
+          "options": [
+            { "value": "top-left", "label": "Top Left" },
+            { "value": "top-center", "label": "Top Center" },
+            { "value": "top-right", "label": "Top Right" },
+            { "value": "center-left", "label": "Center Left" },
+            { "value": "center-center", "label": "Center" },
+            { "value": "center-right", "label": "Center Right" },
+            { "value": "bottom-left", "label": "Bottom Left" },
+            { "value": "bottom-center", "label": "Bottom Center" },
+            { "value": "bottom-right", "label": "Bottom Right" }
+          ],
+          "default": "center-right"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_badges",
+          "label": "Show product badges",
+          "default": true
+        },
+        {
+          "type": "header",
+          "content": "Products (Max 6)"
+        },
+        {
+          "type": "product",
+          "id": "product_1",
+          "label": "Product 1"
+        },
+        {
+          "type": "product",
+          "id": "product_2",
+          "label": "Product 2"
+        },
+        {
+          "type": "product",
+          "id": "product_3",
+          "label": "Product 3"
+        },
+        {
+          "type": "product",
+          "id": "product_4",
+          "label": "Product 4"
+        },
+        {
+          "type": "product",
+          "id": "product_5",
+          "label": "Product 5"
+        },
+        {
+          "type": "product",
+          "id": "product_6",
+          "label": "Product 6"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Get the Look",
+      "blocks": [
+        {
+          "type": "style_tab",
+          "settings": {
+            "button_label": "Casual",
+            "slider_title": "Casual"
+          }
+        },
+        {
+          "type": "style_tab",
+          "settings": {
+            "button_label": "Cute",
+            "slider_title": "Cute"
+          }
+        },
+        {
+          "type": "style_tab",
+          "settings": {
+            "button_label": "Natural",
+            "slider_title": "Natural"
+          }
+        },
+        {
+          "type": "style_tab",
+          "settings": {
+            "button_label": "Rock",
+            "slider_title": "Rock"
+          }
+        },
+        {
+          "type": "style_tab",
+          "settings": {
+            "button_label": "Street",
+            "slider_title": "Street"
+          }
+        },
+        {
+          "type": "style_tab",
+          "settings": {
+            "button_label": "Vintage",
+            "slider_title": "Vintage"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,270 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "dynamic_slideshow_xtXc7L": {
+      "type": "dynamic-slideshow",
+      "blocks": {
+        "slide_GV6UB4": {
+          "type": "slide",
+          "settings": {
+            "background_image": "shopify://shop_images/6_bab08a64-56b9-41fe-8a59-c9f1a0ad95b8.png",
+            "mobile_background_image": "shopify://shop_images/23.png",
+            "title": "Lip Piercing Guide",
+            "text": "All About Lip Piercings: Styles, Care, and Jewellery Inspiration",
+            "color": "#ffffff",
+            "link": "",
+            "text_alignment": "left",
+            "button_one_label": "",
+            "button_one_link": "",
+            "button_two_label": "",
+            "button_two_link": "",
+            "show_overlay": true,
+            "overlay_color": "#000000",
+            "overlay_opacity": 26
+          }
+        }
+      },
+      "block_order": [
+        "slide_GV6UB4"
+      ],
+      "settings": {
+        "enable_autoplay": true,
+        "autoplay_duration": 8,
+        "slideshow_width": "full",
+        "slideshow_height": "small",
+        "slideshow_height_mobile": "medium",
+        "slideshow_text_below_image": true
+      }
+    },
+    "dynamic_rich_text_8fTBUG": {
+      "type": "dynamic-rich-text",
+      "settings": {
+        "width": "wide",
+        "title": "",
+        "text": "<p>Whether you’re considering your first piercing or looking to expand your collection, understanding the process, aftercare, and jewellery options is essential for a safe and enjoyable experience. With an array of lip piercings to choose from, this guide will equip you with the knowledge to make informed decisions and embrace your unique look.</p>",
+        "heading_size": "medium",
+        "text_alignment": "center"
+      }
+    },
+    "dynamic_image_with_text_tCLBH6": {
+      "type": "dynamic-image-with-text",
+      "settings": {
+        "section_heading": "",
+        "image": "shopify://shop_images/Size_Guide_Mobile.png",
+        "desktop_height": "800px",
+        "mobile_height": "400px",
+        "desktop_image_alignment": "left",
+        "mobile_image_alignment": "top",
+        "heading": "Choosing your Piercing",
+        "subheading": "<p>From sleek minimalism to bold statement piercings, there is a fit for every individual's style. Here is a quick overview of the different types of lip piercings which also aims to help you make an informed decision when choosing to pierce your lips. These piercings often appeal to those who know exactly what they’re looking for and appreciate unique styles. </p><p><strong>JEWELLERY: </strong>Flat-back Studs, Segment Clickers, Captive Bead Rings (BCR's), Horseshoe Barbells (CBB's),</p><p><strong>STANDARD SIZE: </strong>16G (1.2mm), and occasionally 14G (1.6mm) or 18G (1.0mm) Thickness & 8-10mm Length.</p><p><strong>DOWNSIZE:</strong> 8mm is standard bar length and hoop diameter after healing for snug fit or if you prefer more fine jewellery choices, 6mm bar length.</p><p><strong>HEALING TIME: </strong>Lip piercings all generally take 3-6 months to fully heal, however healing times are also dependant on the area of piercing and individuals aftercare and oral health. Maintaining good oral hygiene and aftercare are key to creating a smooth healing process and time.</p><p><strong>PAIN LEVEL: </strong>Again, pain level is relative to each individual but a general rule of thumb is that the thicker the tissue area of the piercing the more painful. Although, most lip piercings  are only moderately painful. Piercing in more than 2 areas can also increase pain level.</p><p><strong>AFTERCARE: </strong>Clean your piercings 2-3 a day with Saline solution and restrain from eating spicy foods that can irritate the area. Drinking plenty of water to keep hydrated and rinsing your mouth daily with non-alcoholic mouthwash is also recommended for a smooth healing process.</p><p><strong>PRO-TIP: </strong>Consider how the piercing will complement your facial features and personal style so be sure to discuss placement with your piercer.</p>",
+        "text_alignment": "left",
+        "button_label": "Button",
+        "button_link": ""
+      }
+    },
+    "dynamic_collection_list_KqQmrq": {
+      "type": "dynamic-collection-list",
+      "blocks": {
+        "collection_XfnxNW": {
+          "type": "collection",
+          "settings": {
+            "collection": "flat-backs",
+            "image": "shopify://shop_images/Subcollections-5_fe1f5de3-afba-4570-9978-7398c5e328ea.png",
+            "title": ""
+          }
+        },
+        "collection_mx4Pyg": {
+          "type": "collection",
+          "settings": {
+            "collection": "circular-barbells",
+            "title": ""
+          }
+        },
+        "collection_BceXi3": {
+          "type": "collection",
+          "settings": {
+            "collection": "ball-end-studs",
+            "image": "shopify://shop_images/ChatGPT_Image_Jun_9_2025_at_08_11_16_PM.png",
+            "title": ""
+          }
+        },
+        "collection_qQyW7w": {
+          "type": "collection",
+          "settings": {
+            "collection": "tongue-barbells",
+            "title": ""
+          }
+        },
+        "collection_gJn3n9": {
+          "type": "collection",
+          "settings": {
+            "collection": "hoop-rings",
+            "image": "shopify://shop_images/Subcollections-4_c6ff8a56-9b8d-4cc4-a8ba-89a686e1ad6e.png",
+            "title": ""
+          }
+        }
+      },
+      "block_order": [
+        "collection_XfnxNW",
+        "collection_mx4Pyg",
+        "collection_BceXi3",
+        "collection_qQyW7w",
+        "collection_gJn3n9"
+      ],
+      "name": "t:sections.collection_list.presets.collection_list.name",
+      "settings": {
+        "title": "Shop Lip Rings",
+        "thumbnail_columns_desktop": 5,
+        "thumbnail_columns_mobile": 2,
+        "image-crop": "original",
+        "cta_label": "",
+        "cta_link": "",
+        "cta_button_style": "primary"
+      }
+    },
+    "dynamic_image_with_text_imKL9f": {
+      "type": "dynamic-image-with-text",
+      "settings": {
+        "section_heading": "",
+        "image": "shopify://shop_images/Piercing_Guide-2_42996b4d-17a6-44bc-82ea-4f14974b1c7b.png",
+        "desktop_height": "500px",
+        "mobile_height": "300px",
+        "desktop_image_alignment": "left",
+        "mobile_image_alignment": "top",
+        "heading": "Classic or Perioral Piercings",
+        "subheading": "<p>Labret, Monroe, Madonna, Medusa are all considered perioral piercings due to their placement on the outer lip areas. All have a healing time of 6-8 weeks and moderate pain level due to the thickness of the tissue they are pierced on, so healing time is comparatively short to other lip piercings.<br/><span style=\"text-decoration:underline\">LABRET</span>: the most classic lip piercing located below the centre of the bottom lip. An off-side labret is also a popular choice amongst piercing enthusiasts that can also be worn with a basic hoop ring around the bottom lip.<br/><span style=\"text-decoration:underline\">MEDUSA</span>: placed on the philtrum of the lip drawing attention to that area.<br/><span style=\"text-decoration:underline\">MONROE & MADONNA:</span> These are pierced on  either side of the lips, mimicking the popular stars Marilyn Monroe & Madonna's beauty marks respectively.</p>",
+        "text_alignment": "left",
+        "button_label": "Button",
+        "button_link": ""
+      }
+    },
+    "dynamic_image_with_text_N8ndFU": {
+      "type": "dynamic-image-with-text",
+      "settings": {
+        "section_heading": "",
+        "image": "shopify://shop_images/Piercing_Guide-3.png",
+        "desktop_height": "500px",
+        "mobile_height": "300px",
+        "desktop_image_alignment": "left",
+        "mobile_image_alignment": "top",
+        "heading": "Bite Piercings",
+        "subheading": "<p>These piercings are unique and take inspiration from the look of animal bites, hence their name.  <span style=\"text-decoration:underline\">Dolphin Bite,</span> <span style=\"text-decoration:underline\">Dahlia,</span> <span style=\"text-decoration:underline\">Snake Bite,</span> <span style=\"text-decoration:underline\">Spider Bite,</span> <span style=\"text-decoration:underline\">Shark Bites,</span> <span style=\"text-decoration:underline\">Angel Bite, </span>and<span style=\"text-decoration:underline\"> Cyber Bite</span> piercings are all when 2 or more studs are pierced on either side, (vertically or horizontally) of the lips. People may opt for these choices to maintain a more symmetrical look when it comes to lip piercings. <br/>Bite piercings typically take around 6-12 weeks to heal and whilst most bite piercings are only moderately painful on the scale, Angel and Shark bites may be more painful due to Angel bites pierced on the upper lip and Shark bites involving more piercings. <br/><br/>Whilst most bite piercings consist of only 2 piercings positioned symmetrically around the lips, <strong>Shark bites </strong>consist of two piercings on each side of the lower lip, creating a fierce, symmetrical look, while <strong>spider bites </strong>feature two closely placed piercings on one side of the lower lip for a sleek, understated vibe. Both styles offer versatile jewellery options, from studs to hoops, making them a perfect choice for anyone looking to add a bold yet stylish element to their appearance.</p>",
+        "text_alignment": "left",
+        "button_label": "Button",
+        "button_link": ""
+      }
+    },
+    "dynamic_image_with_text_aJGFdc": {
+      "type": "dynamic-image-with-text",
+      "settings": {
+        "section_heading": "",
+        "image": "shopify://shop_images/mouth-2.png",
+        "desktop_height": "500px",
+        "mobile_height": "300px",
+        "desktop_image_alignment": "left",
+        "mobile_image_alignment": "top",
+        "heading": "Central Piercings",
+        "subheading": "<p>Vertical Labret, Ashley & Jestrum piercings are all choices when you're looking for something bold whilst accentuating the natural curves of the lips.<br/><span style=\"text-decoration:underline\">ASHLEY</span>: located right on the centre of the bottom lip, this piercing penetrates through the lip tissue itself rather than the lip line. Fully healed Ashley piercings can take upto 3 months and will be moderately painful on the pain scale due to the many nerves on the lip.<br/><span style=\"text-decoration:underline\">JESTRUM</span>: (Vertical Medusa) It is placed through the philtrum and exits through the centre of the upper lip. With an initial healing time of 6-12 weeks, full healing can take upto 6 months. Again moderately painful but not high. <br/><span style=\"text-decoration:underline\">VERTICAL LABRET</span>: As the name suggests, this piercing is positioned at the same place as the typical labret piercing but goes through the centre of the lip. Both ends of the jewellery are visible on either side of the bottom lip, creating an edgy but elegant look.  Again, upto 3 months for a fully healed vertical labret piercing is normal and this piercing is known to be moderately painful on the pain scale.<br/></p>",
+        "text_alignment": "left",
+        "button_label": "Button",
+        "button_link": ""
+      }
+    },
+    "main": {
+      "type": "page",
+      "disabled": true,
+      "settings": {}
+    },
+    "dynamic_slideshow_PLyb8Q": {
+      "type": "dynamic-slideshow",
+      "settings": {
+        "enable_autoplay": true,
+        "autoplay_duration": 8,
+        "slideshow_width": "full",
+        "slideshow_height": "original",
+        "slideshow_height_mobile": "small",
+        "slideshow_text_below_image": true
+      }
+    },
+    "11859229-c1d4-4dfb-a2ce-dd353ba3b726": {
+      "type": "dynamic-highlights-banner",
+      "blocks": {
+        "template--16105802989730__11859229-c1d4-4dfb-a2ce-dd353ba3b726-highlight-1": {
+          "type": "highlight",
+          "settings": {
+            "icon": "icon-delivery",
+            "image": "shopify://shop_images/1_07a54c9c-8a0b-44ca-b177-699382656454.png",
+            "title": "Free Shipping",
+            "text": "<p><em>For UK Orders Over £20</em></p>",
+            "link": "shopify://pages/shipping-policy"
+          }
+        },
+        "template--16105802989730__11859229-c1d4-4dfb-a2ce-dd353ba3b726-highlight-2": {
+          "type": "highlight",
+          "settings": {
+            "icon": "icon-cell-phone",
+            "image": "shopify://shop_images/sample_f8cb253b-da44-4cc1-91e8-46fdc47a9ab2.png",
+            "title": "Quality Assurance",
+            "text": "<p><em>High Quality Materials & Service</em></p>",
+            "link": "shopify://pages/about-us"
+          }
+        },
+        "template--16105802989730__11859229-c1d4-4dfb-a2ce-dd353ba3b726-highlight-3": {
+          "type": "highlight",
+          "settings": {
+            "icon": "icon-chat-alternate",
+            "image": "shopify://shop_images/2_9d24f671-5979-4ed0-8d10-cf715d64327f.png",
+            "title": "14 Day Return",
+            "text": "<p><em>Product Satisfaction</em></p>",
+            "link": "shopify://pages/replacements-returns-policy"
+          }
+        },
+        "template--16105802989730__11859229-c1d4-4dfb-a2ce-dd353ba3b726-highlight-4": {
+          "type": "highlight",
+          "settings": {
+            "icon": "icon-pin",
+            "image": "shopify://shop_images/4_ad79c56c-096e-4794-aa6e-e2b2c5c0cc4c.png",
+            "title": "Worldwide Shipping",
+            "text": "<p><em>Orders Shipped in 2 Days</em></p>",
+            "link": "shopify://pages/shipping-policy"
+          }
+        }
+      },
+      "block_order": [
+        "template--16105802989730__11859229-c1d4-4dfb-a2ce-dd353ba3b726-highlight-1",
+        "template--16105802989730__11859229-c1d4-4dfb-a2ce-dd353ba3b726-highlight-2",
+        "template--16105802989730__11859229-c1d4-4dfb-a2ce-dd353ba3b726-highlight-3",
+        "template--16105802989730__11859229-c1d4-4dfb-a2ce-dd353ba3b726-highlight-4"
+      ],
+      "settings": {
+        "section_spacing": false,
+        "section_width": "full-width",
+        "icon_layout": "center",
+        "color": "#4d4d4d",
+        "icon_color": "#4d4d4d",
+        "background_color": "#ffffff",
+        "mobile_layout": "grid"
+      }
+    }
+  },
+  "order": [
+    "dynamic_slideshow_xtXc7L",
+    "dynamic_rich_text_8fTBUG",
+    "dynamic_image_with_text_tCLBH6",
+    "dynamic_collection_list_KqQmrq",
+    "dynamic_image_with_text_imKL9f",
+    "dynamic_image_with_text_N8ndFU",
+    "dynamic_image_with_text_aJGFdc",
+    "main",
+    "dynamic_slideshow_PLyb8Q",
+    "11859229-c1d4-4dfb-a2ce-dd353ba3b726"
+  ]
+}

@@ -1,0 +1,451 @@
+{% comment %}
+  Top Bar Links Section - Similar to Heybike.com
+  Supports both Shopify menus and manual blocks
+{% endcomment %}
+
+{% style %}
+  .top-bar-links {
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    font-size: {{ section.settings.font_size }}px;
+    padding: {{ section.settings.padding_vertical }}px 0;
+    border-bottom: 1px solid {{ section.settings.border_color }};
+  }
+
+  .top-bar-links__container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .top-bar-links__left,
+  .top-bar-links__right {
+    display: flex;
+    align-items: center;
+    gap: {{ section.settings.link_gap }}px;
+    flex-wrap: wrap;
+  }
+
+  .top-bar-links__menu {
+    display: flex;
+    align-items: center;
+    gap: {{ section.settings.link_gap }}px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .top-bar-links__menu-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .top-bar-links__link {
+    color: {{ section.settings.text_color }};
+    text-decoration: none;
+    transition: color 0.2s ease, opacity 0.2s ease;
+    font-weight: {{ section.settings.font_weight }};
+    white-space: nowrap;
+  }
+
+  .top-bar-links__link:hover {
+    color: {{ section.settings.hover_color }};
+  }
+
+  .top-bar-links__item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .top-bar-links__icon {
+    width: {{ section.settings.icon_size }}px;
+    height: {{ section.settings.icon_size }}px;
+    flex-shrink: 0;
+  }
+
+  .top-bar-links__icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+    fill: none;
+  }
+
+  .top-bar-links__divider {
+    width: 1px;
+    height: 14px;
+    background-color: {{ section.settings.text_color }};
+    opacity: 0.3;
+  }
+
+  /* Mobile styles */
+  @media screen and (max-width: 749px) {
+    .top-bar-links {
+      font-size: {{ section.settings.font_size | minus: 2 }}px;
+      padding: {{ section.settings.padding_vertical | divided_by: 2 }}px 0;
+    }
+
+    .top-bar-links__container {
+      padding: 0 15px;
+      {% if section.settings.mobile_layout == 'center' %}
+        justify-content: center;
+      {% elsif section.settings.mobile_layout == 'stack' %}
+        flex-direction: column;
+        gap: 8px;
+      {% endif %}
+    }
+
+    .top-bar-links__left,
+    .top-bar-links__right,
+    .top-bar-links__menu {
+      gap: {{ section.settings.link_gap | divided_by: 2 }}px;
+    }
+
+    {% if section.settings.hide_right_mobile %}
+      .top-bar-links__right {
+        display: none;
+      }
+    {% endif %}
+
+    {% if section.settings.hide_left_mobile %}
+      .top-bar-links__left {
+        display: none;
+      }
+    {% endif %}
+  }
+{% endstyle %}
+
+<div class="top-bar-links" data-section-id="{{ section.id }}">
+  <div class="top-bar-links__container">
+
+    <!-- Left Side - Menu or Blocks -->
+    <div class="top-bar-links__left">
+      {% if section.settings.left_menu != blank %}
+        <ul class="top-bar-links__menu">
+          {% for link in linklists[section.settings.left_menu].links %}
+            <li class="top-bar-links__menu-item">
+              <a href="{{ link.url }}" class="top-bar-links__link">{{ link.title }}</a>
+            </li>
+            {% unless forloop.last %}
+              {% if section.settings.show_dividers %}
+                <span class="top-bar-links__divider"></span>
+              {% endif %}
+            {% endunless %}
+          {% endfor %}
+        </ul>
+      {% else %}
+        {% for block in section.blocks %}
+          {% if block.type == 'link_left' %}
+            <div class="top-bar-links__item" {{ block.shopify_attributes }}>
+              {% if block.settings.icon != 'none' %}
+                <span class="top-bar-links__icon">
+                  {% render 'top-bar-icon', icon: block.settings.icon %}
+                </span>
+              {% endif %}
+              <a href="{{ block.settings.link }}" class="top-bar-links__link">
+                {{ block.settings.text }}
+              </a>
+            </div>
+            {% unless forloop.last %}
+              {% if section.settings.show_dividers %}
+                <span class="top-bar-links__divider"></span>
+              {% endif %}
+            {% endunless %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    <!-- Right Side - Menu or Blocks -->
+    <div class="top-bar-links__right">
+      {% if section.settings.right_menu != blank %}
+        <ul class="top-bar-links__menu">
+          {% for link in linklists[section.settings.right_menu].links %}
+            <li class="top-bar-links__menu-item">
+              <a href="{{ link.url }}" class="top-bar-links__link">{{ link.title }}</a>
+            </li>
+            {% unless forloop.last %}
+              {% if section.settings.show_dividers %}
+                <span class="top-bar-links__divider"></span>
+              {% endif %}
+            {% endunless %}
+          {% endfor %}
+        </ul>
+      {% else %}
+        {% for block in section.blocks %}
+          {% if block.type == 'link_right' %}
+            <div class="top-bar-links__item" {{ block.shopify_attributes }}>
+              {% if block.settings.icon != 'none' %}
+                <span class="top-bar-links__icon">
+                  {% render 'top-bar-icon', icon: block.settings.icon %}
+                </span>
+              {% endif %}
+              <a href="{{ block.settings.link }}" class="top-bar-links__link">
+                {{ block.settings.text }}
+              </a>
+            </div>
+            {% unless forloop.last %}
+              {% if section.settings.show_dividers %}
+                <span class="top-bar-links__divider"></span>
+              {% endif %}
+            {% endunless %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Top Bar Links",
+  "class": "top-bar-links-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Menu Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "left_menu",
+      "label": "Left menu",
+      "info": "Select a menu from Navigation. Leave blank to use manual blocks."
+    },
+    {
+      "type": "link_list",
+      "id": "right_menu",
+      "label": "Right menu",
+      "info": "Select a menu from Navigation. Leave blank to use manual blocks."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "hover_color",
+      "label": "Hover color",
+      "default": "#db1e37"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#e5e5e5"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 13
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Font weight",
+      "options": [
+        { "value": "400", "label": "Normal" },
+        { "value": "500", "label": "Medium" },
+        { "value": "600", "label": "Semi-bold" }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical padding",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "link_gap",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap between links",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 16
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dividers",
+      "label": "Show dividers between links",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Mobile"
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile layout",
+      "options": [
+        { "value": "default", "label": "Left and Right" },
+        { "value": "center", "label": "Center all" },
+        { "value": "stack", "label": "Stacked" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_left_mobile",
+      "label": "Hide left links on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_right_mobile",
+      "label": "Hide right links on mobile",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link_left",
+      "name": "Left Link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Link text",
+          "default": "Support"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link URL"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "phone", "label": "Phone" },
+            { "value": "mail", "label": "Email" },
+            { "value": "truck", "label": "Truck/Shipping" },
+            { "value": "map", "label": "Location" },
+            { "value": "help", "label": "Help/Question" },
+            { "value": "star", "label": "Star" },
+            { "value": "gift", "label": "Gift" }
+          ],
+          "default": "none"
+        }
+      ]
+    },
+    {
+      "type": "link_right",
+      "name": "Right Link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Link text",
+          "default": "Track Order"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link URL"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "phone", "label": "Phone" },
+            { "value": "mail", "label": "Email" },
+            { "value": "truck", "label": "Truck/Shipping" },
+            { "value": "map", "label": "Location" },
+            { "value": "help", "label": "Help/Question" },
+            { "value": "star", "label": "Star" },
+            { "value": "gift", "label": "Gift" },
+            { "value": "user", "label": "User/Account" }
+          ],
+          "default": "none"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Top Bar Links",
+      "blocks": [
+        {
+          "type": "link_left",
+          "settings": {
+            "text": "Free UK Shipping over £20",
+            "icon": "truck"
+          }
+        },
+        {
+          "type": "link_left",
+          "settings": {
+            "text": "Contact Us",
+            "icon": "mail"
+          }
+        },
+        {
+          "type": "link_right",
+          "settings": {
+            "text": "Track Order",
+            "icon": "truck"
+          }
+        },
+        {
+          "type": "link_right",
+          "settings": {
+            "text": "Help Center",
+            "icon": "help"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

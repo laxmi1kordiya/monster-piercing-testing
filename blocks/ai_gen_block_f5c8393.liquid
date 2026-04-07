@@ -1,0 +1,731 @@
+{% doc %}
+  @prompt
+    create a sticky at the end to show the products and on the right show the option for add to cart so on scrolling the sticky down side when the main add to cart do not appear , remove the nationality option from the sticky in the mobile  and remove the incremental and decremental which is just side of the number in incremental, keep the plus and minus incremental decremental remove this uodown incremental decremental 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-sticky-atc-{{ ai_gen_id }} {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: {{ block.settings.background_color }};
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    display: block;
+  }
+
+  .ai-sticky-atc-{{ ai_gen_id }}.visible {
+    transform: translateY(0);
+  }
+
+  .ai-sticky-atc-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    padding: {{ block.settings.padding }}px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .ai-sticky-atc-product-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .ai-sticky-atc-image-{{ ai_gen_id }} {
+    width: {{ block.settings.image_size }}px;
+    height: {{ block.settings.image_size }}px;
+    flex-shrink: 0;
+    border-radius: {{ block.settings.image_border_radius }}px;
+    overflow: hidden;
+  }
+
+  .ai-sticky-atc-image-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-sticky-atc-info-{{ ai_gen_id }} {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .ai-sticky-atc-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    font-weight: 600;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ai-sticky-atc-price-{{ ai_gen_id }} {
+    font-size: {{ block.settings.price_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0;
+  }
+
+  .ai-sticky-atc-price-{{ ai_gen_id }} .price--on-sale {
+    color: {{ block.settings.sale_color }};
+  }
+
+  .ai-sticky-atc-price-{{ ai_gen_id }} .price--compare {
+    text-decoration: line-through;
+    opacity: 0.6;
+    margin-left: 8px;
+  }
+
+  .ai-sticky-atc-actions-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .ai-sticky-atc-quantity-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    border: 1px solid {{ block.settings.input_border_color }};
+    border-radius: {{ block.settings.button_border_radius }}px;
+    overflow: hidden;
+  }
+
+  .ai-sticky-atc-qty-btn-{{ ai_gen_id }} {
+    background-color: {{ block.settings.qty_button_bg }};
+    color: {{ block.settings.qty_button_color }};
+    border: none;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: background-color 0.2s ease;
+  }
+
+  .ai-sticky-atc-qty-btn-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.qty_button_hover_bg }};
+  }
+
+  .ai-sticky-atc-qty-input-{{ ai_gen_id }} {
+    width: 50px;
+    height: 36px;
+    border: none;
+    text-align: center;
+    font-size: 14px;
+    color: {{ block.settings.text_color }};
+    background-color: transparent;
+    -moz-appearance: textfield;
+  }
+
+  .ai-sticky-atc-qty-input-{{ ai_gen_id }}::-webkit-outer-spin-button,
+  .ai-sticky-atc-qty-input-{{ ai_gen_id }}::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .ai-sticky-atc-button-{{ ai_gen_id }} {
+    background-color: {{ block.settings.button_bg_color }};
+    color: {{ block.settings.button_text_color }};
+    border: none;
+    padding: 12px 32px;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-size: {{ block.settings.button_text_size }}px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .ai-sticky-atc-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_bg_color }};
+  }
+
+  .ai-sticky-atc-button-{{ ai_gen_id }}:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-sticky-atc-container-{{ ai_gen_id }} {
+      gap: 12px;
+    }
+
+    .ai-sticky-atc-image-{{ ai_gen_id }} {
+      width: {{ block.settings.image_size | times: 0.8 }}px;
+      height: {{ block.settings.image_size | times: 0.8 }}px;
+    }
+
+    .ai-sticky-atc-title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.9 }}px;
+    }
+
+    .ai-sticky-atc-quantity-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-sticky-atc-button-{{ ai_gen_id }} {
+      padding: 12px 24px;
+    }
+  }
+{% endstyle %}
+
+<sticky-add-to-cart-{{ ai_gen_id }}
+  class="ai-sticky-atc-{{ ai_gen_id }}"
+  data-threshold="{{ block.settings.scroll_threshold }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-sticky-atc-container-{{ ai_gen_id }}">
+    <div class="ai-sticky-atc-product-{{ ai_gen_id }}">
+      {% if product.featured_image %}
+        <div class="ai-sticky-atc-image-{{ ai_gen_id }}">
+          <img
+            src="{{ product.featured_image | image_url: width: 200 }}"
+            alt="{{ product.featured_image.alt | escape }}"
+            loading="lazy"
+            width="200"
+            height="200"
+          >
+        </div>
+      {% endif %}
+
+      <div class="ai-sticky-atc-info-{{ ai_gen_id }}">
+        <h3 class="ai-sticky-atc-title-{{ ai_gen_id }}">{{ product.title }}</h3>
+        <div class="ai-sticky-atc-price-{{ ai_gen_id }}">
+          {% if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price %}
+            <span class="price--on-sale">{{ product.selected_or_first_available_variant.price | money }}</span>
+            <span class="price--compare">{{ product.selected_or_first_available_variant.compare_at_price | money }}</span>
+          {% else %}
+            <span>{{ product.selected_or_first_available_variant.price | money }}</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-sticky-atc-actions-{{ ai_gen_id }}">
+      {% if block.settings.show_quantity %}
+        <div class="ai-sticky-atc-quantity-{{ ai_gen_id }}">
+          <button
+            type="button"
+            class="ai-sticky-atc-qty-btn-{{ ai_gen_id }} ai-sticky-atc-qty-minus-{{ ai_gen_id }}"
+            aria-label="Decrease quantity"
+          >
+            −
+          </button>
+          <input
+            type="number"
+            class="ai-sticky-atc-qty-input-{{ ai_gen_id }}"
+            value="1"
+            min="1"
+            aria-label="Quantity"
+          >
+          <button
+            type="button"
+            class="ai-sticky-atc-qty-btn-{{ ai_gen_id }} ai-sticky-atc-qty-plus-{{ ai_gen_id }}"
+            aria-label="Increase quantity"
+          >
+            +
+          </button>
+        </div>
+      {% endif %}
+
+      <button
+        type="button"
+        class="ai-sticky-atc-button-{{ ai_gen_id }}"
+        data-product-id="{{ product.id }}"
+        data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+      >
+        {% if product.selected_or_first_available_variant.available %}
+          {{ block.settings.button_text }}
+        {% else %}
+          {{ block.settings.sold_out_text }}
+        {% endif %}
+      </button>
+    </div>
+  </div>
+</sticky-add-to-cart-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class StickyAddToCart{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.threshold = parseInt(this.dataset.threshold) || 300;
+        this.mainAddToCartButton = null;
+        this.stickyButton = this.querySelector('.ai-sticky-atc-button-{{ ai_gen_id }}');
+        this.qtyInput = this.querySelector('.ai-sticky-atc-qty-input-{{ ai_gen_id }}');
+        this.qtyMinusBtn = this.querySelector('.ai-sticky-atc-qty-minus-{{ ai_gen_id }}');
+        this.qtyPlusBtn = this.querySelector('.ai-sticky-atc-qty-plus-{{ ai_gen_id }}');
+      }
+
+      connectedCallback() {
+        this.findMainAddToCartButton();
+        this.setupScrollListener();
+        this.setupQuantityControls();
+        this.setupAddToCart();
+        this.syncWithMainForm();
+      }
+
+      findMainAddToCartButton() {
+        const selectors = [
+          'button[name="add"]',
+          '.product-form__submit',
+          '[data-add-to-cart]',
+          'button[type="submit"][form*="product"]'
+        ];
+
+        for (const selector of selectors) {
+          this.mainAddToCartButton = document.querySelector(selector);
+          if (this.mainAddToCartButton) break;
+        }
+      }
+
+      setupScrollListener() {
+        let ticking = false;
+
+        window.addEventListener('scroll', () => {
+          if (!ticking) {
+            window.requestAnimationFrame(() => {
+              this.handleScroll();
+              ticking = false;
+            });
+            ticking = true;
+          }
+        });
+
+        this.handleScroll();
+      }
+
+      handleScroll() {
+        if (!this.mainAddToCartButton) {
+          if (window.scrollY > this.threshold) {
+            this.classList.add('visible');
+          } else {
+            this.classList.remove('visible');
+          }
+          return;
+        }
+
+        const buttonRect = this.mainAddToCartButton.getBoundingClientRect();
+        const isButtonVisible = buttonRect.top < window.innerHeight && buttonRect.bottom > 0;
+
+        if (!isButtonVisible && window.scrollY > this.threshold) {
+          this.classList.add('visible');
+        } else {
+          this.classList.remove('visible');
+        }
+      }
+
+      setupQuantityControls() {
+        if (!this.qtyInput) return;
+
+        if (this.qtyMinusBtn) {
+          this.qtyMinusBtn.addEventListener('click', () => {
+            const currentValue = parseInt(this.qtyInput.value) || 1;
+            if (currentValue > 1) {
+              this.qtyInput.value = currentValue - 1;
+            }
+          });
+        }
+
+        if (this.qtyPlusBtn) {
+          this.qtyPlusBtn.addEventListener('click', () => {
+            const currentValue = parseInt(this.qtyInput.value) || 1;
+            this.qtyInput.value = currentValue + 1;
+          });
+        }
+
+        this.qtyInput.addEventListener('change', () => {
+          const value = parseInt(this.qtyInput.value);
+          if (isNaN(value) || value < 1) {
+            this.qtyInput.value = 1;
+          }
+        });
+      }
+
+      setupAddToCart() {
+        if (!this.stickyButton) return;
+
+        this.stickyButton.addEventListener('click', () => {
+          const variantId = this.stickyButton.dataset.variantId;
+          const quantity = this.qtyInput ? parseInt(this.qtyInput.value) || 1 : 1;
+
+          if (!variantId) return;
+
+          this.stickyButton.disabled = true;
+          const originalText = this.stickyButton.textContent;
+          this.stickyButton.textContent = 'Adding...';
+
+          fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              id: variantId,
+              quantity: quantity
+            })
+          })
+          .then(response => response.json())
+          .then(data => {
+            this.stickyButton.textContent = 'Added!';
+
+            setTimeout(() => {
+              this.stickyButton.textContent = originalText;
+              this.stickyButton.disabled = false;
+            }, 1500);
+
+            if (window.theme && window.theme.cart) {
+              window.theme.cart.refresh();
+            }
+
+            document.dispatchEvent(new CustomEvent('cart:updated'));
+
+            // Open cart drawer after adding
+            this.openCartDrawer();
+          })
+          .catch(error => {
+            console.error('Error adding to cart:', error);
+            this.stickyButton.textContent = originalText;
+            this.stickyButton.disabled = false;
+          });
+        });
+      }
+
+      openCartDrawer() {
+        const self = this;
+        const drawer = document.querySelector('#CartDrawer');
+        let overlay = document.querySelector('#CartDrawerOverlay, .cart-drawer__overlay');
+
+        // Create overlay if it doesn't exist
+        if (!overlay) {
+          overlay = document.createElement('div');
+          overlay.id = 'CartDrawerOverlay';
+          overlay.className = 'cart-drawer__overlay';
+          document.body.appendChild(overlay);
+        }
+
+        // Show overlay
+        Object.assign(overlay.style, {
+          position: 'fixed',
+          top: '0',
+          left: '0',
+          right: '0',
+          bottom: '0',
+          width: '100%',
+          height: '100%',
+          zIndex: '9998',
+          display: 'block',
+          pointerEvents: 'auto',
+          opacity: '1',
+          visibility: 'visible',
+          background: 'rgba(0,0,0,0.36)'
+        });
+
+        // Bind overlay click to close
+        overlay.onclick = function() {
+          self.closeCartDrawer();
+        };
+
+        if (drawer) {
+          drawer.classList.add('cart-drawer--open');
+          document.documentElement.style.overflow = 'hidden';
+        }
+
+        // Refresh drawer content to show updated cart
+        fetch('/?section_id=cart-drawer')
+          .then(r => r.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newDrawer = doc.querySelector('#CartDrawer');
+            if (newDrawer && drawer) {
+              drawer.innerHTML = newDrawer.innerHTML;
+              drawer.classList.add('cart-drawer--open');
+
+              // Bind close buttons after content refresh
+              self.bindCloseButtons(drawer);
+            }
+          })
+          .catch(err => console.error('Could not refresh drawer', err));
+      }
+
+      closeCartDrawer() {
+        const drawer = document.querySelector('#CartDrawer');
+        const overlay = document.querySelector('#CartDrawerOverlay, .cart-drawer__overlay');
+
+        if (drawer) {
+          drawer.classList.remove('cart-drawer--open');
+        }
+
+        if (overlay) {
+          overlay.style.display = 'none';
+          overlay.style.pointerEvents = 'none';
+          overlay.style.opacity = '0';
+          overlay.style.visibility = 'hidden';
+        }
+
+        document.documentElement.style.overflow = '';
+      }
+
+      bindCloseButtons(drawer) {
+        const self = this;
+        const closeButtons = drawer.querySelectorAll('[data-cart-drawer-close]');
+
+        closeButtons.forEach(btn => {
+          btn.onclick = function(e) {
+            e.preventDefault();
+            self.closeCartDrawer();
+          };
+        });
+
+        // Also bind Escape key
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') {
+            self.closeCartDrawer();
+          }
+        });
+      }
+
+      syncWithMainForm() {
+        const mainForm = document.querySelector('form[action*="/cart/add"]');
+        if (!mainForm) return;
+
+        const variantSelect = mainForm.querySelector('[name="id"]');
+        if (variantSelect) {
+          variantSelect.addEventListener('change', (e) => {
+            this.stickyButton.dataset.variantId = e.target.value;
+          });
+        }
+
+        const observer = new MutationObserver(() => {
+          const currentVariantId = mainForm.querySelector('[name="id"]')?.value;
+          if (currentVariantId) {
+            this.stickyButton.dataset.variantId = currentVariantId;
+          }
+        });
+
+        observer.observe(mainForm, {
+          childList: true,
+          subtree: true,
+          attributes: true
+        });
+      }
+    }
+
+    customElements.define('sticky-add-to-cart-{{ ai_gen_id }}', StickyAddToCart{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Sticky add to cart",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Behavior"
+    },
+    {
+      "type": "range",
+      "id": "scroll_threshold",
+      "min": 100,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "label": "Scroll threshold",
+      "default": 300
+    },
+    {
+      "type": "checkbox",
+      "id": "show_quantity",
+      "label": "Show quantity selector",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Add to cart"
+    },
+    {
+      "type": "text",
+      "id": "sold_out_text",
+      "label": "Sold out text",
+      "default": "Sold out"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 1000,
+      "max": 1600,
+      "step": 100,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "image_size",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Image size",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Image border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "sale_color",
+      "label": "Sale price",
+      "default": "#db1e37"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_bg_color",
+      "label": "Button hover background",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "qty_button_bg",
+      "label": "Quantity button background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "qty_button_hover_bg",
+      "label": "Quantity button hover background",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "color",
+      "id": "qty_button_color",
+      "label": "Quantity button text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Input border",
+      "default": "#dddddd"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Title size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "price_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Price size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_text_size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Button text size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Button border radius",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sticky add to cart"
+    }
+  ]
+}
+{% endschema %}

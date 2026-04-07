@@ -1,0 +1,945 @@
+<script
+  type="application/json"
+  data-section-type="hero-slider"
+  data-section-id="{{ section.id }}"
+  data-section-data
+>
+  {
+    "sectionId": {{ section.id | json }},
+    "enableAutoplay": {{ section.settings.enable_autoplay | json }},
+    "autoplayDuration": {{ section.settings.autoplay_duration | json }},
+    "animationSpeed": {{ section.settings.animation_speed | json }},
+    "showDots": {{ section.settings.show_dots | json }},
+    "showArrows": {{ section.settings.show_arrows | json }}
+  }
+</script>
+
+{% if section.blocks.size > 0 %}
+<section
+  class="hero-slider hero-slider--{{ section.id }}"
+  aria-label="Hero slideshow"
+  data-hero-slider
+  data-section-id="{{ section.id }}"
+>
+  <div class="hero-slider__slides" data-slides-container>
+    {% for block in section.blocks %}
+      <div
+        class="hero-slider__slide hero-slider__slide--{{ block.id }} {% if forloop.first %}is-active{% endif %}"
+        data-slide-index="{{ forloop.index0 }}"
+        {{ block.shopify_attributes }}
+      >
+        {%- comment -%} Desktop Image {%- endcomment -%}
+        {%- assign is_first_slide = forloop.first -%}
+        <div class="hero-slider__image hero-slider__image--desktop">
+          {% if block.settings.desktop_image != blank %}
+            <img
+              src="{{ block.settings.desktop_image | img_url: '2000x' }}"
+              srcset="{{ block.settings.desktop_image | img_url: '1000x' }} 1000w,
+                      {{ block.settings.desktop_image | img_url: '1500x' }} 1500w,
+                      {{ block.settings.desktop_image | img_url: '2000x' }} 2000w"
+              sizes="100vw"
+              alt="{{ block.settings.desktop_image.alt | escape }}"
+              {% if is_first_slide %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}
+            >
+          {% else %}
+            <div class="hero-slider__placeholder">
+              {{ 'lifestyle-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+        </div>
+
+        {%- comment -%} Mobile Image {%- endcomment -%}
+        <div class="hero-slider__image hero-slider__image--mobile">
+          {% if block.settings.mobile_image != blank %}
+            <img
+              src="{{ block.settings.mobile_image | img_url: '800x' }}"
+              srcset="{{ block.settings.mobile_image | img_url: '400x' }} 400w,
+                      {{ block.settings.mobile_image | img_url: '600x' }} 600w,
+                      {{ block.settings.mobile_image | img_url: '800x' }} 800w"
+              sizes="100vw"
+              alt="{{ block.settings.mobile_image.alt | escape }}"
+              {% if is_first_slide %}loading="eager"{% else %}loading="lazy"{% endif %}
+            >
+          {% elsif block.settings.desktop_image != blank %}
+            <img
+              src="{{ block.settings.desktop_image | img_url: '800x' }}"
+              srcset="{{ block.settings.desktop_image | img_url: '400x' }} 400w,
+                      {{ block.settings.desktop_image | img_url: '600x' }} 600w,
+                      {{ block.settings.desktop_image | img_url: '800x' }} 800w"
+              sizes="100vw"
+              alt="{{ block.settings.desktop_image.alt | escape }}"
+              {% if is_first_slide %}loading="eager"{% else %}loading="lazy"{% endif %}
+            >
+          {% else %}
+            <div class="hero-slider__placeholder">
+              {{ 'lifestyle-1' | placeholder_svg_tag }}
+            </div>
+          {% endif %}
+        </div>
+
+        {%- comment -%} Overlay {%- endcomment -%}
+        {% if block.settings.show_overlay %}
+          <div class="hero-slider__overlay" style="
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: {{ block.settings.overlay_color }};
+            opacity: {{ block.settings.overlay_opacity | divided_by: '100.00' }};
+            z-index: 1;
+          "></div>
+        {% endif %}
+
+        {%- comment -%} Content Overlay {%- endcomment -%}
+        <div class="hero-slider__content hero-slider__content--{{ block.settings.content_position }}">
+          <div class="hero-slider__content-inner hero-slider__content-inner--{{ block.id }}">
+            {% if block.settings.show_pretitle and block.settings.pretitle != blank %}
+              <p class="hero-slider__pretitle">
+                {{ block.settings.pretitle | escape }}
+              </p>
+            {% endif %}
+
+            {% if block.settings.show_title and block.settings.title != blank %}
+              <h1 class="hero-slider__title">
+                {{ block.settings.title | escape }}
+              </h1>
+            {% endif %}
+
+            {% if block.settings.show_subtitle and block.settings.subtitle != blank %}
+              <p class="hero-slider__subtitle">
+                {{ block.settings.subtitle | escape }}
+              </p>
+            {% endif %}
+
+            {% if block.settings.show_button and block.settings.button_text != blank %}
+              <a
+                href="{{ block.settings.button_url | default: '#' }}"
+                class="hero-slider__button hero-slider__button--{{ block.id }}"
+              >
+                {{ block.settings.button_text | escape }}
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  {%- comment -%} Navigation Arrows - Professional Style {%- endcomment -%}
+  {% if section.settings.show_arrows and section.blocks.size > 1 %}
+    <button class="hero-slider__arrow hero-slider__arrow--prev" aria-label="Previous slide" data-prev style="background-color: {{ section.settings.arrow_bg_color }}; padding: {{ section.settings.arrow_padding }}px;">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 19l-7-7 7-7" stroke="{{ section.settings.arrow_icon_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button class="hero-slider__arrow hero-slider__arrow--next" aria-label="Next slide" data-next style="background-color: {{ section.settings.arrow_bg_color }}; padding: {{ section.settings.arrow_padding }}px;">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 5l7 7-7 7" stroke="{{ section.settings.arrow_icon_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  {% endif %}
+
+  {%- comment -%} Dots Navigation {%- endcomment -%}
+  {% if section.settings.show_dots %}
+    <div class="hero-slider__dots" data-dots>
+      {% for block in section.blocks %}
+        <button
+          class="hero-slider__dot {% if forloop.first %}is-active{% endif %}"
+          aria-label="Go to slide {{ forloop.index }}"
+          data-dot-index="{{ forloop.index0 }}"
+        ></button>
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>
+
+{%- comment -%} Include dynamic per-slide styles {%- endcomment -%}
+{% include 'hero-slider-styles',
+  blocks: section.blocks,
+  section_settings: section.settings,
+  section_id: section.id
+%}
+
+{%- comment -%} Include JavaScript {%- endcomment -%}
+<script src="{{ 'hero-slider.js' | asset_url }}" defer></script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Hero Slider",
+  "tag": "section",
+  "class": "hero-slider-section",
+  "max_blocks": 10,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "section_margin_top",
+      "label": "Margin top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_margin_bottom",
+      "label": "Margin bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_margin_left",
+      "label": "Margin left",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_margin_right",
+      "label": "Margin right",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_padding_left",
+      "label": "Padding left",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_padding_right",
+      "label": "Padding right",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Banner Size"
+    },
+    {
+      "type": "select",
+      "id": "height_mode",
+      "label": "Height mode",
+      "options": [
+        { "value": "auto", "label": "Auto (fit image)" },
+        { "value": "fixed", "label": "Fixed height" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "range",
+      "id": "fixed_height_desktop",
+      "label": "Fixed height (desktop)",
+      "info": "Only applies when height mode is Fixed",
+      "min": 200,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "default": 500
+    },{
+      "type": "range",
+      "id": "fixed_height_mobile",
+      "label": "Fixed height (mobile)",
+      "info": "Only applies when height mode is Fixed",
+      "min": 150,
+      "max": 600,
+      "step": 50,
+      "unit": "px",
+      "default": 300
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image fit",
+      "options": [
+        { "value": "contain", "label": "Contain (show full image)" },
+        { "value": "cover", "label": "Cover (fill container)" }
+      ],
+      "default": "contain"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "info": "Visible when image doesn't fill container",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "header",
+      "content": "Slideshow Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_duration",
+      "label": "Slide duration",
+      "info": "Time each slide is displayed",
+      "min": 3,
+      "max": 15,
+      "step": 1,
+      "unit": "sec",
+      "default": 5
+    },{
+      "type": "range",
+      "id": "animation_speed",
+      "label": "Slide animation speed",
+      "info": "How fast the slide transitions (lower = faster)",
+      "min": 300,
+      "max": 2000,
+      "step": 100,
+      "unit": "ms",
+      "default": 800
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show dots navigation",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show arrows navigation",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Arrow Styling"
+    },
+    {
+      "type": "range",
+      "id": "arrow_size",
+      "label": "Arrow size",
+      "min": 30,
+      "max": 70,
+      "step": 2,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "arrow_padding",
+      "label": "Arrow padding",
+      "min": 8,
+      "max": 25,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "arrow_margin_horizontal",
+      "label": "Arrow horizontal position",
+      "info": "Distance from edge",
+      "min": 5,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "arrow_border_radius",
+      "label": "Arrow border radius",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "color",
+      "id": "arrow_bg_color",
+      "label": "Arrow background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "arrow_icon_color",
+      "label": "Arrow icon color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "arrow_bg_opacity",
+      "label": "Arrow background opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 90
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Images"
+        },
+        {
+          "type": "image_picker",
+          "id": "desktop_image",
+          "label": "Desktop image",
+          "info": "Recommended: 1920x800px or larger"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile image",
+          "info": "Recommended: 750x1000px. Falls back to desktop image if not set."
+        },
+        {
+          "type": "header",
+          "content": "Overlay"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_overlay",
+          "label": "Show overlay",
+          "default": true
+        },
+        {
+          "type": "color",
+          "id": "overlay_color",
+          "label": "Overlay color",
+          "default": "#000000"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "label": "Overlay opacity",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "%",
+          "default": 30
+        },
+        {
+          "type": "header",
+          "content": "Content - Pre-title"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_pretitle",
+          "label": "Show pre-title",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "pretitle",
+          "label": "Pre-title",
+          "default": "New Collection"
+        },
+        {
+          "type": "header",
+          "content": "Pre-title Styling"
+        },
+        {
+          "type": "range",
+          "id": "pretitle_font_size",
+          "label": "Pre-title font size (desktop)",
+          "min": 12,
+          "max": 48,
+          "step": 2,
+          "unit": "px",
+          "default": 18
+        },
+        {
+          "type": "range",
+          "id": "pretitle_font_size_mobile",
+          "label": "Pre-title font size (mobile)",
+          "min": 8,
+          "max": 24,
+          "step": 2,
+          "unit": "px",
+          "default": 12
+        },
+        {
+          "type": "select",
+          "id": "pretitle_font_weight",
+          "label": "Pre-title font weight",
+          "options": [
+            { "value": "300", "label": "Light" },
+            { "value": "400", "label": "Normal" },
+            { "value": "500", "label": "Medium" },
+            { "value": "600", "label": "Semi-bold" },
+            { "value": "700", "label": "Bold" }
+          ],
+          "default": "400"
+        },
+        {
+          "type": "color",
+          "id": "pretitle_color",
+          "label": "Pre-title color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "header",
+          "content": "Content - Title"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_title",
+          "label": "Show title",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Welcome to our store"
+        },
+        {
+          "type": "header",
+          "content": "Title Styling"
+        },
+        {
+          "type": "range",
+          "id": "title_font_size",
+          "label": "Title font size (desktop)",
+          "min": 24,
+          "max": 120,
+          "step": 2,
+          "unit": "px",
+          "default": 56
+        },
+        {
+          "type": "range",
+          "id": "title_font_size_mobile",
+          "label": "Title font size (mobile)",
+          "min": 12,
+          "max": 48,
+          "step": 2,
+          "unit": "px",
+          "default": 18
+        },
+        {
+          "type": "select",
+          "id": "title_font_weight",
+          "label": "Title font weight",
+          "options": [
+            { "value": "300", "label": "Light" },
+            { "value": "400", "label": "Normal" },
+            { "value": "500", "label": "Medium" },
+            { "value": "600", "label": "Semi-bold" },
+            { "value": "700", "label": "Bold" },
+            { "value": "800", "label": "Extra-bold" },
+            { "value": "900", "label": "Black" }
+          ],
+          "default": "700"
+        },
+        {
+          "type": "color",
+          "id": "title_gradient_color_1",
+          "label": "Gradient color 1",
+          "default": "#ff6b6b"
+        },
+        {
+          "type": "color",
+          "id": "title_gradient_color_2",
+          "label": "Gradient color 2",
+          "default": "#feca57"
+        },
+        {
+          "type": "color",
+          "id": "title_gradient_color_3",
+          "label": "Gradient color 3",
+          "default": "#48dbfb"
+        },
+        {
+          "type": "color",
+          "id": "title_gradient_color_4",
+          "label": "Gradient color 4",
+          "default": "#ff9ff3"
+        },
+        {
+          "type": "range",
+          "id": "gradient_direction",
+          "label": "Gradient direction",
+          "info": "Angle in degrees (0=right, 90=down, 180=left, 270=up)",
+          "min": 0,
+          "max": 360,
+          "step": 15,
+          "unit": "deg",
+          "default": 90
+        },
+        {
+          "type": "header",
+          "content": "Content - Subtitle"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_subtitle",
+          "label": "Show subtitle",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Discover our amazing collection"
+        },
+        {
+          "type": "header",
+          "content": "Subtitle Styling"
+        },
+        {
+          "type": "range",
+          "id": "subtitle_font_size",
+          "label": "Subtitle font size (desktop)",
+          "min": 12,
+          "max": 48,
+          "step": 2,
+          "unit": "px",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "subtitle_font_size_mobile",
+          "label": "Subtitle font size (mobile)",
+          "min": 8,
+          "max": 24,
+          "step": 2,
+          "unit": "px",
+          "default": 12
+        },
+        {
+          "type": "select",
+          "id": "subtitle_font_weight",
+          "label": "Subtitle font weight",
+          "options": [
+            { "value": "300", "label": "Light" },
+            { "value": "400", "label": "Normal" },
+            { "value": "500", "label": "Medium" },
+            { "value": "600", "label": "Semi-bold" },
+            { "value": "700", "label": "Bold" }
+          ],
+          "default": "400"
+        },
+        {
+          "type": "color",
+          "id": "subtitle_color",
+          "label": "Subtitle color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "header",
+          "content": "Content - Button"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_button",
+          "label": "Show button",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button link"
+        },
+        {
+          "type": "header",
+          "content": "Button Styling"
+        },
+        {
+          "type": "range",
+          "id": "button_font_size",
+          "label": "Button font size",
+          "min": 12,
+          "max": 24,
+          "step": 1,
+          "unit": "px",
+          "default": 16
+        },
+        {
+          "type": "select",
+          "id": "button_font_weight",
+          "label": "Button font weight",
+          "options": [
+            { "value": "400", "label": "Normal" },
+            { "value": "500", "label": "Medium" },
+            { "value": "600", "label": "Semi-bold" },
+            { "value": "700", "label": "Bold" }
+          ],
+          "default": "600"
+        },
+        {
+          "type": "color",
+          "id": "button_text_color",
+          "label": "Button text color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "color",
+          "id": "button_bg_color_1",
+          "label": "Button gradient color 1",
+          "default": "#ff6b6b"
+        },
+        {
+          "type": "color",
+          "id": "button_bg_color_2",
+          "label": "Button gradient color 2",
+          "default": "#ee5a5a"
+        },
+        {
+          "type": "range",
+          "id": "button_gradient_direction",
+          "label": "Button gradient direction",
+          "min": 0,
+          "max": 360,
+          "step": 15,
+          "unit": "deg",
+          "default": 135
+        },
+        {
+          "type": "range",
+          "id": "button_border_radius",
+          "label": "Button border radius",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "default": 4
+        },
+        {
+          "type": "range",
+          "id": "button_padding_horizontal",
+          "label": "Button horizontal padding",
+          "min": 15,
+          "max": 60,
+          "step": 5,
+          "unit": "px",
+          "default": 35
+        },
+        {
+          "type": "range",
+          "id": "button_padding_vertical",
+          "label": "Button vertical padding",
+          "min": 8,
+          "max": 30,
+          "step": 2,
+          "unit": "px",
+          "default": 14
+        },
+        {
+          "type": "header",
+          "content": "Button Shadow"
+        },
+        {
+          "type": "checkbox",
+          "id": "button_shadow_enabled",
+          "label": "Enable button shadow",
+          "default": true
+        },
+        {
+          "type": "color",
+          "id": "button_shadow_color",
+          "label": "Shadow color",
+          "default": "#000000"
+        },
+        {
+          "type": "range",
+          "id": "button_shadow_y",
+          "label": "Shadow vertical offset",
+          "min": 0,
+          "max": 20,
+          "step": 1,
+          "unit": "px",
+          "default": 4
+        },
+        {
+          "type": "range",
+          "id": "button_shadow_blur",
+          "label": "Shadow blur",
+          "min": 0,
+          "max": 40,
+          "step": 2,
+          "unit": "px",
+          "default": 14
+        },
+        {
+          "type": "header",
+          "content": "Content Position"
+        },
+        {
+          "type": "select",
+          "id": "content_position",
+          "label": "Content position",
+          "options": [
+            { "value": "top-left", "label": "Top Left" },
+            { "value": "top-center", "label": "Top Center" },
+            { "value": "top-right", "label": "Top Right" },
+            { "value": "center-left", "label": "Center Left" },
+            { "value": "center-center", "label": "Center" },
+            { "value": "center-right", "label": "Center Right" },
+            { "value": "bottom-left", "label": "Bottom Left" },
+            { "value": "bottom-center", "label": "Bottom Center" },
+            { "value": "bottom-right", "label": "Bottom Right" }
+          ],
+          "default": "center-center"
+        },
+        {
+          "type": "header",
+          "content": "Content Spacing - Margin"
+        },
+        {
+          "type": "range",
+          "id": "margin_top",
+          "label": "Margin top",
+          "min": 0,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "label": "Margin bottom",
+          "min": 0,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "margin_left",
+          "label": "Margin left",
+          "min": 0,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "margin_right",
+          "label": "Margin right",
+          "min": 0,
+          "max": 200,
+          "step": 5,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Content Spacing - Padding"
+        },
+        {
+          "type": "range",
+          "id": "padding_top",
+          "label": "Padding top",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "px",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "padding_bottom",
+          "label": "Padding bottom",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "px",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "padding_left",
+          "label": "Padding left",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "px",
+          "default": 20
+        },
+        {
+          "type": "range",
+          "id": "padding_right",
+          "label": "Padding right",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "px",
+          "default": 20
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Slider",
+      "blocks": [
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

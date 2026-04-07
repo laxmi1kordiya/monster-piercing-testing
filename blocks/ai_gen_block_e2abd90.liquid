@@ -1,0 +1,839 @@
+{% doc %}
+  @prompt
+    create a section in which we will have circles for the collection in which we will put the collection and images manually and it should be sliding from left and rigth and right to left on and off button for that we can toggle between both and the slider should be infinite  add the first product at the last and repeat that again it should come continue and we can add as many collection we want and the circles for that it should havve a border ad all its setting and a tect inside the circle and we can edit it accordinglly it should come at teh bttom half of the circle with the dark shade and we can adjust its degree, it should come in the circle form currently it isnnt coming in the circular shape and we can adjust eh size of hte circle, we want that on teh hover this text should come and in the mobile view the text should come below the circle and we ccan adjust eh size of the text and it solor and in hte text view we can set different sizes and we can adjust the border color for both mobile and destop sepratelly and provide remaining setting separate for mobile and desktop , text inside the circle in the desktop view is not coming , the shade should only appear in the circle not outside the circle 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-collection-carousel-{{ ai_gen_id }} {
+    width: 100%;
+    overflow: hidden;
+    padding: 5px 0 {{ block.settings.padding_bottom }}px;
+    background-color: {{ block.settings.background_color }};
+    display: block;
+    contain: layout style;
+    height: {{ block.settings.desktop_circle_size | plus: block.settings.padding_bottom | plus: 10 }}px;
+  }
+
+  .ai-collection-carousel__wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    margin: 0 auto;
+    height: {{ block.settings.desktop_circle_size }}px;
+  }
+
+  .ai-collection-carousel__track-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.desktop_item_spacing }}px;
+    will-change: transform;
+    height: {{ block.settings.desktop_circle_size }}px;
+  }
+
+
+  .ai-collection-carousel__item-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ai-collection-carousel__circle-wrapper-{{ ai_gen_id }} {
+    width: {{ block.settings.desktop_circle_size }}px;
+    height: {{ block.settings.desktop_circle_size }}px;
+    position: relative;
+  }
+
+  .ai-collection-carousel__circle-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    border: {{ block.settings.desktop_border_width }}px solid {{ block.settings.desktop_border_color }};
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-collection-carousel__circle-{{ ai_gen_id }}:hover {
+    transform: scale(1.05);
+  }
+
+  .ai-collection-carousel__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-collection-carousel__placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-collection-carousel__placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+  }
+
+  .ai-collection-carousel__text-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: {{ block.settings.desktop_overlay_height }}%;
+    background: transparent;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease, background 0.3s ease;
+    z-index: 2;
+  }
+
+  .ai-collection-carousel__circle-{{ ai_gen_id }}:hover .ai-collection-carousel__text-overlay-{{ ai_gen_id }} {
+    opacity: 1;
+    visibility: visible;
+    background: linear-gradient({{ block.settings.desktop_overlay_angle }}deg, {{ block.settings.desktop_overlay_color }} 0%, transparent 100%);
+  }
+
+  .ai-collection-carousel__text-{{ ai_gen_id }} {
+    color: {{ block.settings.desktop_text_color }};
+    font-size: {{ block.settings.desktop_text_size }}px;
+    font-weight: {{ block.settings.desktop_text_weight }};
+    text-align: center;
+    padding: 0 10px;
+    line-height: 1.2;
+    word-wrap: break-word;
+    max-width: 90%;
+  }
+
+  .ai-collection-carousel__text-below-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-collection-carousel-{{ ai_gen_id }} {
+      height: {{ block.settings.mobile_circle_size | plus: block.settings.padding_bottom | plus: 30 }}px;
+    }
+
+    .ai-collection-carousel__wrapper-{{ ai_gen_id }} {
+      width: {{ block.settings.mobile_width_percent }}%;
+      height: {{ block.settings.mobile_circle_size | plus: 20 }}px;
+    }
+
+    .ai-collection-carousel__track-{{ ai_gen_id }} {
+      height: auto;
+    }
+
+    .ai-collection-carousel__track-{{ ai_gen_id }} {
+      gap: {{ block.settings.mobile_item_spacing }}px;
+    }
+
+    .ai-collection-carousel__item-{{ ai_gen_id }} {
+      gap: {{ block.settings.mobile_text_spacing }}px;
+    }
+
+    .ai-collection-carousel__circle-wrapper-{{ ai_gen_id }} {
+      width: {{ block.settings.mobile_circle_size }}px;
+      height: {{ block.settings.mobile_circle_size }}px;
+    }
+
+    .ai-collection-carousel__circle-{{ ai_gen_id }} {
+      border-width: {{ block.settings.mobile_border_width }}px;
+      border-color: {{ block.settings.mobile_border_color }};
+    }
+
+    .ai-collection-carousel__text-overlay-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .ai-collection-carousel__text-below-{{ ai_gen_id }} {
+      display: block;
+      color: {{ block.settings.mobile_text_color }};
+      font-size: {{ block.settings.mobile_text_size }}px;
+      font-weight: {{ block.settings.mobile_text_weight }};
+      text-align: center;
+      max-width: {{ block.settings.mobile_circle_size }}px;
+      word-wrap: break-word;
+      line-height: 1.2;
+    }
+  }
+{% endstyle %}
+
+<collection-carousel-{{ ai_gen_id }}
+  class="ai-collection-carousel-{{ ai_gen_id }}"
+  data-direction="{{ block.settings.slide_direction }}"
+  data-speed="{{ block.settings.slide_speed }}"
+  data-auto-slide="{{ block.settings.auto_slide }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-collection-carousel__wrapper-{{ ai_gen_id }}">
+    <div class="ai-collection-carousel__track-{{ ai_gen_id }}">
+      {% for i in (1..10) %}
+        {% liquid
+          assign collection_key = 'collection_' | append: i
+          assign image_key = 'image_' | append: i
+          assign text_key = 'text_' | append: i
+          assign collection = block.settings[collection_key]
+          assign image = block.settings[image_key]
+          assign text = block.settings[text_key]
+        %}
+
+        {% if collection != blank or image != blank %}
+          <div class="ai-collection-carousel__item-{{ ai_gen_id }}">
+            <div class="ai-collection-carousel__circle-wrapper-{{ ai_gen_id }}">
+              <a
+                href="{% if collection != blank %}{{ collection.url }}{% else %}#{% endif %}"
+                class="ai-collection-carousel__circle-{{ ai_gen_id }}"
+              >
+                {% if image != blank %}
+                  <img
+                    src="{{ image | image_url: width: 100 }}"
+                    alt="{{ image.alt | escape }}"
+                    class="ai-collection-carousel__image-{{ ai_gen_id }}"
+                    {% comment %} loading="lazy" {% endcomment %}
+                    width="100"
+                    height="100"
+                  >
+                {% elsif collection != blank and collection.featured_image %}
+                  <img
+                    src="{{ collection.featured_image | image_url: width: 100 }}"
+                    alt="{{ collection.featured_image.alt | escape }}"
+                    class="ai-collection-carousel__image-{{ ai_gen_id }}"
+                    {% comment %} loading="lazy" {% endcomment %}
+                    width="100"
+                    height="100"
+                  >
+                {% else %}
+                  <div class="ai-collection-carousel__placeholder-{{ ai_gen_id }}">
+                    {{ 'collection-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
+
+                <div class="ai-collection-carousel__text-overlay-{{ ai_gen_id }}">
+                  <div class="ai-collection-carousel__text-{{ ai_gen_id }}">
+                    {% if text != blank %}
+                      {{ text }}
+                    {% elsif collection != blank %}
+                      {{ collection.title }}
+                    {% else %}
+                      Collection {{ i }}
+                    {% endif %}
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <div class="ai-collection-carousel__text-below-{{ ai_gen_id }}">
+              {% if text != blank %}
+                {{ text }}
+              {% elsif collection != blank %}
+                {{ collection.title }}
+              {% else %}
+                Collection {{ i }}
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</collection-carousel-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class CollectionCarousel{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.track = this.querySelector('.ai-collection-carousel__track-{{ ai_gen_id }}');
+        this.items = Array.from(this.querySelectorAll('.ai-collection-carousel__item-{{ ai_gen_id }}'));
+        this.direction = this.dataset.direction;
+        this.speed = parseFloat(this.dataset.speed);
+        this.autoSlide = this.dataset.autoSlide === 'true';
+        this.animationId = null;
+        this.position = 0;
+      }
+
+      connectedCallback() {
+        if (this.items.length === 0) return;
+
+        this.isMobile = window.innerWidth <= 749;
+
+        if (this.isMobile) {
+          // Mobile: no cloning, no auto-slide — native touch scroll
+          return;
+        }
+
+        this.cloneItems();
+        this.setupInfiniteScroll();
+
+        if (this.autoSlide) {
+          this.startAutoSlide();
+        }
+
+        this.track.addEventListener('mouseenter', () => this.pauseAutoSlide());
+        this.track.addEventListener('mouseleave', () => this.resumeAutoSlide());
+      }
+
+      cloneItems() {
+        const cloneCount = Math.ceil(window.innerWidth / this.items[0].offsetWidth) + 2;
+        
+        for (let i = 0; i < cloneCount; i++) {
+          this.items.forEach(item => {
+            const clone = item.cloneNode(true);
+            this.track.appendChild(clone);
+          });
+        }
+
+        for (let i = 0; i < cloneCount; i++) {
+          this.items.forEach(item => {
+            const clone = item.cloneNode(true);
+            this.track.insertBefore(clone, this.track.firstChild);
+          });
+        }
+      }
+
+      setupInfiniteScroll() {
+        const itemWidth = this.items[0].offsetWidth;
+        const gap = parseInt(getComputedStyle(this.track).gap) || 0;
+        const totalItemWidth = itemWidth + gap;
+        const originalSetWidth = this.items.length * totalItemWidth;
+
+        this.position = -originalSetWidth * Math.ceil(window.innerWidth / this.items[0].offsetWidth);
+        this.track.style.transform = `translateX(${this.position}px)`;
+      }
+
+      startAutoSlide() {
+        if (!this.autoSlide) return;
+
+        const animate = () => {
+          const itemWidth = this.items[0].offsetWidth;
+          const gap = parseInt(getComputedStyle(this.track).gap) || 0;
+          const totalItemWidth = itemWidth + gap;
+          const originalSetWidth = this.items.length * totalItemWidth;
+
+          if (this.direction === 'left') {
+            this.position -= this.speed;
+          } else {
+            this.position += this.speed;
+          }
+
+          this.track.style.transform = `translateX(${this.position}px)`;
+
+          if (this.direction === 'left' && this.position <= -originalSetWidth * 2) {
+            this.position += originalSetWidth;
+          } else if (this.direction === 'right' && this.position >= 0) {
+            this.position -= originalSetWidth;
+          }
+
+          this.animationId = requestAnimationFrame(animate);
+        };
+
+        this.animationId = requestAnimationFrame(animate);
+      }
+
+      pauseAutoSlide() {
+        if (this.animationId) {
+          cancelAnimationFrame(this.animationId);
+          this.animationId = null;
+        }
+      }
+
+      resumeAutoSlide() {
+        if (this.autoSlide && !this.animationId) {
+          this.startAutoSlide();
+        }
+      }
+
+      disconnectedCallback() {
+        this.pauseAutoSlide();
+      }
+    }
+
+    customElements.define('collection-carousel-{{ ai_gen_id }}', CollectionCarousel{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Collection carousel",
+  "settings": [
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Desktop settings"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "desktop_circle_size",
+      "label": "Circle size",
+      "min": 80,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "default": 200
+    },
+    {
+      "type": "range",
+      "id": "desktop_item_spacing",
+      "label": "Space between items",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "desktop_border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "default": 3
+    },
+    {
+      "type": "color",
+      "id": "desktop_border_color",
+      "label": "Border color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "desktop_overlay_height",
+      "label": "Text overlay height",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "desktop_overlay_angle",
+      "label": "Overlay gradient angle",
+      "min": 0,
+      "max": 360,
+      "step": 15,
+      "unit": "deg",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "desktop_overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "desktop_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "desktop_text_size",
+      "label": "Text size",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "desktop_text_weight",
+      "label": "Text weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "header",
+      "content": "Mobile settings"
+    },
+    {
+      "type": "range",
+      "id": "mobile_width_percent",
+      "label": "Width",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "mobile_circle_size",
+      "label": "Circle size",
+      "min": 60,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "mobile_item_spacing",
+      "label": "Space between items",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "mobile_text_spacing",
+      "label": "Space between circle and text",
+      "min": 5,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "mobile_border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "unit": "px",
+      "default": 2
+    },
+    {
+      "type": "color",
+      "id": "mobile_border_color",
+      "label": "Border color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "mobile_text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "mobile_text_size",
+      "label": "Text size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "mobile_text_weight",
+      "label": "Text weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_slide",
+      "label": "Enable auto slide",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "slide_direction",
+      "label": "Slide direction",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left to right"
+        },
+        {
+          "value": "right",
+          "label": "Right to left"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "slide_speed",
+      "label": "Slide speed",
+      "min": 0.5,
+      "max": 3,
+      "step": 0.5,
+      "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Collection 1"
+    },
+    {
+      "type": "collection",
+      "id": "collection_1",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Custom image"
+    },
+    {
+      "type": "text",
+      "id": "text_1",
+      "label": "Custom text"
+    },
+    {
+      "type": "header",
+      "content": "Collection 2"
+    },
+    {
+      "type": "collection",
+      "id": "collection_2",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Custom image"
+    },
+    {
+      "type": "text",
+      "id": "text_2",
+      "label": "Custom text"
+    },
+    {
+      "type": "header",
+      "content": "Collection 3"
+    },
+    {
+      "type": "collection",
+      "id": "collection_3",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Custom image"
+    },
+    {
+      "type": "text",
+      "id": "text_3",
+      "label": "Custom text"
+    },
+    {
+      "type": "header",
+      "content": "Collection 4"
+    },
+    {
+      "type": "collection",
+      "id": "collection_4",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_4",
+      "label": "Custom image"
+    },
+    {
+      "type": "text",
+      "id": "text_4",
+      "label": "Custom text"
+    },
+    {
+      "type": "header",
+      "content": "Collection 5"
+    },
+    {
+      "type": "collection",
+      "id": "collection_5",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_5",
+      "label": "Custom image"
+    },
+    {
+      "type": "text",
+      "id": "text_5",
+      "label": "Custom text"
+    },
+    {
+      "type": "header",
+      "content": "Collection 6"
+    },
+    {
+      "type": "collection",
+      "id": "collection_6",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_6",
+      "label": "Custom image"
+    },
+    {
+      "type": "text",
+      "id": "text_6",
+      "label": "Custom text"
+    },
+    {
+      "type": "header",
+      "content": "Collection 7"
+    },
+    {
+      "type": "collection",
+      "id": "collection_7",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_7",
+      "label": "Custom image"
+    },
+    {
+      "type": "text",
+      "id": "text_7",
+      "label": "Custom text"
+    },
+    {
+      "type": "header",
+      "content": "Collection 8"
+    },
+    {
+      "type": "collection",
+      "id": "collection_8",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_8",
+      "label": "Custom image"
+    },
+    {
+      "type": "text",
+      "id": "text_8",
+      "label": "Custom text"
+    },
+    {
+      "type": "header",
+      "content": "Collection 9"
+    },
+    {
+      "type": "collection",
+      "id": "collection_9",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_9",
+      "label": "Custom image"
+    },
+    {
+      "type": "text",
+      "id": "text_9",
+      "label": "Custom text"
+    },
+    {
+      "type": "header",
+      "content": "Collection 10"
+    },
+    {
+      "type": "collection",
+      "id": "collection_10",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_10",
+      "label": "Custom image"
+    },
+    {
+      "type": "text",
+      "id": "text_10",
+      "label": "Custom text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection carousel"
+    }
+  ]
+}
+{% endschema %}

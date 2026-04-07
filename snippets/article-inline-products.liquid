@@ -1,0 +1,90 @@
+{% comment %}
+  Article Inline Products Snippet
+  Renders a horizontal product slider inside blog articles
+  Accepts:
+    - products (array of product objects)
+    - section (section object)
+    - block (block object, optional)
+    - block_collection (collection object, optional)
+{% endcomment %}
+
+{% if products != blank and products.size > 0 %}
+  {% assign heading = '' %}
+  {% assign shop_collection = block_collection %}
+  {% assign unique_id = section.id %}
+
+  {% if block != blank %}
+    {% if block.settings.heading != blank %}
+      {% assign heading = block.settings.heading %}
+    {% endif %}
+    {% assign unique_id = block.id %}
+  {% endif %}
+
+  <div class="article-products-inline" {{ block.shopify_attributes }}>
+    <div class="article-products-inline__header">
+      {% if heading != blank %}
+        <h2 class="article-products-inline__title">{{ heading }}</h2>
+      {% endif %}
+
+      {% assign btn_label = section.settings.shop_btn_label | strip %}
+      {% if shop_collection != blank and btn_label != blank %}
+        <a href="{{ shop_collection.url }}" class="article-products-inline__shop-btn">
+          {{ btn_label }}
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="article-products-inline__slider-wrap">
+      <button
+        class="article-products-inline__nav-btn article-products-inline__nav-btn--prev"
+        aria-label="Previous"
+        onclick="document.getElementById('ap-inline-track-{{ unique_id }}').scrollLeft -= {{ section.settings.card_width | plus: section.settings.product_gap }}"
+      >&#8249;</button>
+
+      <div class="article-products-inline__track" id="ap-inline-track-{{ unique_id }}">
+        {% for product in products %}
+          <div class="article-products-inline__card">
+            <a href="{{ product.url }}" class="article-products-inline__image-wrap">
+              {% if product.featured_image %}
+                <img
+                  src="{{ product.featured_image | image_url: width: 400 }}"
+                  alt="{{ product.title | escape }}"
+                  loading="lazy"
+                  width="400"
+                  height="400"
+                >
+              {% endif %}
+            </a>
+            <div class="article-products-inline__info">
+              <h3 class="article-products-inline__product-title">
+                <a href="{{ product.url }}">{{ product.title }}</a>
+              </h3>
+              <div class="article-products-inline__price">
+                {% if product.compare_at_price > product.price %}
+                  <span class="article-products-inline__price--compare">{{ product.compare_at_price | money }}</span>
+                {% endif %}
+                {{ product.price | money }}
+              </div>
+
+              {% if section.settings.show_add_to_cart %}
+                <form method="post" action="/cart/add">
+                  <input type="hidden" name="id" value="{{ product.first_available_variant.id }}">
+                  <input type="hidden" name="quantity" value="1">
+                  <button type="submit" class="article-products-inline__add-btn">
+                    {{ section.settings.add_to_cart_text }}
+                  </button>
+                </form>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <button
+        class="article-products-inline__nav-btn article-products-inline__nav-btn--next"
+        aria-label="Next"
+        onclick="document.getElementById('ap-inline-track-{{ unique_id }}').scrollLeft += {{ section.settings.card_width | plus: section.settings.product_gap }}"
+      >&#8250;</button>
+    </div>
+  </div>
+{% endif %}

@@ -1,0 +1,595 @@
+{% comment %}
+  Multi-column Sidenav Mega Menu
+  - Left column: Categories with arrows
+  - Middle column: Submenus (changes on category hover/click)
+  - Right column: Featured images
+
+  @param menu LinkList
+    The menu item that triggered this meganav (contains .links for child items)
+
+  @param block Block
+    The block with the meganav properties
+{% endcomment %}
+
+{%- capture meganav_classes -%}
+  navmenu-meganav
+  navmenu-meganav--desktop
+  navmenu-meganav-multi-column
+{%- endcapture -%}
+
+{% comment %} Get menu links - try direct links first, then nested linklist {% endcomment %}
+{% assign menu_links = menu.links %}
+{% if menu_links.size == 0 and linklists[menu.handle] != blank %}
+  {% assign menu_links = linklists[menu.handle].links %}
+{% endif %}
+{% assign icon_size = block.settings.icon_size | default: 40 %}
+{% assign icon_size_2x = icon_size | times: 2 %}
+
+<div
+  class="{{ meganav_classes | strip_newlines }}"
+  data-navmenu-submenu
+  data-meganav-menu
+  data-meganav-id="{{ block.id }}"
+  data-meganav-multi-column
+  style="display: none; opacity: 0; visibility: hidden;"
+>
+  <style>
+    [data-meganav-id="{{ block.id }}"] {
+      background: #fff;
+      padding: 0;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      position: absolute !important;
+      top: 100% !important;
+      left: 20% !important;
+      width: 60% !important;
+      z-index: 9999;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-wrapper {
+      display: grid;
+      grid-template-columns: 200px 1fr 240px;
+      min-height: 350px;
+      width: 100%;
+    }
+
+    /* Left Column - Categories */
+    [data-meganav-id="{{ block.id }}"] .multi-col-categories {
+      background: #f8f8f8;
+      border-right: 1px solid #eee;
+      padding: 20px 0;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-categories-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0 20px 12px;
+      margin: 0;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-category-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-category-item {
+      position: relative;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-category-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      color: #333;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-category-link:hover,
+    [data-meganav-id="{{ block.id }}"] .multi-col-category-link.active {
+      background: #fff;
+      color: #da1e37;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-category-link.active {
+      border-right: 2px solid #da1e37;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-category-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 10px;
+      object-fit: contain;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-category-text {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-category-arrow {
+      width: 16px;
+      height: 16px;
+      color: #999;
+      transition: color 0.2s ease;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-category-link:hover .multi-col-category-arrow,
+    [data-meganav-id="{{ block.id }}"] .multi-col-category-link.active .multi-col-category-arrow {
+      color: #da1e37;
+    }
+
+    /* Middle Column - Submenus */
+    [data-meganav-id="{{ block.id }}"] .multi-col-submenus {
+      padding: 20px 30px;
+      background: #fff;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-submenu-panel {
+      display: none;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-submenu-panel.active {
+      display: block;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-submenu-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px 30px;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-submenu-link {
+      color: #555;
+      text-decoration: none;
+      font-size: 13px;
+      padding: 6px 0;
+      display: block;
+      transition: color 0.2s ease;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-submenu-link:hover {
+      color: #da1e37;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-submenu-link--view-all {
+      font-weight: 600;
+      color: #da1e37;
+      margin-top: 15px;
+      grid-column: 1 / -1;
+    }
+
+    /* Right Column - Featured Images */
+    [data-meganav-id="{{ block.id }}"] .multi-col-featured {
+      background: #fafafa;
+      border-left: 1px solid #eee;
+      padding: 20px;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-featured-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0 0 15px;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-featured-item {
+      display: block;
+      text-decoration: none;
+      margin-bottom: 20px;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-featured-item:last-child {
+      margin-bottom: 0;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-featured-image-wrapper {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-featured-image {
+      width: 100px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-featured-content {
+      flex: 1;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-featured-item-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin: 0 0 5px;
+      line-height: 1.3;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-featured-price {
+      font-size: 14px;
+      font-weight: 600;
+      color: #da1e37;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-featured-cta {
+      font-size: 13px;
+      color: #da1e37;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-featured-cta svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Placeholder styling */
+    [data-meganav-id="{{ block.id }}"] .multi-col-featured-placeholder {
+      background: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-featured-placeholder .placeholder-svg {
+      width: 60%;
+      height: 60%;
+      opacity: 0.5;
+    }
+
+    /* Featured panels - show/hide based on active category */
+    [data-meganav-id="{{ block.id }}"] .multi-col-featured-panel {
+      display: none;
+    }
+
+    [data-meganav-id="{{ block.id }}"] .multi-col-featured-panel.active {
+      display: block;
+    }
+
+    /* Responsive */
+    @media screen and (max-width: 1024px) {
+      [data-meganav-id="{{ block.id }}"] {
+        display: none !important;
+      }
+    }
+  </style>
+
+  <div class="multi-col-wrapper">
+    <!-- Left Column: Categories -->
+    <div class="multi-col-categories">
+      <p class="multi-col-categories-title">{{ block.settings.categories_title | default: 'Browse by category' }}</p>
+      <ul class="multi-col-category-list">
+        {% for menu_item in menu_links %}
+          {% assign category_index = forloop.index %}
+          {% assign icon_key = 'category_' | append: category_index | append: '_icon' %}
+          {% assign link_key = 'category_' | append: category_index | append: '_link' %}
+          {% assign category_icon = block.settings[icon_key] %}
+          {% assign custom_link = block.settings[link_key] %}
+          {% assign category_url = custom_link | default: menu_item.url %}
+
+          <li class="multi-col-category-item">
+            <a
+              href="{{ category_url }}"
+              class="multi-col-category-link {% if forloop.first %}active{% endif %}"
+              data-category-index="{{ forloop.index }}"
+            >
+              <span class="multi-col-category-text">
+                {% if category_icon %}
+                  <img
+                    src="{{ category_icon | image_url: width: 48 }}"
+                    alt="{{ menu_item.title | escape }}"
+                    class="multi-col-category-icon"
+                    loading="lazy"
+                  >
+                {% endif %}
+                {{ menu_item.title }}
+              </span>
+              <svg class="multi-col-category-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Middle Column: Submenus -->
+    <div class="multi-col-submenus">
+      {% for menu_item in menu_links %}
+        {% assign submenu_items = menu_item.links %}
+        {% if submenu_items.size == 0 and linklists[menu_item.handle] != blank %}
+          {% assign submenu_items = linklists[menu_item.handle].links %}
+        {% endif %}
+
+        <div class="multi-col-submenu-panel {% if forloop.first %}active{% endif %}" data-submenu-panel="{{ forloop.index }}">
+          <div class="multi-col-submenu-grid">
+            {% for sub_item in submenu_items %}
+              <a href="{{ sub_item.url }}" class="multi-col-submenu-link">
+                {{ sub_item.title }}
+              </a>
+            {% endfor %}
+
+            {% assign link_key = 'category_' | append: forloop.index | append: '_link' %}
+            {% assign custom_link = block.settings[link_key] %}
+            {% assign category_url = custom_link | default: menu_item.url %}
+            <a href="{{ category_url }}" class="multi-col-submenu-link multi-col-submenu-link--view-all">
+              View All {{ menu_item.title }} →
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Right Column: Featured Products (Auto-fetched from each category) -->
+    <div class="multi-col-featured">
+      <p class="multi-col-featured-title">{{ block.settings.featured_title | default: 'Featured' }}</p>
+
+      {% comment %} Create a panel for each category with products from that collection {% endcomment %}
+      {% for cat_item in menu_links %}
+        {% comment %} Find collection for this category {% endcomment %}
+        {% assign cat_collection = nil %}
+        {% assign found_collection = false %}
+
+        {% comment %} Method 1: Direct object (if menu links to a collection) {% endcomment %}
+        {% if cat_item.object.products.size > 0 %}
+          {% assign cat_collection = cat_item.object %}
+          {% assign found_collection = true %}
+        {% endif %}
+
+        {% comment %} Method 2: Extract handle from URL {% endcomment %}
+        {% unless found_collection %}
+          {% if cat_item.url contains '/collections/' %}
+            {% assign url_parts = cat_item.url | split: '/collections/' %}
+            {% if url_parts.size > 1 %}
+              {% assign extracted_handle = url_parts[1] | split: '/' | first | split: '?' | first %}
+              {% if collections[extracted_handle].products.size > 0 %}
+                {% assign cat_collection = collections[extracted_handle] %}
+                {% assign found_collection = true %}
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        {% endunless %}
+
+        {% comment %} Method 3: Try title as handle {% endcomment %}
+        {% unless found_collection %}
+          {% assign title_as_handle = cat_item.title | handleize %}
+          {% if collections[title_as_handle].products.size > 0 %}
+            {% assign cat_collection = collections[title_as_handle] %}
+            {% assign found_collection = true %}
+          {% endif %}
+        {% endunless %}
+
+        {% comment %} Method 4: Try handle directly {% endcomment %}
+        {% unless found_collection %}
+          {% if cat_item.handle != blank and collections[cat_item.handle].products.size > 0 %}
+            {% assign cat_collection = collections[cat_item.handle] %}
+            {% assign found_collection = true %}
+          {% endif %}
+        {% endunless %}
+
+        {% comment %} Method 5: Try with common suffixes {% endcomment %}
+        {% unless found_collection %}
+          {% assign title_handle = cat_item.title | handleize %}
+          {% assign handle_with_jewellery = title_handle | append: '-jewellery' %}
+          {% assign handle_with_jewelry = title_handle | append: '-jewelry' %}
+          {% assign handle_with_piercing = title_handle | append: '-piercing' %}
+
+          {% if collections[handle_with_jewellery].products.size > 0 %}
+            {% assign cat_collection = collections[handle_with_jewellery] %}
+            {% assign found_collection = true %}
+          {% elsif collections[handle_with_jewelry].products.size > 0 %}
+            {% assign cat_collection = collections[handle_with_jewelry] %}
+            {% assign found_collection = true %}
+          {% elsif collections[handle_with_piercing].products.size > 0 %}
+            {% assign cat_collection = collections[handle_with_piercing] %}
+            {% assign found_collection = true %}
+          {% endif %}
+        {% endunless %}
+
+        {% comment %} Fallback: Use all products {% endcomment %}
+        {% unless found_collection %}
+          {% assign cat_collection = collections.all %}
+        {% endunless %}
+
+        <div class="multi-col-featured-panel{% if forloop.first %} active{% endif %}" data-featured-panel="{{ forloop.index }}">
+          {% for product in cat_collection.products limit: 2 %}
+            <a href="{{ product.url }}" class="multi-col-featured-item">
+              <div class="multi-col-featured-image-wrapper">
+                {% if product.featured_image != blank %}
+                  <img
+                    src="{{ product.featured_image | image_url: width: 200 }}"
+                    alt="{{ product.title | escape }}"
+                    class="multi-col-featured-image"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="multi-col-featured-image multi-col-featured-placeholder">
+                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  </div>
+                {% endif %}
+                <div class="multi-col-featured-content">
+                  <p class="multi-col-featured-item-title">{{ product.title | truncate: 40 }}</p>
+                  <span class="multi-col-featured-price">{{ product.price | money }}</span>
+                  <span class="multi-col-featured-cta">
+                    Shop Now
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            </a>
+          {% else %}
+            <div class="multi-col-featured-item">
+              <div class="multi-col-featured-image-wrapper">
+                <div class="multi-col-featured-image multi-col-featured-placeholder">
+                  {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
+                <div class="multi-col-featured-content">
+                  <p class="multi-col-featured-item-title">Browse {{ cat_item.title }}</p>
+                  <span class="multi-col-featured-cta">View Collection</span>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        {% comment %} Fallback when no menu_links - show default products {% endcomment %}
+        <div class="multi-col-featured-panel active" data-featured-panel="1">
+          {% for product in collections.all.products limit: 2 %}
+            <a href="{{ product.url }}" class="multi-col-featured-item">
+              <div class="multi-col-featured-image-wrapper">
+                {% if product.featured_image != blank %}
+                  <img
+                    src="{{ product.featured_image | image_url: width: 200 }}"
+                    alt="{{ product.title | escape }}"
+                    class="multi-col-featured-image"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="multi-col-featured-image multi-col-featured-placeholder">
+                    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  </div>
+                {% endif %}
+                <div class="multi-col-featured-content">
+                  <p class="multi-col-featured-item-title">{{ product.title | truncate: 40 }}</p>
+                  <span class="multi-col-featured-price">{{ product.price | money }}</span>
+                  <span class="multi-col-featured-cta">
+                    Shop Now
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+  // Multi-column sidenav menu hover handler - Block ID: {{ block.id }}
+  (function() {
+    const meganav = document.querySelector('[data-meganav-id="{{ block.id }}"]');
+    if (!meganav) return;
+
+    const parentItem = meganav.closest('[data-navmenu-meganav-trigger]');
+    if (!parentItem) return;
+
+    // Category hover/click handling
+    const categoryLinks = meganav.querySelectorAll('[data-category-index]');
+    const submenuPanels = meganav.querySelectorAll('[data-submenu-panel]');
+    const featuredPanels = meganav.querySelectorAll('[data-featured-panel]');
+
+    categoryLinks.forEach(link => {
+      link.addEventListener('mouseenter', function() {
+        const index = this.dataset.categoryIndex;
+
+        // Update active category
+        categoryLinks.forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+
+        // Show corresponding submenu panel
+        submenuPanels.forEach(panel => panel.classList.remove('active'));
+        const activePanel = meganav.querySelector(`[data-submenu-panel="${index}"]`);
+        if (activePanel) activePanel.classList.add('active');
+
+        // Show corresponding featured products panel
+        featuredPanels.forEach(panel => panel.classList.remove('active'));
+        const activeFeaturedPanel = meganav.querySelector(`[data-featured-panel="${index}"]`);
+        if (activeFeaturedPanel) activeFeaturedPanel.classList.add('active');
+      });
+
+      // Click to navigate
+      link.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href && href !== '#' && href !== '') {
+          e.preventDefault();
+          window.location.href = href;
+        }
+      });
+    });
+
+    // Menu open/close handling
+    let isOpen = false;
+    let closeTimeout = null;
+
+    function openMenu() {
+      if (closeTimeout) {
+        clearTimeout(closeTimeout);
+        closeTimeout = null;
+      }
+      if (!isOpen) {
+        isOpen = true;
+
+        // Close all other multi-column menus first
+        document.querySelectorAll('[data-meganav-multi-column]').forEach(function(otherMenu) {
+          if (otherMenu !== meganav) {
+            otherMenu.style.display = 'none';
+            otherMenu.style.opacity = '0';
+            otherMenu.style.visibility = 'hidden';
+          }
+        });
+
+        meganav.style.display = 'block';
+        meganav.style.opacity = '1';
+        meganav.style.visibility = 'visible';
+        const details = parentItem.querySelector('[data-navmenu-details]');
+        if (details) details.setAttribute('open', 'open');
+      }
+    }
+
+    function closeMenu() {
+      closeTimeout = setTimeout(function() {
+        isOpen = false;
+
+        meganav.style.display = 'none';
+        meganav.style.opacity = '0';
+        meganav.style.visibility = 'hidden';
+        const details = parentItem.querySelector('[data-navmenu-details]');
+        if (details) details.removeAttribute('open');
+        closeTimeout = null;
+      }, 50);
+    }
+
+    // Hover handlers
+    parentItem.addEventListener('mouseenter', openMenu);
+    parentItem.addEventListener('mouseleave', closeMenu);
+    meganav.addEventListener('mouseenter', openMenu);
+    meganav.addEventListener('mouseleave', closeMenu);
+
+    // Handle click on parent link to navigate
+    const parentLink = parentItem.querySelector('.navmenu-link-depth-1');
+    if (parentLink) {
+      parentLink.addEventListener('click', function(e) {
+        const href = this.getAttribute('href') || this.dataset.href;
+        if (href && href !== '#' && href !== '') {
+          e.preventDefault();
+          window.location.href = href;
+        }
+      });
+    }
+  })();
+</script>

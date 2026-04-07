@@ -1,0 +1,267 @@
+{% doc %}
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-announcement-bar-{{ ai_gen_id }} {
+    width: 100%;
+    background-color: {{ block.settings.background_color }};
+    color: {{ block.settings.text_color }};
+    padding: {{ block.settings.padding }}px 20px;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+    display: block;
+  }
+  .ai-announcement-bar__container-{{ ai_gen_id }} {
+    max-width: 100%;
+    margin: 0 auto;
+    position: relative;
+    height: {{ block.settings.font_size | times: 1.5 }}px;
+  }
+
+  .ai-announcement-bar__message-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    font-size: {{ block.settings.font_size }}px;
+    line-height: {{ block.settings.font_size | times: 1.5 }}px;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .ai-announcement-bar__message-{{ ai_gen_id }}.active {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .ai-announcement-bar__message-{{ ai_gen_id }}.exit {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+{% endstyle %}
+
+<announcement-bar-{{ ai_gen_id }}
+  class="ai-announcement-bar-{{ ai_gen_id }}"
+  data-interval="{{ block.settings.rotation_interval }}"
+  data-country="{{ localization.country.iso_code }}"
+  {{ block.shopify_attributes }}
+>
+  <div class="ai-announcement-bar__container-{{ ai_gen_id }}">
+    <div class="ai-announcement-bar__message-{{ ai_gen_id }}" data-message="review">
+      {{ block.settings.review_message }}
+    </div>
+    <div class="ai-announcement-bar__message-{{ ai_gen_id }}" data-message="shipping">
+      <span data-country="US">{{ block.settings.us_shipping_message }}</span>
+      <span data-country="GB">{{ block.settings.uk_shipping_message }}</span>
+      <span data-country="EU">{{ block.settings.eu_shipping_message }}</span>
+      <span data-country="OTHER">{{ block.settings.other_message }}</span>
+    </div>
+  </div>
+</announcement-bar-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class AnnouncementBar{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.currentIndex = 0;
+        this.messages = [];
+        this.interval = null;
+        this.rotationTime = parseInt(this.dataset.interval) * 1000;
+        this.euCountries = [
+          'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR',
+          'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL',
+          'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE'
+        ];
+      }
+
+      connectedCallback() {
+        this.setupMessages();
+        this.startRotation();
+      }
+
+      disconnectedCallback() {
+        if (this.interval) {
+          clearInterval(this.interval);
+        }
+      }
+
+      setupMessages() {
+        const reviewMessage = this.querySelector('[data-message="review"]');
+        const shippingMessage = this.querySelector('[data-message="shipping"]');
+        
+        if (!reviewMessage || !shippingMessage) return;
+
+        const country = this.getCountry();
+        const shippingSpans = shippingMessage.querySelectorAll('span[data-country]');
+        
+        let selectedShippingText = '';
+        
+        shippingSpans.forEach(span => {
+          const spanCountry = span.dataset.country;
+          
+          if (country === 'US' && spanCountry === 'US') {
+            selectedShippingText = span.textContent;
+          } else if (country === 'GB' && spanCountry === 'GB') {
+            selectedShippingText = span.textContent;
+          } else if (this.euCountries.includes(country) && spanCountry === 'EU') {
+            selectedShippingText = span.textContent;
+          } else if (spanCountry === 'OTHER' && !selectedShippingText) {
+            selectedShippingText = span.textContent;
+          }
+        });
+
+        if (!selectedShippingText) {
+          selectedShippingText = shippingMessage.querySelector('[data-country="OTHER"]')?.textContent || '';
+        }
+
+        shippingMessage.innerHTML = selectedShippingText;
+
+        this.messages = [reviewMessage, shippingMessage];
+        
+        if (this.messages.length > 0) {
+          this.messages[0].classList.add('active');
+        }
+      }
+
+      getCountry() {
+        if (this.dataset.country) {
+          return this.dataset.country;
+        }
+        
+        if (typeof Shopify !== 'undefined' && Shopify.country) {
+          return Shopify.country;
+        }
+        
+        return 'OTHER';
+      }
+
+      startRotation() {
+        if (this.messages.length < 2) return;
+
+        this.interval = setInterval(() => {
+          this.rotateMessage();
+        }, this.rotationTime);
+      }
+
+      rotateMessage() {
+        const currentMessage = this.messages[this.currentIndex];
+        const nextIndex = (this.currentIndex + 1) % this.messages.length;
+        const nextMessage = this.messages[nextIndex];
+
+        currentMessage.classList.remove('active');
+        currentMessage.classList.add('exit');
+
+        setTimeout(() => {
+          currentMessage.classList.remove('exit');
+          nextMessage.classList.add('active');
+        }, 500);
+
+        this.currentIndex = nextIndex;
+      }
+    }
+
+    customElements.define('announcement-bar-{{ ai_gen_id }}', AnnouncementBar{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Country announcement bar",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Messages"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "review_message",
+      "label": "Review message",
+      "default": "⭐⭐⭐⭐⭐ Rated 4.9/5 by 10,000+ customers"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "us_shipping_message",
+      "label": "US shipping message",
+      "default": "Free US shipping on orders over $30 🚚"
+    }, 
+    {
+      "type": "inline_richtext",
+      "id": "uk_shipping_message",
+      "label": "UK shipping message",
+      "default": "Free UK shipping on orders over £20 🚚"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "eu_shipping_message",
+      "label": "EU shipping message",
+      "default": "Free EU shipping on orders over €30 🚚"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "other_message",
+      "label": "Other countries message",
+      "default": "🌍 Worldwide shipping available"
+    },
+    {
+      "type": "header",
+      "content": "Timing"
+    },
+    {
+      "type": "range",
+      "id": "rotation_interval",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Message rotation interval",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding",
+      "default": 12
+    }
+  ],
+  "presets": [
+    {
+      "name": "Country announcement bar"
+    }
+  ]
+}
+{% endschema %}
