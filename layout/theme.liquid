@@ -12,43 +12,66 @@
     <link rel="preconnect" href="https://cdn.shopifycloud.com">
 
     {%- render 'hs-critical-css' -%}
+    {%- if template contains 'collection' -%}
+      {%- assign extra_collection_handle = request.path
+        | remove: '/collections/'
+        | replace: '/', '-'
+        | replace: '_', '-'
+        | replace: '+', '-'
+      -%}
+      {%- assign extra_collection = shop.metaobjects.extra_collection[extra_collection_handle] -%}
+      {%- if extra_collection != blank -%}
+        {%- if extra_collection.seo_title != blank -%}
+          {%- assign page_title = extra_collection.seo_title -%}
+        {%- endif -%}
+        {%- if extra_collection.seo_description != blank -%}
+          {%- assign page_description = extra_collection.seo_description -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endif -%}
 
     <title>
-      {{- page_title -}}
+      {%- if extra_collection != blank and extra_collection.seo_title != blank -%}
+        {{- extra_collection.seo_title -}}
+      {%- else -%}
+        {{- page_title -}}
 
-      {%- if current_tags -%}
-        {% capture cat_array %}{%- render 'advanced-tag-loop' -%}{% endcapture %}
-        {% assign cat_array = cat_array | split: '|' %}
-        {% assign title_tags = '' %}
-        {% assign meta_tags = current_tags | join: ', ' %}
-        {%- for tag in current_tags -%}
-          {% assign is_advanced_tag = false %}
-          {% assign cat = tag | split: '_' | first %}
+        {%- if current_tags -%}
+          {% capture cat_array %}{%- render 'advanced-tag-loop' -%}{% endcapture %}
+          {% assign cat_array = cat_array | split: '|' %}
+          {% assign title_tags = '' %}
+          {% assign meta_tags = current_tags | join: ', ' %}
+          {%- for tag in current_tags -%}
+            {% assign is_advanced_tag = false %}
+            {% assign cat = tag | split: '_' | first %}
 
-          {%- unless cat == tag -%}
-            {%- if cat_array contains cat -%}
-              {% assign is_advanced_tag = true %}
-              {% assign title_tags = title_tags | append: ', ' | append: tag | replace_first: '_', ': ' %}
-            {%- endif -%}
-          {%- endunless -%}
+            {%- unless cat == tag -%}
+              {%- if cat_array contains cat -%}
+                {% assign is_advanced_tag = true %}
+                {% assign title_tags = title_tags | append: ', ' | append: tag | replace_first: '_', ': ' %}
+              {%- endif -%}
+            {%- endunless -%}
 
-          {%- unless is_advanced_tag -%}
-            {% assign title_tags = title_tags | append: ', ' | append: tag %}
-          {%- endunless -%}
-        {%- endfor -%}
-        {{ 'general.title.tags' | t: tags: title_tags | remove_first: ', ' }}
+            {%- unless is_advanced_tag -%}
+              {% assign title_tags = title_tags | append: ', ' | append: tag %}
+            {%- endunless -%}
+          {%- endfor -%}
+          {{ 'general.title.tags' | t: tags: title_tags | remove_first: ', ' }}
+        {%- endif -%}
+
+        {%- if current_page != 1 -%}
+          {{- 'general.title.page' | t: page: current_page -}}
+        {%- endif -%}
+
+        {%- unless page_title contains shop.name -%}
+          {{- 'general.title.shop' | t: shop: shop.name -}}
+        {%- endunless -%}
       {%- endif -%}
-
-      {%- if current_page != 1 -%}
-        {{- 'general.title.page' | t: page: current_page -}}
-      {%- endif -%}
-
-      {%- unless page_title contains shop.name -%}
-        {{- 'general.title.shop' | t: shop: shop.name -}}
-      {%- endunless -%}
     </title>
 
-    {% if page_description != blank %}
+    {% if extra_collection != blank and extra_collection.seo_description != blank %}
+      <meta name="description" content="{{ extra_collection.seo_description | escape }}">
+    {%- elsif page_description != blank -%}
       <meta name="description" content="{{ page_description | escape }}">
     {%- else -%}
       <meta name="description" content="{{ shop.name | escape }}">
