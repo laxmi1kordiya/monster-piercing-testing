@@ -382,7 +382,6 @@
 
           # Step 2: Check if the collection has an H1 map metafield
           assign h1_map_raw = collection.metafields.custom.filter_h1_map
-
           # Step 3: If a filter is active AND an H1 map exists, try to find a match
           if h1_map_raw != blank
             assign h1_map = h1_map_raw.value
