@@ -374,35 +374,58 @@
           Monster Piercing — SEO-optimized H1 override
           ============================================
         {% endcomment %}
-
         {%- liquid
 
-          # Step 1: Set default H1 as collection title
           assign dynamic_h1 = collection.title
-
-          # Step 2: Check if the collection has an H1 map metafield
           assign h1_map_raw = collection.metafields.custom.filter_h1_map
 
-          # Step 3: If a filter is active AND an H1 map exists, try to find a match
           if h1_map_raw != blank
             assign h1_map = h1_map_raw.value
+            assign matched = false
 
+            # 1) Native faceted filters
             for filter in collection.filters
+              if matched
+                break
+              endif
               for active_value in filter.active_values
-                assign filter_label = active_value.label
-
-                # Check if this filter value has a custom H1 in the map
-                assign custom_h1 = h1_map[filter_label]
-
+                assign custom_h1 = h1_map[active_value.label]
                 if custom_h1 != blank
                   assign dynamic_h1 = custom_h1
+                  assign matched = true
                   break
                 endif
-
               endfor
             endfor
+
+            # 2) Tag-based filters (e.g. /collections/x/type_clicker)
+            unless matched
+              for tag in current_tags
+                if matched
+                  break
+                endif
+                assign tag_value = tag | split: '_' | last | replace: '-', ' ' | downcase | strip
+
+                for entry in h1_map
+                  assign key_lower = entry[0] | downcase
+                  if key_lower == tag_value or key_lower contains tag_value
+                    assign dynamic_h1 = entry[1]
+                    assign matched = true
+                    break
+                  endif
+                endfor
+              endfor
+            endunless
           endif
 
+        -%}
+
+        {% comment %} DEBUG — remove after verifying {% endcomment %}
+        {%- liquid
+          assign debug_present = false
+          if h1_map_raw != blank
+            assign debug_present = true
+          endif
         -%}
 
         <h1 class="collection--title" data-collection-title data-original-title="{{ collection.title }}">
