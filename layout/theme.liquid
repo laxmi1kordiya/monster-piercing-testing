@@ -13,8 +13,35 @@
 
     {%- render 'hs-critical-css' -%}
 
+    {%- liquid
+
+      assign page_seo_title = page_title
+
+      if template contains 'collection'
+        assign h1_map_raw = collection.metafields.custom.filter_h1_map
+
+        if h1_map_raw != blank
+          assign h1_map = h1_map_raw.value
+
+          for filter in collection.filters
+            for active_value in filter.active_values
+              assign filter_label = active_value.label
+              assign custom_h1 = h1_map[filter_label]
+
+              if custom_h1 != blank
+                assign page_seo_title = custom_h1 | append: ' | Monster Piercing'
+                break
+              endif
+
+            endfor
+          endfor
+        endif
+      endif
+
+    -%}
+
     <title>
-      {{- page_title -}}
+      {{- page_seo_title -}}
 
       {%- if current_tags -%}
         {% capture cat_array %}{%- render 'advanced-tag-loop' -%}{% endcapture %}

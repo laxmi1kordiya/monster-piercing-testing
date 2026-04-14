@@ -368,8 +368,45 @@
         {% endif %}
   
   
+        {% comment %}
+          ============================================
+          DYNAMIC H1 BASED ON ACTIVE FILTERS
+          Monster Piercing — SEO-optimized H1 override
+          ============================================
+        {% endcomment %}
+
+        {%- liquid
+
+          # Step 1: Set default H1 as collection title
+          assign dynamic_h1 = collection.title
+
+          # Step 2: Check if the collection has an H1 map metafield
+          assign h1_map_raw = collection.metafields.custom.filter_h1_map
+
+          # Step 3: If a filter is active AND an H1 map exists, try to find a match
+          if h1_map_raw != blank
+            assign h1_map = h1_map_raw.value
+
+            for filter in collection.filters
+              for active_value in filter.active_values
+                assign filter_label = active_value.label
+
+                # Check if this filter value has a custom H1 in the map
+                assign custom_h1 = h1_map[filter_label]
+
+                if custom_h1 != blank
+                  assign dynamic_h1 = custom_h1
+                  break
+                endif
+
+              endfor
+            endfor
+          endif
+
+        -%}
+
         <h1 class="collection--title" data-collection-title data-original-title="{{ collection.title }}">
-          {{- seo_page_title -}}
+          {{ dynamic_h1 }}
         </h1>
       </div>
 
