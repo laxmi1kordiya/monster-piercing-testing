@@ -76,7 +76,7 @@
           {%- when 'tag' -%}
             {%- capture search_filter_content_rest -%}
               {%- for tag in collections.all.all_tags -%}
-                {%- assign split_tag = tag | split: '_' -%}
+                {%- assign split_tag = tag | split: '-' -%}
                 {%- if split_tag[0] == 'searchfilter' -%}
                   {%- if tag == filter or collection.title == split_tag[1] -%}
                     {%- assign search_filter_selected = split_tag[1] -%}

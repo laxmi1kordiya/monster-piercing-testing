@@ -148,9 +148,9 @@
     {% if section.settings.filter_style == 'groups' and current_tags and show_swatches %}
       {% comment %} We are filtered by tags, so check and see if it's filtering by swatch {% endcomment %}
       {% for tag in current_tags %}
-        {% assign tag_group = tag | split: '_' | first | downcase %}
+        {% assign tag_group = tag | split: '-' | first | downcase %}
         {% if tag_group == swatch_trigger %}
-          {% assign active_swatch_name = tag | split: '_' | last | downcase %}
+          {% assign active_swatch_name = tag | split: '-' | last | downcase %}
 
           {% comment %} Filter variants by swatch (for ex. where color == blue). Can't use | where due to case sensitivity {% endcomment %}
           {% for variant in product.variants %}

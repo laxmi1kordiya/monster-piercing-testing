@@ -46,12 +46,12 @@
         {% for tag in current_tags %}
 
           {% assign is_advanced_tag = false %}
-          {% assign cat = tag | split: '_' | first %}
+          {% assign cat = tag | split: '-' | first %}
           {% unless cat == tag %}
             {% if cat_array contains cat %}
               {% assign is_advanced_tag = true %}
               <span class="breadcrumbs-tag">
-                {{ tag | remove_first: cat | remove_first: '_' }}
+                {{ tag | remove_first: cat | remove_first: '-' }}
               </span>
             {% endif %}
           {% endunless %}

@@ -137,7 +137,7 @@
           {%- endif -%}
 
           {% liquid
-            assign cat = tag | split: '_' | first
+            assign cat = tag | split: '-' | first
             assign cat_handle = cat | handleize
             assign tag_handle = tag | handleize
             assign cat_item_handle = cat_item | handleize
@@ -155,7 +155,7 @@
             {% endcomment %}
             {% liquid
               for current_tag in current_tags
-                assign current_cat = current_tag | split: '_' | first
+                assign current_cat = current_tag | split: '-' | first
 
                 if current_cat == cat
                   assign within_group = true
@@ -165,7 +165,7 @@
             %}
 
             {%- if show_swatches -%}
-              {%- assign color_name = tag | remove_first: cat | remove_first: '_' -%}
+              {%- assign color_name = tag | remove_first: cat | remove_first: '-' -%}
               {%- capture swatch -%}
                 <div
                   class="filter-item--swatch-wrapper"
@@ -199,7 +199,7 @@
                   </span>
                 {%- endunless -%}
                 <span class="filter-text">
-                  {{ tag | remove_first: cat | remove_first: '_' }}
+                  {{ tag | remove_first: cat | remove_first: '-' }}
                 </span>
               {%- endif -%}
 

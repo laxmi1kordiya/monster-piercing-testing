@@ -8,8 +8,8 @@
   {%- if template.name == 'collection' and collection.all_tags.size > 0 -%}
     {% assign categories = blank %}
     {%- for tag in collection.all_tags -%}
-      {%- if tag contains '_' -%}
-        {% assign category = tag | split: '_' | first %}
+      {%- if tag contains '-' -%}
+        {% assign category = tag | split: '-' | first %}
 
         {% assign categories = categories
           | append: '|'

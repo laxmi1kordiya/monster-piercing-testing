@@ -16,7 +16,7 @@
 <ul class="filter-group--grid">
   {% for tag in current_tags %}
     {% assign is_advanced_tag = false %}
-    {% assign cat = tag | split: '_' | first %}
+    {% assign cat = tag | split: '-' | first %}
     {% unless cat == tag %}
       {% if cat_array contains cat %}
         {% assign is_advanced_tag = true %}
@@ -27,7 +27,7 @@
       {%- capture tag_text -%}
         <span class="filter-text">
           {%- if is_advanced_tag -%}
-            {{ tag | replace_first: '_', ' - ' }}
+            {{ tag | replace_first: '-', ' - ' }}
           {%- else -%}
             {{ tag }}
           {%- endif -%}

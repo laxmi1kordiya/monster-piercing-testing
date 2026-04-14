@@ -81,7 +81,7 @@
 
     {% for tag in sorted_tags %}
       {% assign is_advanced_tag = false %}
-      {% assign cat = tag | split: '_' | first %}
+      {% assign cat = tag | split: '-' | first %}
 
       {%- if cat == 'searchfilter' -%}
         {%- continue -%}
@@ -98,7 +98,7 @@
       {% endunless %}
 
         {%- if is_advanced_tag -%}
-          {% assign tag_content = tag | remove_first: cat | remove_first: '_' %}
+          {% assign tag_content = tag | remove_first: cat | remove_first: '-' %}
         {%- else -%}
           {% assign tag_content = tag %}
         {%- endif -%}
