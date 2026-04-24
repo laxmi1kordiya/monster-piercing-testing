@@ -21,6 +21,48 @@
     The block setting ID for the question/summary content
 {% endcomment %}
 
+{%- assign faq_metafield = collection.metafields.custom.faq.value -%}
+{%- if faq_metafield.faq.size > 0 -%}
+  {%- assign current_category = '' -%}
+  {%- for item in faq_metafield.faq -%}
+    {%- if item.category != blank and item.category != current_category -%}
+      <h3
+        class="faq__heading"
+        id="{{ section.id }}-metafield-{{ forloop.index }}"
+      >
+        {{- item.category | escape -}}
+      </h3>
+      {%- assign current_category = item.category -%}
+    {%- endif -%}
+
+    {%- if item.question != blank and item.answer != blank -%}
+      <details class="faq__details" data-faq-details>
+        <summary class="faq__summary" data-faq-summary>
+          <span class="faq__summary-heading">
+            {{- item.question | escape -}}
+          </span>
+
+          {%-
+            render 'icon-library',
+            id: icon,
+            icon_class: 'faq__summary-icon',
+          -%}
+        </summary>
+
+        <div
+          class="faq__answer"
+          data-faq-answer
+          data-faq-answer-index="metafield-{{ forloop.index0 }}"
+        >
+          <div class="faq__answer-content" data-faq-answer-content>
+            {{- item.answer -}}
+          </div>
+        </div>
+      </details>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
 {%- for block in section.blocks -%}
   {%- case block.type -%}
     {%- when category_id -%}
