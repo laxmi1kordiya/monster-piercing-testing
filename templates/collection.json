@@ -189,7 +189,7 @@
       "name": "t:sections.rich_text.presets.rich_text.name",
       "settings": {
         "width": "full-width",
-        "title": "Monster Piercing | Accessories",
+        "title": "",
         "text": "{{ collection.metafields.custom.collection_rich_text | metafield_tag }}",
         "heading_size": "medium",
         "text_alignment": "center"
