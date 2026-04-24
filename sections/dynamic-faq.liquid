@@ -143,20 +143,34 @@
     style="--faq-custom-icon-color: {{ custom_icon_color }};"
   {% endif %}
 >
-  {%- if section_heading != blank or section_subheading != blank -%}
-    <div class="faq__section-header section-header">
-      {%- if section_heading != blank -%}
-        <h1 class="faq__section-heading section-header__heading">
-          {{- section_heading | escape -}}
-        </h1>
-      {%- endif -%}
+  {%- liquid
+    assign has_blocks = false
+    if section.blocks.size > 0
+      assign has_blocks = true
+    endif
 
-      {%- if section_subheading != blank -%}
-        <div class="faq__section-subheading section-header__subheading">
-          {{- section_subheading -}}
-        </div>
-      {%- endif -%}
-    </div>
+    assign has_metafield_faq = false
+    if collection.metafields.custom.faq.value.faq.size > 0
+      assign has_metafield_faq = true
+    endif
+  -%}
+
+  {%- if has_blocks or has_metafield_faq -%}
+    {%- if section_heading != blank or section_subheading != blank -%}
+      <div class="faq__section-header section-header">
+        {%- if section_heading != blank -%}
+          <h1 class="faq__section-heading section-header__heading">
+            {{- section_heading | escape -}}
+          </h1>
+        {%- endif -%}
+
+        {%- if section_subheading != blank -%}
+          <div class="faq__section-subheading section-header__subheading">
+            {{- section_subheading -}}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
   {%- endif -%}
 
   <div
