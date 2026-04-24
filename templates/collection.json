@@ -183,6 +183,17 @@
         "category_heading_size": "medium",
         "icon_color": "rgba(0,0,0,0)"
       }
+    },
+    "dynamic_rich_text_fwiHxC": {
+      "type": "dynamic-rich-text",
+      "name": "t:sections.rich_text.presets.rich_text.name",
+      "settings": {
+        "width": "full-width",
+        "title": "Monster Piercing | Accessories",
+        "text": "{{ collection.metafields.custom.collection_rich_text | metafield_tag }}",
+        "heading_size": "medium",
+        "text_alignment": "center"
+      }
     }
   },
   "order": [
@@ -191,6 +202,7 @@
     "main",
     "1773658894fc8975fe",
     "static-recently-viewed",
-    "dynamic_faq_Qtgzbt"
+    "dynamic_faq_Qtgzbt",
+    "dynamic_rich_text_fwiHxC"
   ]
 }
